@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { http, shikimori_api } from '../../constants';
 import { firstValueFrom } from 'rxjs';
-import { http, shikimori_api } from 'src/constants';
 
 const newTitlesUrl = '?season=2023&status=ongoing&order=ranked&limit=10';
 
