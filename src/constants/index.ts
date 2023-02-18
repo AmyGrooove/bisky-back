@@ -1,12 +1,9 @@
 const shikimori_api = 'https://shikimori.one/api/';
 
-function api<T>(url: string): Promise<T> {
-  return fetch(url).then((response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    return response.json();
-  });
+async function http<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  const body = await response.json();
+  return body;
 }
 
-export { shikimori_api, api };
+export { shikimori_api, http };
