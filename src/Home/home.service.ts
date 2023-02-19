@@ -11,7 +11,12 @@ import {
   shikimori_api,
   shuffleArray,
 } from '../../constants';
-import { AniemShort, AnimeFull, HomeAnime, Screenshot } from 'constants/types';
+import {
+  AniemShort,
+  AnimeFull,
+  HomeAnime,
+  Screenshot,
+} from '../../constants/types';
 
 @Injectable()
 export class HomeService {
