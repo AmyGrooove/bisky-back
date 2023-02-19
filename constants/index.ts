@@ -1,6 +1,6 @@
 const shikimori_api = 'https://shikimori.one/api/';
 
-const newTitlesUrl = '?season=2023&status=ongoing&order=ranked&limit=10';
+const newTitlesUrl = '?season=2023&status=ongoing&order=ranked&limit=15';
 
 async function http<T>(url: string): Promise<T> {
   const response = await fetch(url);

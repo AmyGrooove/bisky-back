@@ -5,7 +5,12 @@ import {
   SeasonalAnime,
   SeasonalAnimeDocument,
 } from './schems/SeasonalAnime.schema';
-import { http, newTitlesUrl, shikimori_api } from '../../constants';
+import {
+  http,
+  newTitlesUrl,
+  shikimori_api,
+  shuffleArray,
+} from '../../constants';
 import { AniemShort, AnimeFull, HomeAnime, Screenshot } from 'constants/types';
 
 @Injectable()
@@ -37,7 +42,8 @@ export class HomeService {
             shikimori_api + 'animes/' + el.id + '/screenshots',
           )
         ).map((item) => 'https://shikimori.one' + item.original.slice(0, -11));
-        screenshots.length = 10;
+        shuffleArray(screenshots);
+        screenshots.length = 6;
 
         await new Promise((res) => setTimeout(res, 300));
 
