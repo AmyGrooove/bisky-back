@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import {
   SeasonalAnime,
   SeasonalAnimeSchema,
-} from './schems/SeasonalAnime.schema';
+} from '../schems/SeasonalAnime.schema';
 
 @Module({
   imports: [

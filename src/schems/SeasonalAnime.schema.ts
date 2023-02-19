@@ -5,10 +5,10 @@ export type SeasonalAnimeDocument = HydratedDocument<SeasonalAnime>;
 
 @Schema({ collection: 'SeasonalAnime' })
 export class SeasonalAnime {
-  @Prop()
+  @Prop({ required: true })
   shiki_id: number;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
   @Prop()

@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import {
   SeasonalAnime,
   SeasonalAnimeDocument,
-} from './schems/SeasonalAnime.schema';
+} from '../schems/SeasonalAnime.schema';
 import {
   http,
   newTitlesUrl,
@@ -17,14 +17,14 @@ import { AniemShort, AnimeFull, HomeAnime, Screenshot } from 'constants/types';
 export class HomeService {
   constructor(
     @InjectModel(SeasonalAnime.name)
-    private seasonalModelModule: Model<SeasonalAnimeDocument>,
+    private seasonalAnimeModel: Model<SeasonalAnimeDocument>,
   ) {}
 
   async getSeasonal(): Promise<SeasonalAnime[]> {
-    return this.seasonalModelModule.find().exec();
+    return this.seasonalAnimeModel.find().exec();
   }
 
-  async updateSeasonal() {
+  async updateSeasonal(): Promise<boolean> {
     try {
       const newSeasonalAnime: HomeAnime[] = [];
 
@@ -57,8 +57,8 @@ export class HomeService {
         });
       }
 
-      await this.seasonalModelModule.remove();
-      await this.seasonalModelModule.insertMany(newSeasonalAnime);
+      await this.seasonalAnimeModel.remove();
+      await this.seasonalAnimeModel.insertMany(newSeasonalAnime);
 
       return true;
     } catch (error) {
