@@ -2,14 +2,15 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
+
 import {
   loginValidate,
   emailValidate,
   passwordValidate,
-} from 'public/constatns';
-import { User, UserDocument } from 'src/schems/User.schema';
-import { RegisterUserDto } from 'src/dto/registerUser.dto';
-import { LoginUserDto } from 'src/dto/loginUser.dto';
+} from '../../public/constatns';
+import { User, UserDocument } from '../schems/User.schema';
+import { RegisterUserDto } from '../dto/registerUser.dto';
+import { LoginUserDto } from '../dto/loginUser.dto';
 
 @Injectable()
 export class AuthService {
