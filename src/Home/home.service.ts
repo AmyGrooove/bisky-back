@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { shikimori_api, newTitlesUrl } from '@public/constatns';
+import { http, shuffleArray } from '@public/functions';
+import { HomeAnime, AnimeShort, AnimeFull, Screenshot } from '@public/types';
+
 import {
   SeasonalAnime,
   SeasonalAnimeDocument,
-} from '../schems/SeasonalAnime.schema';
-import {
-  http,
-  newTitlesUrl,
-  shikimori_api,
-  shuffleArray,
-} from '../../constants';
-import { AnimeShort, AnimeFull, Screenshot } from '../../constants/typesShiki';
-import { HomeAnime } from '../../constants/typesAmy';
+} from '@/schems/SeasonalAnime.schema';
 
 @Injectable()
 export class HomeService {

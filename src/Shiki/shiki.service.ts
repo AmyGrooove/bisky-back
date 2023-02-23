@@ -1,10 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { http, shikimori_api } from '../../constants';
-import { AnimeFull, AnimeShort, Screenshot } from '../../constants/typesShiki';
-import { AnimeList, AnimeListDocument } from '../schems/AnimeList.schema';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
-import { UpdateAnimesDto } from '../dto/updateAnimes.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { shikimori_api } from '@public/constatns';
+import { http } from '@public/functions';
+import { AnimeShort, AnimeFull, Screenshot } from '@public/types';
+
+import { AnimeList, AnimeListDocument } from '@/schems/AnimeList.schema';
+import { UpdateAnimesDto } from '@/dto/updateAnimes.dto';
 
 @Injectable()
 export class ShikiService {

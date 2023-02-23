@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+
+import { AuthModule } from './Auth/auth.module';
+import { HomeModule } from './Home/home.module';
+import { ShikiModule } from './Shiki/shiki.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HomeModule } from './Home/home.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './Auth/auth.module';
-import { ShikiModule } from './Shiki/shiki.module';
 
 @Module({
   imports: [

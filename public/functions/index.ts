@@ -1,11 +1,3 @@
-const shikimori_api = 'https://shikimori.one/api/';
-
-const newTitlesUrl = '?season=2023&status=ongoing&order=ranked&limit=15';
-
-const loginValidate = /^[a-zA-Z][a-zA-Z0-9-_\.]{3,20}$/;
-const emailValidate = /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/;
-const passwordValidate = /^.*(?=.{8,})(?=.*[a-zA-Z!#$%&?])(?=.*\d).*$/;
-
 async function http<T>(url: string): Promise<T> {
   const response = await fetch(url);
   const body = await response.json();
@@ -41,14 +33,4 @@ function compareArrays(arr1: any[], arr2: any[]): boolean {
   return true;
 }
 
-export {
-  shikimori_api,
-  newTitlesUrl,
-  http,
-  shuffleArray,
-  compareArrays,
-  removeKeyFromArrObj,
-  loginValidate,
-  emailValidate,
-  passwordValidate,
-};
+export { http, shuffleArray, compareArrays, removeKeyFromArrObj };
