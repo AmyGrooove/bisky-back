@@ -11,12 +11,8 @@ import {
   shikimori_api,
   shuffleArray,
 } from '../../constants';
-import {
-  AniemShort,
-  AnimeFull,
-  HomeAnime,
-  Screenshot,
-} from '../../constants/types';
+import { AnimeShort, AnimeFull, Screenshot } from '../../constants/typesShiki';
+import { HomeAnime } from '../../constants/typesAmy';
 
 @Injectable()
 export class HomeService {
@@ -33,7 +29,7 @@ export class HomeService {
     try {
       const newSeasonalAnime: HomeAnime[] = [];
 
-      const animes = await http<AniemShort[]>(
+      const animes = await http<AnimeShort[]>(
         shikimori_api + 'animes' + newTitlesUrl,
       );
 

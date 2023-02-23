@@ -1,14 +1,10 @@
 {
   "name": "bisky-back",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
-  "private": true,
-  "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
     "start:dev": "nest start --watch",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    "lint": "eslint \"{constants,src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",

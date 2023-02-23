@@ -27,7 +27,7 @@ function removeKeyFromArrObj(array: any[], element: string) {
   return array;
 }
 
-function compareArrays(arr1: any[], arr2: any[]) {
+function compareArrays(arr1: any[], arr2: any[]): boolean {
   try {
     arr1.forEach((el, index) => {
       if (JSON.stringify(el) !== JSON.stringify(arr2[index])) {
