@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-
-import { HomeController } from './home.controller';
-import { HomeService } from './home.service';
-
 import {
   SeasonalAnime,
   SeasonalAnimeSchema,
-} from '@/schems/SeasonalAnime.schema';
+} from 'src/schems/SeasonalAnime.schema';
+
+import { HomeController } from './home.controller';
+import { HomeService } from './home.service';
 
 @Module({
   imports: [

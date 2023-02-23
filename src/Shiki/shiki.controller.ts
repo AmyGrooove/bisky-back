@@ -1,8 +1,7 @@
 import { Body, Controller, HttpException, Put } from '@nestjs/common';
+import { UpdateAnimesDto } from 'src/dto/updateAnimes.dto';
 
 import { ShikiService } from './shiki.service';
-
-import { UpdateAnimesDto } from '@/dto/updateAnimes.dto';
 
 @Controller('shiki')
 export class ShikiController {

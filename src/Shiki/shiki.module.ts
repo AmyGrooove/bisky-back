@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AnimeList, AnimeListSchema } from 'src/schems/AnimeList.schema';
 
 import { ShikiController } from './shiki.controller';
 import { ShikiService } from './shiki.service';
-
-import { AnimeList, AnimeListSchema } from '@/schems/AnimeList.schema';
 
 @Module({
   imports: [
