@@ -8,15 +8,15 @@ import { ShikiService } from './shiki.service';
 export class ShikiController {
   constructor(private readonly shikiService: ShikiService) {}
 
-  @Put('/year')
-  updateAnimes(
+  @Put('/shikiParse')
+  shikiParse(
     @Body() updateAnimesDto: UpdateAnimesDto,
   ): Promise<number | HttpException> {
-    return this.shikiService.updateAnimes(updateAnimesDto);
+    return this.shikiService.shikiParse(updateAnimesDto);
   }
 
-  @Put('/ongoing')
-  updateOngoingAnons(): Promise<boolean | HttpException> {
-    return this.shikiService.updateOngoingAnons();
+  @Put('/updateAnimes')
+  updateAnimes(): Promise<number | HttpException> {
+    return this.shikiService.updateAnimes();
   }
 }

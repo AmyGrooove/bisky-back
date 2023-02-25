@@ -23,7 +23,7 @@ export class ShikiService {
     private seasonalAnimeModel: Model<AnimeListDocument>,
   ) {}
 
-  async updateOngoingAnons(): Promise<boolean | HttpException> {
+  async updateAnimes(): Promise<number | HttpException> {
     try {
       const shikiAnimes: number[] = (
         await this.seasonalAnimeModel
@@ -33,15 +33,28 @@ export class ShikiService {
           .exec()
       ).map((item) => item.shiki_id);
 
-      const newAnimes = await this.parseAnime(shikiAnimes);
+      const newPages: number[] = await this.getAnimeIdByYear(
+        new Date().getFullYear(),
+        new Date().getFullYear() + 3,
+      );
+
+      const newAnimes = await this.parseAnime([
+        ...new Set(shikiAnimes.concat(newPages)),
+      ]);
 
       await this.seasonalAnimeModel.deleteMany({
-        $or: [{ status: 'anons' }, { status: 'ongoing' }],
+        $or: [
+          { status: 'anons' },
+          { status: 'ongoing' },
+          {
+            $where: `new Date(this.aired_on) >= new Date() && new Date(this.aired).getFullYear() <= new Date().getFullYear() + 3`,
+          },
+        ],
       });
 
       await this.seasonalAnimeModel.insertMany(newAnimes);
 
-      return true;
+      return shikiAnimes.length;
     } catch (error) {
       return new HttpException('error', HttpStatus.BAD_REQUEST, {
         cause: error,
@@ -49,48 +62,18 @@ export class ShikiService {
     }
   }
 
-  async updateAnimes(
+  async shikiParse(
     updateAnimesDto: UpdateAnimesDto,
   ): Promise<number | HttpException> {
     try {
-      let newAnimes: AnimeList[] = [];
-      let shikiAnimes: number[] = [];
+      const shikiAnimes: number[] = await this.getAnimeIdByYear(
+        updateAnimesDto.from,
+        updateAnimesDto.to,
+      );
 
-      let page = 1;
-      while (true) {
-        try {
-          const newPage = (
-            await http<AnimeShort[]>(
-              shikimori_api +
-                'animes?limit=50' +
-                '&season=' +
-                updateAnimesDto.from +
-                '_' +
-                updateAnimesDto.to +
-                '&page=' +
-                page,
-            )
-          ).map((item) => item.id);
-
-          shikiAnimes = shikiAnimes.concat(newPage);
-
-          if (newPage.length === 0) {
-            break;
-          }
-
-          console.log('page: ' + page);
-          page++;
-
-          await new Promise((res) => setTimeout(res, 1000));
-        } catch (error) {
-          console.log('delay... ' + error.message);
-
-          await new Promise((res) => setTimeout(res, 5000));
-        }
-      }
-
-      console.log('pages full');
-      newAnimes = newAnimes.concat(await this.parseAnime(shikiAnimes));
+      const newAnimes: AnimeList[] = await this.parseAnime([
+        ...new Set(shikiAnimes),
+      ]);
 
       await this.seasonalAnimeModel.deleteMany({
         $where: `new Date(this.aired_on) >= new Date("${
@@ -111,7 +94,10 @@ export class ShikiService {
     }
   }
 
-  private async parseAnime(shikiAnimes: number[], count = 0) {
+  private async parseAnime(
+    shikiAnimes: number[],
+    count = 0,
+  ): Promise<AnimeList[]> {
     const successParse: AnimeList[] = [];
     const failParse: number[] = [];
 
@@ -235,5 +221,45 @@ export class ShikiService {
     } else {
       return successParse;
     }
+  }
+
+  private async getAnimeIdByYear(from: number, to: number): Promise<number[]> {
+    let animesPages: number[] = [];
+    let page = 1;
+
+    while (true) {
+      try {
+        const newPage = (
+          await http<AnimeShort[]>(
+            shikimori_api +
+              'animes?limit=50' +
+              '&season=' +
+              from +
+              '_' +
+              to +
+              '&page=' +
+              page,
+          )
+        ).map((item) => item.id);
+
+        animesPages = animesPages.concat(newPage);
+
+        if (newPage.length === 0) {
+          break;
+        }
+
+        console.log('page: ' + page);
+        page++;
+
+        await new Promise((res) => setTimeout(res, 500));
+      } catch (error) {
+        console.log('delay... ' + error.message);
+
+        await new Promise((res) => setTimeout(res, 5000));
+      }
+    }
+
+    console.log('page parse end');
+    return animesPages;
   }
 }
