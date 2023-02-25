@@ -1,3 +1,10 @@
+export interface RelationAnimes {
+  relation: string;
+  relation_russian: string;
+  anime: AnimeShort | null;
+  manga: Manga | null;
+}
+
 export interface AnimeShort {
   id: number;
   name: string;
@@ -10,7 +17,22 @@ export interface AnimeShort {
   episodes: number;
   episodes_aired: number;
   aired_on: string;
-  released_on: string;
+  released_on?: string;
+}
+
+export interface Manga {
+  id: number;
+  name: string;
+  russian: string;
+  image: Image;
+  url: string;
+  kind: string;
+  score: string;
+  status: string;
+  volumes: number;
+  chapters: number;
+  aired_on: string;
+  released_on: any;
 }
 
 export interface AnimeFull {
@@ -85,7 +107,7 @@ export interface Studio {
   name: string;
   filtered_name: string;
   real: boolean;
-  image: string;
+  image: string | null;
 }
 
 export interface Video {

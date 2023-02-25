@@ -1,8 +1,8 @@
 export interface Anime {
   shiki_id: number;
-  label: AnimeName;
+  label: RusEngLabels;
   all_labels: string[];
-  image: string;
+  image: string | null;
   url: string;
   kind: string;
   score: number;
@@ -16,15 +16,34 @@ export interface Anime {
   description: string | null;
   franchise: string | null;
   next_episode_at: string | null;
-  genres: number[];
-  studios_id: number[];
+  genres: Genres[];
+  studios: ShortStudio[];
   videos: string[];
   screenshots: string[];
+  relations: Relation[];
 }
 
-export interface AnimeName {
-  ru: string;
+export interface RusEngLabels {
   en: string | null;
+  ru: string | null;
+}
+
+export interface Genres {
+  genre_id: number;
+  name: RusEngLabels;
+}
+
+export interface ShortStudio {
+  studio_id: number;
+  name: string;
+  image: string | null;
+}
+
+export interface Relation {
+  shiki_id: number;
+  relation: RusEngLabels;
+  label: RusEngLabels;
+  image: string;
 }
 
 export interface HomeAnime {

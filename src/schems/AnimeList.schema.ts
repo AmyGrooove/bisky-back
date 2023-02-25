@@ -3,13 +3,49 @@ import { HydratedDocument } from 'mongoose';
 
 export type AnimeListDocument = HydratedDocument<AnimeList>;
 
-@Schema({ collection: 'AnimeLabels' })
-class AnimeLabels {
+@Schema({ collection: 'RusEngLabels' })
+class RusEngLabels {
   @Prop()
-  ru: string;
+  ru: string | null;
 
   @Prop()
   en: string | null;
+}
+
+@Schema({ collection: 'Genres' })
+class Genres {
+  @Prop()
+  genre_id: number;
+
+  @Prop()
+  name: RusEngLabels;
+}
+
+@Schema({ collection: 'Studio' })
+class Studio {
+  @Prop()
+  studio_id: number;
+
+  @Prop()
+  name: string;
+
+  @Prop()
+  image: string | null;
+}
+
+@Schema({ collection: 'Relation' })
+class Relation {
+  @Prop()
+  shiki_id: number;
+
+  @Prop()
+  relation: RusEngLabels;
+
+  @Prop()
+  label: RusEngLabels;
+
+  @Prop()
+  image: string;
 }
 
 @Schema({ collection: 'AnimeList' })
@@ -18,16 +54,13 @@ export class AnimeList {
   shiki_id: number;
 
   @Prop()
-  label: AnimeLabels;
+  label: RusEngLabels;
 
   @Prop()
   all_labels: string[];
 
   @Prop()
-  image: string;
-
-  @Prop()
-  url: string;
+  image: string | null;
 
   @Prop()
   kind: string;
@@ -66,16 +99,19 @@ export class AnimeList {
   next_episode_at: string | null;
 
   @Prop()
-  genres: number[];
+  genres: Genres[];
 
   @Prop()
-  studios_id: number[];
+  studios: Studio[];
 
   @Prop()
   videos: string[];
 
   @Prop()
   screenshots: string[];
+
+  @Prop()
+  relations: Relation[];
 }
 
 export const AnimeListSchema = SchemaFactory.createForClass(AnimeList);
