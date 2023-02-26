@@ -33,4 +33,22 @@ function compareArrays(arr1: any[], arr2: any[]): boolean {
   return true;
 }
 
-export { http, shuffleArray, compareArrays, removeKeyFromArrObj };
+const findDuplicates = (arr: any[]) => {
+  const results = [];
+
+  arr.sort().forEach((el, index, sortArray) => {
+    if (sortArray[index + 1] !== undefined && el === sortArray[index + 1]) {
+      results.push(el);
+    }
+  });
+
+  return results;
+};
+
+export {
+  http,
+  shuffleArray,
+  compareArrays,
+  removeKeyFromArrObj,
+  findDuplicates,
+};

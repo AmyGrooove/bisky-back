@@ -2,8 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
-import { shikimori_api } from '../../public//constatns';
-import { http } from '../../public//functions';
+import { shikimori_api } from '../../public/constatns';
+import { findDuplicates, http } from '../../public/functions';
 import {
   AnimeShort,
   AnimeFull,
@@ -53,8 +53,10 @@ export class ShikiService {
       });
 
       await this.seasonalAnimeModel.insertMany(newAnimes);
+      const updateLength = await this.deleteDuplicates();
 
-      return shikiAnimes.length;
+      console.log('update end');
+      return shikiAnimes.length - updateLength;
     } catch (error) {
       return new HttpException('error', HttpStatus.BAD_REQUEST, {
         cause: error,
@@ -261,5 +263,22 @@ export class ShikiService {
 
     console.log('page parse end');
     return animesPages;
+  }
+
+  async deleteDuplicates(): Promise<number> {
+    const animeListIds = (await this.seasonalAnimeModel.find().exec()).map(
+      (el) => el.shiki_id,
+    );
+
+    const duplicateAnimes = findDuplicates(animeListIds);
+    console.log('dupls: ' + duplicateAnimes.length);
+
+    const parsedDupls = await this.parseAnime(duplicateAnimes);
+
+    await this.seasonalAnimeModel.deleteMany({ shiki_id: duplicateAnimes });
+    await this.seasonalAnimeModel.insertMany(parsedDupls);
+    console.log('dupls deleted');
+
+    return duplicateAnimes.length;
   }
 }
