@@ -23,6 +23,15 @@ export interface Anime {
   relations: Relation[];
 }
 
+export interface SeasonalAnime {
+  shiki_id: number;
+  label: RusEngLabels;
+  image: string | null;
+  score: number;
+  screenshots: string[];
+  genres: Genres[];
+}
+
 export interface RusEngLabels {
   en: string | null;
   ru: string | null;
@@ -44,13 +53,4 @@ export interface Relation {
   relation: RusEngLabels;
   label: RusEngLabels;
   image: string;
-}
-
-export interface HomeAnime {
-  shiki_id: number;
-  name: string;
-  image: string;
-  score: number;
-  screenshots: string[];
-  genres: string[];
 }

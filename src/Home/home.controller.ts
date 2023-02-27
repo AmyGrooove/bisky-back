@@ -1,4 +1,4 @@
-import { Controller, Get, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 
 import { HomeService } from './home.service';
 
@@ -11,8 +11,18 @@ export class HomeController {
     return this.homeService.getSeasonal();
   }
 
-  @Put('/seasonal')
-  updateSeasonal() {
-    return this.homeService.updateSeasonal();
+  @Get('/best')
+  getBest() {
+    return this.homeService.getBest();
+  }
+
+  @Get('/fact')
+  getFact() {
+    return this.homeService.getFact();
+  }
+
+  @Post('/fact')
+  addFact(@Body() newFact: string) {
+    return this.homeService.addFact(newFact);
   }
 }

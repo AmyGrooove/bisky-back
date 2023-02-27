@@ -1,4 +1,4 @@
-import { Body, Controller, HttpException, Put } from '@nestjs/common';
+import { Body, Controller, Put } from '@nestjs/common';
 
 import { UpdateAnimesDto } from '../dto/updateAnimes.dto';
 
@@ -9,14 +9,12 @@ export class ShikiController {
   constructor(private readonly shikiService: ShikiService) {}
 
   @Put('/shikiParse')
-  shikiParse(
-    @Body() updateAnimesDto: UpdateAnimesDto,
-  ): Promise<number | HttpException> {
+  shikiParse(@Body() updateAnimesDto: UpdateAnimesDto) {
     return this.shikiService.shikiParse(updateAnimesDto);
   }
 
   @Put('/updateAnimes')
-  updateAnimes(): Promise<number | HttpException> {
+  updateAnimes() {
     return this.shikiService.updateAnimes();
   }
 }

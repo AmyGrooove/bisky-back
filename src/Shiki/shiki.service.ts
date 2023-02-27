@@ -23,7 +23,7 @@ export class ShikiService {
     private seasonalAnimeModel: Model<AnimeListDocument>,
   ) {}
 
-  async updateAnimes(): Promise<number | HttpException> {
+  async updateAnimes() {
     try {
       const shikiAnimes: number[] = (
         await this.seasonalAnimeModel
@@ -47,7 +47,7 @@ export class ShikiService {
           { status: 'anons' },
           { status: 'ongoing' },
           {
-            $where: `new Date(this.aired_on) >= new Date() && new Date(this.aired).getFullYear() <= new Date().getFullYear() + 3`,
+            aired_on: { $gte: new Date(), $lte: new Date().getFullYear() + 3 },
           },
         ],
       });
@@ -225,7 +225,7 @@ export class ShikiService {
     }
   }
 
-  private async getAnimeIdByYear(from: number, to: number): Promise<number[]> {
+  private async getAnimeIdByYear(from: number, to: number) {
     let animesPages: number[] = [];
     let page = 1;
 
@@ -265,7 +265,7 @@ export class ShikiService {
     return animesPages;
   }
 
-  async deleteDuplicates(): Promise<number> {
+  private async deleteDuplicates() {
     const animeListIds = (await this.seasonalAnimeModel.find().exec()).map(
       (el) => el.shiki_id,
     );

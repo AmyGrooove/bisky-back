@@ -6,10 +6,15 @@ const loginValidate = /^[a-zA-Z][a-zA-Z0-9-_\.]{3,20}$/;
 const emailValidate = /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/;
 const passwordValidate = /^.*(?=.{8,})(?=.*[a-zA-Z!#$%&?])(?=.*\d).*$/;
 
+const seasonalTitlesString = 'shiki_id label image score screenshots genres';
+const bestTitlesString = 'shiki_id label image';
+
 export {
   shikimori_api,
   newTitlesUrl,
   loginValidate,
   emailValidate,
   passwordValidate,
+  seasonalTitlesString,
+  bestTitlesString,
 };

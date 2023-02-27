@@ -1,10 +1,8 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import {
-  SeasonalAnime,
-  SeasonalAnimeSchema,
-} from '../schems/SeasonalAnime.schema';
+import { AnimeList, AnimeListSchema } from '../schems/AnimeList.schema';
+import { Facts, FactsSchema } from '../schems/Facts.schema';
 
 import { HomeController } from './home.controller';
 import { HomeService } from './home.service';
@@ -12,7 +10,8 @@ import { HomeService } from './home.service';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: SeasonalAnime.name, schema: SeasonalAnimeSchema },
+      { name: AnimeList.name, schema: AnimeListSchema },
+      { name: Facts.name, schema: FactsSchema },
     ]),
   ],
   controllers: [HomeController],

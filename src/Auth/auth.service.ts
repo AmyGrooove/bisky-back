@@ -19,9 +19,7 @@ export class AuthService {
     private userModel: Model<UserDocument>,
   ) {}
 
-  async register(
-    registerUserDto: RegisterUserDto,
-  ): Promise<boolean | HttpException> {
+  async register(registerUserDto: RegisterUserDto) {
     try {
       if (await this.userModel.findOne({ login: registerUserDto.login }))
         throw 1;
@@ -58,7 +56,7 @@ export class AuthService {
     }
   }
 
-  async login(loginUserDto: LoginUserDto): Promise<boolean | HttpException> {
+  async login(loginUserDto: LoginUserDto) {
     try {
       if (!emailValidate.test(loginUserDto.login_email)) {
         const user = await this.userModel.findOne({
