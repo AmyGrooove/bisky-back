@@ -7,12 +7,14 @@ import { HomeModule } from './Home/home.module';
 import { ShikiModule } from './Shiki/shiki.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { SearchModule } from './Search/search.module';
 
 @Module({
   imports: [
     HomeModule,
     AuthModule,
     ShikiModule,
+    SearchModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),

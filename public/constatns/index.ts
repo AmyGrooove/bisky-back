@@ -8,6 +8,7 @@ const passwordValidate = /^.*(?=.{8,})(?=.*[a-zA-Z!#$%&?])(?=.*\d).*$/;
 
 const seasonalTitlesString = 'shiki_id label image score screenshots genres';
 const bestTitlesString = 'shiki_id label image';
+const searchTitleString = 'shiki_id label image kind status aired_on genres';
 
 export {
   shikimori_api,
@@ -17,4 +18,5 @@ export {
   passwordValidate,
   seasonalTitlesString,
   bestTitlesString,
+  searchTitleString,
 };
