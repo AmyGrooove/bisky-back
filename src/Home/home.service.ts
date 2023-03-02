@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { AnimeList } from '../schems/AnimeList.schema';
-import { bestTitlesString, seasonalTitlesString } from '../../public/constatns';
+import {
+  posterTitleString,
+  seasonalTitlesString,
+} from '../../public/constatns';
 import { shuffleArray } from '../../public/functions';
 import { Facts } from '../schems/Facts.schema';
 
@@ -35,12 +38,15 @@ export class HomeService {
     return seasonalAnime;
   }
 
-  async getBest() {
+  async getBest(page: number) {
+    page = page === undefined ? 1 : page;
+
     return this.animeList
       .find()
       .sort({ score: -1 })
-      .select(bestTitlesString)
-      .limit(30)
+      .select(posterTitleString)
+      .skip((page - 1) * 12)
+      .limit(12)
       .exec();
   }
 

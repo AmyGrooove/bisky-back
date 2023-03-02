@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { AnimeList } from '../schems/AnimeList.schema';
-import { searchTitleString } from '../../public/constatns';
+import { posterTitleString } from '../../public/constatns';
 
 @Injectable()
 export class SearchService {
@@ -18,7 +18,7 @@ export class SearchService {
         all_labels: new RegExp(value, 'gi'),
       })
       .sort({ score: -1 })
-      .select(searchTitleString)
+      .select(posterTitleString)
       .limit(5)
       .exec();
   }

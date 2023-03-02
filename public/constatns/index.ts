@@ -7,8 +7,7 @@ const emailValidate = /^[-\w.]+@([A-z0-9][-A-z0-9]+\.)+[A-z]{2,4}$/;
 const passwordValidate = /^.*(?=.{8,})(?=.*[a-zA-Z!#$%&?])(?=.*\d).*$/;
 
 const seasonalTitlesString = 'shiki_id label image score screenshots genres';
-const bestTitlesString = 'shiki_id label image';
-const searchTitleString = 'shiki_id label image kind status aired_on genres';
+const posterTitleString = 'shiki_id label image kind status aired_on';
 
 export {
   shikimori_api,
@@ -17,6 +16,5 @@ export {
   emailValidate,
   passwordValidate,
   seasonalTitlesString,
-  bestTitlesString,
-  searchTitleString,
+  posterTitleString,
 };

@@ -54,3 +54,12 @@ export interface Relation {
   label: RusEngLabels;
   image: string;
 }
+
+export interface PosterAnime {
+  shiki_id: number;
+  label: RusEngLabels;
+  image: string;
+  kind: string;
+  status: string;
+  aired_on: string;
+}

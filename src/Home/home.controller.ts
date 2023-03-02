@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 
 import { HomeService } from './home.service';
 
@@ -12,8 +12,8 @@ export class HomeController {
   }
 
   @Get('/best')
-  getBest() {
-    return this.homeService.getBest();
+  getBest(@Query('page') page: number) {
+    return this.homeService.getBest(page);
   }
 
   @Get('/fact')

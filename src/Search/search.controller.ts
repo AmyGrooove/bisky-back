@@ -8,7 +8,6 @@ export class SearchController {
 
   @Get()
   findTitle(@Query('value') value: string) {
-    console.log(value);
     return this.searchService.findTitle(value);
   }
 }
