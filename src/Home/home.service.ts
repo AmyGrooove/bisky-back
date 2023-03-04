@@ -7,7 +7,6 @@ import {
   posterTitleString,
   seasonalTitlesString,
 } from '../../public/constatns';
-import { shuffleArray } from '../../public/functions';
 import { Facts } from '../schems/Facts.schema';
 
 @Injectable()
@@ -29,31 +28,38 @@ export class HomeService {
       .sort({ score: -1 })
       .select(seasonalTitlesString)
       .limit(10)
+      .lean()
       .exec();
 
     seasonalAnime.forEach((el) => {
-      el.screenshots.length = 5;
+      el.screenshots = el.screenshots.slice(0, 6);
     });
 
     return seasonalAnime;
   }
 
   async getBest(page: number) {
-    page = page === undefined ? 1 : page;
+    page = page || 1;
+    const skip = (page - 1) * 12;
 
-    return this.animeList
+    const bestAnime = await this.animeList
       .find()
       .sort({ score: -1 })
       .select(posterTitleString)
-      .skip((page - 1) * 12)
+      .skip(skip)
       .limit(12)
+      .lean()
       .exec();
+
+    return bestAnime;
   }
 
   async getFact() {
-    const facts = await this.facts.find().exec();
+    const count = await this.facts.countDocuments();
+    const randomIndex = Math.floor(Math.random() * count);
+    const randomFact = await this.facts.findOne().skip(randomIndex).exec();
 
-    return shuffleArray(facts)[0];
+    return randomFact;
   }
 
   async addFact(newFact: string) {

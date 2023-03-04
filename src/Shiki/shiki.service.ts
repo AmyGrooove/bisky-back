@@ -55,7 +55,6 @@ export class ShikiService {
       await this.seasonalAnimeModel.insertMany(newAnimes);
       const updateLength = await this.deleteDuplicates();
 
-      console.log('update end');
       return shikiAnimes.length - updateLength;
     } catch (error) {
       return new HttpException('error', HttpStatus.BAD_REQUEST, {

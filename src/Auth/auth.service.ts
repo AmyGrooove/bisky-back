@@ -3,11 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 
-import {
-  loginValidate,
-  emailValidate,
-  passwordValidate,
-} from '../../public/constatns';
+import { validationRegex } from '../../public/constatns';
 import { User, UserDocument } from '../schems/User.schema';
 import { RegisterUserDto } from '../dto/registerUser.dto';
 import { LoginUserDto } from '../dto/loginUser.dto';
@@ -21,24 +17,35 @@ export class AuthService {
 
   async register(registerUserDto: RegisterUserDto) {
     try {
-      if (await this.userModel.findOne({ login: registerUserDto.login }))
-        throw 1;
-      if (await this.userModel.findOne({ email: registerUserDto.email }))
-        throw 2;
+      const existingUser = await this.userModel.findOne({
+        $or: [
+          { login: registerUserDto.login },
+          { email: registerUserDto.email },
+        ],
+      });
+
+      if (existingUser) {
+        if (existingUser.login === registerUserDto.login) {
+          throw 1;
+        } else {
+          throw 2;
+        }
+      }
 
       if (
-        !loginValidate.test(registerUserDto.login) ||
-        !emailValidate.test(registerUserDto.email) ||
-        !passwordValidate.test(registerUserDto.password)
-      )
+        !validationRegex.login.test(registerUserDto.login) ||
+        !validationRegex.email.test(registerUserDto.email) ||
+        !validationRegex.password.test(registerUserDto.password)
+      ) {
         throw 3;
+      }
 
       const newUser = new this.userModel({
         login: registerUserDto.login,
         password_hash: await bcrypt.hash(registerUserDto.password, 5),
         email: registerUserDto.email,
       });
-      newUser.save();
+      await newUser.save();
 
       return true;
     } catch (error) {
@@ -58,48 +65,41 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto) {
     try {
-      if (!emailValidate.test(loginUserDto.login_email)) {
-        const user = await this.userModel.findOne({
-          login: loginUserDto.login_email,
-        });
+      let user;
 
-        if (
-          user &&
-          (await bcrypt.compare(loginUserDto.password, user.password_hash))
-        ) {
-          return true;
-        } else {
-          throw 1;
-        }
-      } else {
-        const user = await this.userModel.findOne({
+      if (validationRegex.email.test(loginUserDto.login_email)) {
+        user = await this.userModel.findOne({
           email: loginUserDto.login_email,
         });
+      } else {
+        user = await this.userModel.findOne({
+          login: loginUserDto.login_email,
+        });
+      }
 
-        if (
-          user &&
-          (await bcrypt.compare(loginUserDto.password, user.password_hash))
-        ) {
-          return true;
-        } else {
-          throw 2;
-        }
+      if (
+        user &&
+        (await bcrypt.compare(loginUserDto.password, user.password_hash))
+      ) {
+        return true;
+      } else {
+        throw validationRegex.email.test(loginUserDto.login_email) ? 2 : 1;
       }
     } catch (error) {
       switch (error) {
         case 1:
-          return new HttpException(
+          throw new HttpException(
             'Incorrect login or password',
             HttpStatus.BAD_REQUEST,
           );
         case 2:
-          return new HttpException(
+          throw new HttpException(
             'Incorrect email or password',
             HttpStatus.BAD_REQUEST,
           );
         default:
           console.log(error);
-          return new HttpException('Error', HttpStatus.BAD_REQUEST);
+          throw new HttpException('Error', HttpStatus.BAD_REQUEST);
       }
     }
   }
