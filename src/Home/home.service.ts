@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 
 import { AnimeList } from '../schems/AnimeList.schema';
 import {
+  posterTitleObj,
   posterTitleString,
   seasonalTitlesString,
 } from '../../public/constatns';
@@ -42,7 +43,7 @@ export class HomeService {
     page = page || 1;
     const skip = (page - 1) * 12;
 
-    const bestAnime = await this.animeList
+    return this.animeList
       .find()
       .sort({ score: -1 })
       .select(posterTitleString)
@@ -50,8 +51,41 @@ export class HomeService {
       .limit(12)
       .lean()
       .exec();
+  }
 
-    return bestAnime;
+  async getGenresAnime(genre: string, usedAnimes: string | undefined) {
+    usedAnimes =
+      usedAnimes !== undefined
+        ? JSON.parse(
+            usedAnimes.includes('[') && usedAnimes.endsWith(']')
+              ? usedAnimes
+              : `[${usedAnimes}]`,
+          )
+        : [];
+
+    return this.animeList
+      .aggregate([
+        {
+          $match: {
+            'genres.name.en': genre,
+            shiki_id: { $nin: usedAnimes },
+            status: { $nin: ['anons'] },
+            kind: { $nin: ['ova', 'special'] },
+            score: { $gte: 6 },
+            $expr: {
+              $gte: [{ $toDate: '$aired_on' }, new Date('1990')],
+            },
+          },
+        },
+        { $sample: { size: 6 } },
+        { $project: posterTitleObj },
+        { $limit: 6 },
+      ])
+      .exec();
+  }
+
+  async getAllGenres() {
+    return this.animeList.distinct('genres.name').lean().exec();
   }
 
   async getFact() {

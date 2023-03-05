@@ -11,10 +11,21 @@ const validationRegex = {
 const seasonalTitlesString = 'shiki_id label image score screenshots genres';
 const posterTitleString = 'shiki_id label image score kind status aired_on';
 
+const posterTitleObj = {
+  shiki_id: 1,
+  label: 1,
+  image: 1,
+  score: 1,
+  kind: 1,
+  status: 1,
+  aired_on: 1,
+};
+
 export {
   shikimori_api,
   newTitlesUrl,
   validationRegex,
   seasonalTitlesString,
   posterTitleString,
+  posterTitleObj,
 };

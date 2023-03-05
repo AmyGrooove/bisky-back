@@ -16,6 +16,19 @@ export class HomeController {
     return this.homeService.getBest(page);
   }
 
+  @Get('/genres/anime')
+  getGenresAnime(
+    @Query('genre') genre: string,
+    @Query('usedAnimes') usedAnimes: string,
+  ) {
+    return this.homeService.getGenresAnime(genre, usedAnimes);
+  }
+
+  @Get('/genres/all')
+  gelAllGenres() {
+    return this.homeService.getAllGenres();
+  }
+
   @Get('/fact')
   getFact() {
     return this.homeService.getFact();
