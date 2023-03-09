@@ -39,21 +39,12 @@ export class HomeService {
     return seasonalAnime;
   }
 
-  async getBest(page: number) {
+  async getBest(page: number, usedAnimes: string | undefined) {
+    const pageSize = 12;
+
     page = page || 1;
-    const skip = (page - 1) * 12;
+    const skip = (page - 1) * pageSize;
 
-    return this.animeList
-      .find()
-      .sort({ score: -1 })
-      .select(posterTitleString)
-      .skip(skip)
-      .limit(12)
-      .lean()
-      .exec();
-  }
-
-  async getGenresAnime(genre: string, usedAnimes: string | undefined) {
     usedAnimes =
       usedAnimes !== undefined
         ? JSON.parse(
@@ -64,23 +55,51 @@ export class HomeService {
         : [];
 
     return this.animeList
-      .aggregate([
+      .find({ shiki_id: { $nin: usedAnimes } }, posterTitleString)
+      .sort({ score: -1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean()
+      .exec();
+  }
+
+  async getGenresAnime(
+    genre: string,
+    page: number,
+    usedAnimes: string | undefined,
+  ) {
+    const pageSize = 6;
+
+    page = page || 1;
+    const skip = (page - 1) * pageSize;
+
+    usedAnimes =
+      usedAnimes !== undefined
+        ? JSON.parse(
+            usedAnimes.includes('[') && usedAnimes.endsWith(']')
+              ? usedAnimes
+              : `[${usedAnimes}]`,
+          )
+        : [];
+
+    return this.animeList
+      .find(
         {
-          $match: {
-            'genres.name.en': genre,
-            shiki_id: { $nin: usedAnimes },
-            status: { $nin: ['anons'] },
-            kind: { $nin: ['ova', 'special'] },
-            score: { $gte: 6 },
-            $expr: {
-              $gte: [{ $toDate: '$aired_on' }, new Date('1990')],
-            },
+          'genres.name.en': genre,
+          shiki_id: { $nin: usedAnimes },
+          status: { $nin: ['anons'] },
+          kind: { $nin: ['ova', 'special'] },
+          score: { $gte: 6 },
+          $expr: {
+            $gte: [{ $toDate: '$aired_on' }, new Date('1990')],
           },
         },
-        { $sample: { size: 6 } },
-        { $project: posterTitleObj },
-        { $limit: 6 },
-      ])
+        posterTitleString,
+      )
+      .sort({ score: -1 })
+      .skip(skip)
+      .limit(pageSize)
+      .lean()
       .exec();
   }
 
