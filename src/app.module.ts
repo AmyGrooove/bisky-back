@@ -7,12 +7,14 @@ import { HomeModule } from './Home/home.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SearchModule } from './Search/search.module';
+import { AnimePageModule } from './AnimePage/animePage.module';
 
 @Module({
   imports: [
     HomeModule,
     AuthModule,
     SearchModule,
+    AnimePageModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
     }),

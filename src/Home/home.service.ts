@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 
 import { AnimeList } from '../schems/AnimeList.schema';
 import {
-  posterTitleObj,
   posterTitleString,
   seasonalTitlesString,
 } from '../../public/constatns';
