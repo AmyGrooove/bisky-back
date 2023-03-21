@@ -1,66 +1,49 @@
-export interface Anime {
+export interface IAnimeInfo {
   shiki_id: number;
-  label: RusEngLabels;
-  all_labels: string[];
-  image: string | null;
-  url: string;
-  kind: string;
-  score: number;
-  status: string;
-  episodes: number;
-  episodes_aired: number;
-  aired_on: string;
-  released_on: string | null;
-  rating: string;
-  duration: number;
+  labels: string[];
+  poster: string | null;
+  kind: 'tv' | 'movie' | 'ova' | 'ona' | 'special' | 'music';
+  scores: number[];
+  status: 'anons' | 'ongoing' | 'released';
+  episodes: {
+    count: number | null;
+    aired: number | null;
+    duration: number;
+    next_episode_at: Date | null;
+  };
+  dates: {
+    aired_on: Date | null;
+    released_on: Date | null;
+  };
+  rating: 'none' | 'g' | 'pg' | 'pg_13' | 'r' | 'r_plus' | 'rx';
   description: string | null;
-  franchise: string | null;
-  next_episode_at: string | null;
-  genres: Genres[];
-  studios: ShortStudio[];
+  screenshots: string[];
   videos: string[];
-  screenshots: string[];
-  relations: Relation[];
+  genres: IGenres[];
+  studios: IStudios[];
+  relations: {
+    franchise: string | null;
+    animes: { link: IAnimeInfo; relation: { en: string; ru: string } }[];
+  };
 }
 
-export interface SeasonalAnime {
-  shiki_id: number;
-  label: RusEngLabels;
-  image: string | null;
-  score: number;
-  screenshots: string[];
-  genres: Genres[];
+export interface IPlatform {
+  platform_id: number;
+  name: string;
+  icon: string;
+  url: string;
 }
 
-export interface RusEngLabels {
-  en: string | null;
-  ru: string | null;
-}
-
-export interface Genres {
+export interface IGenres {
   genre_id: number;
-  name: RusEngLabels;
+  name: {
+    en: string;
+    ru: string;
+  };
 }
 
-export interface ShortStudio {
+export interface IStudios {
   studio_id: number;
   name: string;
-  image: string | null;
-}
-
-export interface Relation {
-  shiki_id: number;
-  relation: RusEngLabels;
-  label: RusEngLabels;
-  image: string;
-}
-
-export interface PosterAnime {
-  shiki_id: number;
-  label: RusEngLabels;
-  image: string;
-  score: number;
-  kind: string;
-  status: string;
-  aired_on: string;
+  img: string | null;
 }

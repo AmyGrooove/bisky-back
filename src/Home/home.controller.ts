@@ -21,7 +21,7 @@ export class HomeController {
 
   @Get('/genres/anime')
   getGenresAnime(
-    @Query('genre') genre: string,
+    @Query('genre') genre: number,
     @Query('page') page: number,
     @Query('usedAnimes') usedAnimes: string,
   ) {

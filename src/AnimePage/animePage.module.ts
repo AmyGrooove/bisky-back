@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
-import { AnimeList, AnimeListSchema } from '../schems/AnimeList.schema';
+import { AnimeInfo, AnimeInfoSchema } from '../schems/AnimeInfo.schema';
 
 import { AnimePageController } from './animePage.controller';
 import { AnimePageService } from './animePage.service';
@@ -9,7 +9,7 @@ import { AnimePageService } from './animePage.service';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: AnimeList.name, schema: AnimeListSchema },
+      { name: AnimeInfo.name, schema: AnimeInfoSchema },
     ]),
   ],
   controllers: [AnimePageController],
