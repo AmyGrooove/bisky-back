@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
 import { AnimeInfo } from '../schems/AnimeInfo.schema';
-import { posterTitleObj } from '../../public/constatns';
+import { posterTitleObj } from '../../public/constants';
 
 @Injectable()
 export class SearchService {

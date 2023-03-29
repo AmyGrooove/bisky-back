@@ -88,7 +88,7 @@ export class AnimePageService {
                 relation: 1,
                 link: {
                   shiki_id: 1,
-                  labels: { $slice: ['$labels', 2] },
+                  labels: 1,
                   poster: 1,
                   scores: 1,
                   kind: 1,
@@ -119,8 +119,16 @@ export class AnimePageService {
         },
       ])
       .then((results) => {
+        if (results.length === 0) throw 'err';
+
         return {
           ...results[0],
+          relations: {
+            franchise: results[0].relations.franchise,
+            animes: results[0].relations.animes.filter(
+              (el) => el.link !== undefined,
+            ),
+          },
           description: results[0].description
             ? results[0].description.replace(/\r\n/g, '<br>')
             : null,

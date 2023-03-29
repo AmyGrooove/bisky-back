@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 
 import { getUsedAnimeString } from '../../public/functions';
 import { AnimeInfo } from '../schems/AnimeInfo.schema';
-import { posterTitleObj } from '../../public/constatns';
+import { posterTitleObj } from '../../public/constants';
 import { Facts } from '../schems/Facts.schema';
 import { Genres } from '../schems/Genres.schema';
 
