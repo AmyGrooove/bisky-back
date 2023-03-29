@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -121,8 +121,13 @@ export class AnimePageService {
       .then((results) => {
         return {
           ...results[0],
-          description: results[0].description.replace(/\r\n/g, '<br>'),
+          description: results[0].description
+            ? results[0].description.replace(/\r\n/g, '<br>')
+            : null,
         };
+      })
+      .catch((error) => {
+        return new NotFoundException('Anime not found');
       });
   }
 }

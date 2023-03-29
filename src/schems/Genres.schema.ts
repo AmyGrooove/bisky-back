@@ -11,6 +11,8 @@ export class Genres {
     en: string;
     ru: string;
   };
+
+  @Prop() type: string;
 }
 
 export const GenresSchema = SchemaFactory.createForClass(Genres);

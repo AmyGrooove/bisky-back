@@ -118,7 +118,10 @@ export class HomeService {
 
   async getAllGenres() {
     return this.genres
-      .find({})
+      .find({
+        type: 'anime',
+        'name.ru': { $nin: ['Эротика', 'Магия', 'Хентай', 'Яой', 'Юри'] },
+      })
       .select({
         _id: 0,
         genre_id: 1,
