@@ -134,8 +134,8 @@ export class AnimePageService {
             : null,
         };
       })
-      .catch((error) => {
-        return new NotFoundException('Anime not found');
+      .catch(() => {
+        return new NotFoundException('Anime id not found');
       });
   }
 }
