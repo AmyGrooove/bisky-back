@@ -1,4 +1,4 @@
 export class UpdateAnimesDto {
-  readonly from: number;
-  readonly to: number;
+  readonly from: number
+  readonly to: number
 }

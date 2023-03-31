@@ -1,10 +1,10 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { Module } from "@nestjs/common"
+import { MongooseModule } from "@nestjs/mongoose"
 
-import { AnimeInfo, AnimeInfoSchema } from '../schems/AnimeInfo.schema';
+import { AnimeInfo, AnimeInfoSchema } from "../schems/AnimeInfo.schema"
 
-import { AnimePageController } from './animePage.controller';
-import { AnimePageService } from './animePage.service';
+import { AnimePageController } from "./animePage.controller"
+import { AnimePageService } from "./animePage.service"
 
 @Module({
   imports: [

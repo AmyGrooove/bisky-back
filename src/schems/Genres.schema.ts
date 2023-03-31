@@ -1,18 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
+import { HydratedDocument } from "mongoose"
 
-export type GenresDocument = HydratedDocument<Genres>;
+export type GenresDocument = HydratedDocument<Genres>
 
-@Schema({ collection: 'Genres' })
+@Schema({ collection: "Genres" })
 export class Genres {
-  @Prop({ required: true, unique: true }) genre_id: number;
+  @Prop({ required: true, unique: true }) genre_id: number
 
   @Prop({ type: { en: String, ru: String } }) name: {
-    en: string;
-    ru: string;
-  };
+    en: string
+    ru: string
+  }
 
-  @Prop() type: string;
+  @Prop() type: string
 }
 
-export const GenresSchema = SchemaFactory.createForClass(Genres);
+export const GenresSchema = SchemaFactory.createForClass(Genres)

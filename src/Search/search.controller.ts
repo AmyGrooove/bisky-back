@@ -1,13 +1,13 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query } from "@nestjs/common"
 
-import { SearchService } from './search.service';
+import { SearchService } from "./search.service"
 
-@Controller('search')
+@Controller("search")
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  findTitle(@Query('value') value: string) {
-    return this.searchService.findTitle(value);
+  findTitle(@Query("value") value: string) {
+    return this.searchService.findTitle(value)
   }
 }

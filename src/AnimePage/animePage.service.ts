@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Injectable, NotFoundException } from "@nestjs/common"
+import { InjectModel } from "@nestjs/mongoose"
+import { Model } from "mongoose"
 
-import { AnimeInfo } from '../schems/AnimeInfo.schema';
+import { AnimeInfo } from "../schems/AnimeInfo.schema"
 
 @Injectable()
 export class AnimePageService {
@@ -18,44 +18,44 @@ export class AnimePageService {
         { $limit: 1 },
         {
           $lookup: {
-            from: 'AnimeInfo',
-            localField: 'relations.animes.link_id',
-            foreignField: 'shiki_id',
-            as: 'relationsAnime',
+            from: "AnimeInfo",
+            localField: "relations.animes.link_id",
+            foreignField: "shiki_id",
+            as: "relationsAnime",
           },
         },
         {
           $lookup: {
-            from: 'Genres',
-            localField: 'genres',
-            foreignField: 'genre_id',
-            as: 'genres',
+            from: "Genres",
+            localField: "genres",
+            foreignField: "genre_id",
+            as: "genres",
           },
         },
         {
           $lookup: {
-            from: 'Studios',
-            localField: 'studios',
-            foreignField: 'studio_id',
-            as: 'studios',
+            from: "Studios",
+            localField: "studios",
+            foreignField: "studio_id",
+            as: "studios",
           },
         },
         {
           $addFields: {
-            'relations.animes': {
+            "relations.animes": {
               $map: {
-                input: '$relations.animes',
-                as: 'anime',
+                input: "$relations.animes",
+                as: "anime",
                 in: {
-                  relation: '$$anime.relation',
+                  relation: "$$anime.relation",
                   link: {
                     $arrayElemAt: [
                       {
                         $filter: {
-                          input: '$relationsAnime',
-                          as: 'relAnime',
+                          input: "$relationsAnime",
+                          as: "relAnime",
                           cond: {
-                            $eq: ['$$relAnime.shiki_id', '$$anime.link_id'],
+                            $eq: ["$$relAnime.shiki_id", "$$anime.link_id"],
                           },
                         },
                       },
@@ -99,19 +99,19 @@ export class AnimePageService {
             },
             genres: {
               $map: {
-                input: '$genres',
-                as: 'genre',
-                in: { genre_id: '$$genre.genre_id', name: '$$genre.name' },
+                input: "$genres",
+                as: "genre",
+                in: { genre_id: "$$genre.genre_id", name: "$$genre.name" },
               },
             },
             studios: {
               $map: {
-                input: '$studios',
-                as: 'studio',
+                input: "$studios",
+                as: "studio",
                 in: {
-                  studio_id: '$$studio.studio_id',
-                  name: '$$studio.name',
-                  img: '$$studio.img',
+                  studio_id: "$$studio.studio_id",
+                  name: "$$studio.name",
+                  img: "$$studio.img",
                 },
               },
             },
@@ -119,7 +119,7 @@ export class AnimePageService {
         },
       ])
       .then((results) => {
-        if (results.length === 0) throw 'err';
+        if (results.length === 0) throw "err"
 
         return {
           ...results[0],
@@ -130,12 +130,12 @@ export class AnimePageService {
             ),
           },
           description: results[0].description
-            ? results[0].description.replace(/\r\n/g, '<br>')
+            ? results[0].description.replace(/\r\n/g, "<br>")
             : null,
-        };
+        }
       })
       .catch(() => {
-        return new NotFoundException('Anime id not found');
-      });
+        return new NotFoundException("Anime id not found")
+      })
   }
 }

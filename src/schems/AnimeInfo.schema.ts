@@ -1,40 +1,40 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
+import mongoose, { HydratedDocument } from "mongoose"
 
-export type AnimeInfoDocument = HydratedDocument<AnimeInfo>;
+export type AnimeInfoDocument = HydratedDocument<AnimeInfo>
 
-@Schema({ collection: 'AnimeInfo' })
+@Schema({ collection: "AnimeInfo" })
 export class AnimeInfo {
   @Prop({ required: true, unique: true })
-  shiki_id: number;
+  shiki_id: number
 
   @Prop({
     type: [{ type: String }],
     required: true,
     set: (value) => {
-      const [first, second, ...sortArr] = Array.from(new Set(value));
-      return [first, second, ...sortArr.sort()].filter((item) => item !== null);
+      const [first, second, ...sortArr] = Array.from(new Set(value))
+      return [first, second, ...sortArr.sort()].filter((item) => item !== null)
     },
   })
-  labels: string[];
+  labels: string[]
 
   @Prop({
     type: mongoose.Schema.Types.Mixed,
     set: (value) =>
-      value.indexOf('missing') === -1
+      value.indexOf("missing") === -1
         ? value.slice(0, -15).substring(24)
         : null,
   })
-  poster: string;
+  poster: string
 
-  @Prop({ enum: ['tv', 'movie', 'ova', 'ona', 'special', 'music'] })
-  kind: string;
+  @Prop({ enum: ["tv", "movie", "ova", "ona", "special", "music"] })
+  kind: string
 
   @Prop({ type: Number, set: (value) => Number(value) })
-  scores: number[];
+  scores: number[]
 
-  @Prop({ required: true, enum: ['anons', 'ongoing', 'released'] })
-  status: string;
+  @Prop({ required: true, enum: ["anons", "ongoing", "released"] })
+  status: string
 
   @Prop({
     type: {
@@ -48,11 +48,11 @@ export class AnimeInfo {
     next_episode_at: { set: (value) => (value ? new Date(value) : null) },
   })
   episodes: {
-    count: number | null;
-    aired: number | null;
-    duration: number;
-    next_episode_at: Date | null;
-  };
+    count: number | null
+    aired: number | null
+    duration: number
+    next_episode_at: Date | null
+  }
 
   @Prop({
     type: {
@@ -62,41 +62,41 @@ export class AnimeInfo {
     aired_on: { set: (value) => (value ? new Date(value) : null) },
     released_on: { set: (value) => (value ? new Date(value) : null) },
   })
-  dates: { aired_on: Date | null; released_on: Date | null };
+  dates: { aired_on: Date | null; released_on: Date | null }
 
-  @Prop({ enum: ['none', 'g', 'pg', 'pg_13', 'r', 'r_plus', 'rx'] })
-  rating: string;
+  @Prop({ enum: ["none", "g", "pg", "pg_13", "r", "r_plus", "rx"] })
+  rating: string
 
   @Prop({
     type: String,
     set: (value) =>
       value
         ? value
-            .replace(/<(?!br\s*\/?)[^>]*>/gi, '')
-            .replace(/<br\s[^>]*>/gi, '<br>')
-            .replace(/\[[^\]]*\]/g, '')
-            .replace(/\r\n/g, '<br>')
+            .replace(/<(?!br\s*\/?)[^>]*>/gi, "")
+            .replace(/<br\s[^>]*>/gi, "<br>")
+            .replace(/\[[^\]]*\]/g, "")
+            .replace(/\r\n/g, "<br>")
         : null,
   })
-  description: string | null;
+  description: string | null
 
   @Prop([{ type: String, set: (value) => value.slice(0, -15).substring(29) }])
-  screenshots: string[];
+  screenshots: string[]
 
   @Prop([
     {
       type: String,
       set: (value) =>
-        value.replace('youtube.com', 'youtu.be').replace('watch?v=', ''),
+        value.replace("youtube.com", "youtu.be").replace("watch?v=", ""),
     },
   ])
-  videos: string[];
+  videos: string[]
 
   @Prop({ type: [Number] })
-  genres: number[];
+  genres: number[]
 
   @Prop({ type: [Number] })
-  studios: number[];
+  studios: number[]
 
   @Prop({
     type: {
@@ -110,9 +110,9 @@ export class AnimeInfo {
     animes: [{ link_id: Number, relation: { en: String, ru: String } }],
   })
   relations: {
-    franchise: string | null;
-    animes: [{ link_id: number; relation: { en: string; ru: string } }];
-  };
+    franchise: string | null
+    animes: [{ link_id: number; relation: { en: string; ru: string } }]
+  }
 }
 
-export const AnimeInfoSchema = SchemaFactory.createForClass(AnimeInfo);
+export const AnimeInfoSchema = SchemaFactory.createForClass(AnimeInfo)

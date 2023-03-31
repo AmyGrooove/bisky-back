@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from "@nestjs/common"
+import { Model } from "mongoose"
+import { InjectModel } from "@nestjs/mongoose"
 
-import { AnimeInfo } from '../schems/AnimeInfo.schema';
-import { posterTitleObj } from '../../public/constants';
+import { AnimeInfo } from "../schems/AnimeInfo.schema"
+import { posterTitleObj } from "../../public/constants"
 
 @Injectable()
 export class SearchService {
@@ -15,11 +15,11 @@ export class SearchService {
   async findTitle(value: string) {
     return this.animeInfo
       .find({
-        labels: new RegExp(value, 'gi'),
+        labels: new RegExp(value, "gi"),
       })
       .sort({ scores: -1 })
       .select(posterTitleObj)
       .limit(5)
-      .exec();
+      .exec()
   }
 }

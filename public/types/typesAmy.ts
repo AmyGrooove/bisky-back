@@ -1,49 +1,49 @@
 export interface IAnimeInfo {
-  shiki_id: number;
-  labels: string[];
-  poster: string | null;
-  kind: 'tv' | 'movie' | 'ova' | 'ona' | 'special' | 'music';
-  scores: number[];
-  status: 'anons' | 'ongoing' | 'released';
+  shiki_id: number
+  labels: string[]
+  poster: string | null
+  kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
+  scores: number[]
+  status: "anons" | "ongoing" | "released"
   episodes: {
-    count: number | null;
-    aired: number | null;
-    duration: number;
-    next_episode_at: Date | null;
-  };
+    count: number | null
+    aired: number | null
+    duration: number
+    next_episode_at: Date | null
+  }
   dates: {
-    aired_on: Date | null;
-    released_on: Date | null;
-  };
-  rating: 'none' | 'g' | 'pg' | 'pg_13' | 'r' | 'r_plus' | 'rx';
-  description: string | null;
-  screenshots: string[];
-  videos: string[];
-  genres: IGenres[];
-  studios: IStudios[];
+    aired_on: Date | null
+    released_on: Date | null
+  }
+  rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
+  description: string | null
+  screenshots: string[]
+  videos: string[]
+  genres: IGenres[]
+  studios: IStudios[]
   relations: {
-    franchise: string | null;
-    animes: { link: IAnimeInfo; relation: { en: string; ru: string } }[];
-  };
+    franchise: string | null
+    animes: { link: IAnimeInfo; relation: { en: string; ru: string } }[]
+  }
 }
 
 export interface IPlatform {
-  platform_id: number;
-  name: string;
-  icon: string;
-  url: string;
+  platform_id: number
+  name: string
+  icon: string
+  url: string
 }
 
 export interface IGenres {
-  genre_id: number;
+  genre_id: number
   name: {
-    en: string;
-    ru: string;
-  };
+    en: string
+    ru: string
+  }
 }
 
 export interface IStudios {
-  studio_id: number;
-  name: string;
-  img: string | null;
+  studio_id: number
+  name: string
+  img: string | null
 }

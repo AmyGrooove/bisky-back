@@ -1,2 +1,2 @@
-export * from './typesAmy';
-export * from './typesShiki';
+export * from "./typesAmy"
+export * from "./typesShiki"
