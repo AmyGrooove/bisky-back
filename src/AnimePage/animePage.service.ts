@@ -138,4 +138,23 @@ export class AnimePageService {
         return new NotFoundException("Anime id not found")
       })
   }
+
+  async getAllIds() {
+    return this.animeInfo
+      .find()
+      .select({ shiki_id: 1, status: 1, updateDate: 1, _id: 0 })
+      .then((data) => {
+        const result: {
+          anons: { id: number; updateDate: Date }[]
+          ongoing: { id: number; updateDate: Date }[]
+          released: { id: number; updateDate: Date }[]
+        } = { anons: [], ongoing: [], released: [] }
+
+        data.forEach((el) => {
+          result[el.status].push({ id: el.shiki_id, updateDate: el.updateDate })
+        })
+
+        return result
+      })
+  }
 }

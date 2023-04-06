@@ -113,6 +113,9 @@ export class AnimeInfo {
     franchise: string | null
     animes: [{ link_id: number; relation: { en: string; ru: string } }]
   }
+
+  @Prop({ required: true })
+  updateDate: Date
 }
 
 export const AnimeInfoSchema = SchemaFactory.createForClass(AnimeInfo)

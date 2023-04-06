@@ -29,6 +29,7 @@ export class HomeService {
       {
         $match: {
           status: "ongoing",
+          $expr: { $gt: [{ $size: "$screenshots" }, 0] },
           "episodes.next_episode_at": { $ne: null },
           "dates.aired_on": {
             $gte: new Date((new Date().getFullYear() - 1).toString()),
