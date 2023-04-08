@@ -1,3 +1,5 @@
+import BiMap from "./Bimap"
+
 async function http<T>(url: string): Promise<T> {
   try {
     const response = await fetch(url)
@@ -22,4 +24,4 @@ const getUsedAnimeString = (usedAnimes: string) => {
     : []
 }
 
-export { http, getUsedAnimeString }
+export { http, getUsedAnimeString, BiMap }

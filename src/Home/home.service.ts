@@ -4,7 +4,6 @@ import { Model } from "mongoose"
 
 import { getUsedAnimeString } from "../../public/functions"
 import { AnimeInfo } from "../schems/AnimeInfo.schema"
-import { posterTitleObj } from "../../public/constants"
 import { Facts } from "../schems/Facts.schema"
 import { Genres } from "../schems/Genres.schema"
 
@@ -21,7 +20,7 @@ export class HomeService {
     private facts: Model<Facts>,
   ) {}
 
-  async getSeasonal() {
+  async getSeasonal(page = 0, usedAnimes?: string) {
     const lastYearStart = new Date()
     lastYearStart.setFullYear(lastYearStart.getFullYear() - 1, 0, 1)
 
@@ -34,8 +33,12 @@ export class HomeService {
           "dates.aired_on": {
             $gte: new Date((new Date().getFullYear() - 1).toString()),
           },
+          shiki_id: { $nin: getUsedAnimeString(usedAnimes) },
         },
       },
+      { $sort: { scores: -1 } },
+      { $skip: page * 12 },
+      { $limit: 12 },
       {
         $lookup: {
           from: "Genres",
@@ -50,7 +53,11 @@ export class HomeService {
           shiki_id: 1,
           labels: { $slice: ["$labels", 2] },
           poster: 1,
+          kind: 1,
           scores: 1,
+          episodes: 1,
+          dates: 1,
+          rating: 1,
           genres: {
             genre_id: 1,
             name: 1,
@@ -58,64 +65,54 @@ export class HomeService {
           screenshots: { $slice: ["$screenshots", 6] },
         },
       },
-      { $sort: { scores: -1 } },
-      { $limit: 10 },
     ])
   }
 
-  async getBest(page: number, usedAnimes: string | undefined) {
-    const pageSize = 12
-    page = page || 1
-    const skip = (page - 1) * pageSize
-
+  async getBest(page = 0, usedAnimes?: string) {
     return this.animeList
       .find({ shiki_id: { $nin: getUsedAnimeString(usedAnimes) } })
-      .select(posterTitleObj)
       .sort({ scores: -1 })
-      .skip(skip)
-      .limit(pageSize)
+      .skip(page * 12)
+      .limit(12)
+      .select({
+        _id: 0,
+        shiki_id: 1,
+        labels: { $slice: ["$labels", 2] },
+        poster: 1,
+        kind: 1,
+        scores: 1,
+        status: 1,
+        episodes: 1,
+        dates: 1,
+        rating: 1,
+      })
       .lean()
       .exec()
-      .then((results) => {
-        return results.map((result) => ({
-          ...result,
-          aired_on: result.dates.aired_on,
-          dates: undefined,
-        }))
-      })
   }
 
-  async getGenresAnime(
-    genre: number,
-    page: number,
-    usedAnimes: string | undefined,
-  ) {
-    const pageSize = 6
-    page = page || 1
-    const skip = (page - 1) * pageSize
-
+  async getGenresAnime(genre: number, page = 0, usedAnimes?: string) {
     return this.animeList
       .find({
         genres: genre,
         shiki_id: { $nin: getUsedAnimeString(usedAnimes) },
-        scores: { $gte: 6 },
-        $expr: {
-          $gte: [{ $toDate: "$dates.aired_on" }, new Date("1990")],
-        },
       })
-      .select(posterTitleObj)
       .sort({ scores: -1 })
-      .skip(skip)
-      .limit(pageSize)
+      .skip(page * 12)
+      .limit(12)
+      .select({
+        _id: 0,
+        shiki_id: 1,
+        labels: { $slice: ["$labels", 2] },
+        poster: 1,
+        kind: 1,
+        scores: 1,
+        status: 1,
+        episodes: 1,
+        dates: 1,
+        rating: 1,
+      })
       .lean()
       .exec()
-      .then((results) => {
-        return results.map((result) => ({
-          ...result,
-          aired_on: result.dates.aired_on,
-          dates: undefined,
-        }))
-      })
   }
 
   async getAllGenres() {
@@ -128,6 +125,30 @@ export class HomeService {
         _id: 0,
         genre_id: 1,
         name: 1,
+      })
+      .lean()
+      .exec()
+  }
+
+  async getLastAnimes(page = 0, usedAnimes?: string) {
+    return this.animeList
+      .find({
+        status: "ongoing",
+        shiki_id: { $nin: getUsedAnimeString(usedAnimes) },
+      })
+      .sort({ updateDate: -1 })
+      .skip(page * 12)
+      .limit(12)
+      .select({
+        _id: 0,
+        shiki_id: 1,
+        labels: { $slice: ["$labels", 2] },
+        poster: 1,
+        kind: 1,
+        scores: 1,
+        episodes: 1,
+        dates: 1,
+        rating: 1,
       })
       .lean()
       .exec()

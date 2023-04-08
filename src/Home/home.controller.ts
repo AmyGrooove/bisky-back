@@ -7,8 +7,11 @@ export class HomeController {
   constructor(private readonly homeService: HomeService) {}
 
   @Get("/seasonal")
-  getSeasonal() {
-    return this.homeService.getSeasonal()
+  getSeasonal(
+    @Query("page") page: number,
+    @Query("usedAnimes") usedAnimes: string,
+  ) {
+    return this.homeService.getSeasonal(page, usedAnimes)
   }
 
   @Get("/best")
@@ -29,8 +32,16 @@ export class HomeController {
   }
 
   @Get("/genres/all")
-  gelAllGenres() {
+  getAllGenres() {
     return this.homeService.getAllGenres()
+  }
+
+  @Get("/last")
+  getLast(
+    @Query("page") page: number,
+    @Query("usedAnimes") usedAnimes: string,
+  ) {
+    return this.homeService.getLastAnimes(page, usedAnimes)
   }
 
   @Get("/fact")
