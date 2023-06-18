@@ -25,7 +25,7 @@ export class AnimeInfo {
         ? value.slice(0, -15).substring(24)
         : null,
   })
-  poster: string
+  poster: string | null
 
   @Prop({ enum: ["tv", "movie", "ova", "ona", "special", "music"] })
   kind: string

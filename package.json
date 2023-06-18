@@ -3,16 +3,20 @@
   "version": "1.0.1",
   "scripts": {
     "lint:fix": "eslint --fix .",
-    "start:dev": "nest start",
+    "start:dev": "nest start --watch",
     "build": "nest build"
   },
   "dependencies": {
+    "@apollo/server": "^4.7.3",
+    "@nestjs/apollo": "^11.0.6",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.1",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/graphql": "^11.0.6",
     "@nestjs/mongoose": "^9.2.1",
     "@nestjs/platform-express": "^9.0.0",
     "bcryptjs": "^2.4.3",
+    "graphql": "^16.6.0",
     "mongoose": "^6.9.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.0"
