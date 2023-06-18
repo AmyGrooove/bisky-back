@@ -7,8 +7,8 @@ import { AnimeInfoService } from "./anime-Info.service"
 export class AnimeInfoResolver {
   constructor(private animeInfoService: AnimeInfoService) {}
 
-  @Query((returns) => AnimeInfoModel, { name: "getAnime" })
-  async getAnimeInfo(@Args("shiki_id", { type: () => ID }) shiki_id: number) {
-    return this.animeInfoService.getOneItem(shiki_id)
+  @Query((returns) => AnimeInfoModel, { name: "getOneAnime" })
+  async getAnimeInfo(@Args("id", { type: () => ID }) id: number) {
+    return this.animeInfoService.getOneAnime(id)
   }
 }
