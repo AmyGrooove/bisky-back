@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Int } from "@nestjs/graphql"
+import { ObjectType, Field, Int } from "@nestjs/graphql"
 
 @ObjectType()
 class Episodes {
@@ -26,16 +26,16 @@ class Dates {
 
 @ObjectType()
 class Relations {
-  @Field(() => ID, { nullable: true })
-  franchise: string | null
+  @Field({ nullable: true })
+  name: string | null
   @Field(() => [RelationAnime])
-  animes: [{ link_id: number; relation: { en: string; ru: string } }]
+  animes: [{ id: number; relation: { en: string; ru: string } }]
 }
 
 @ObjectType()
 class RelationAnime {
-  @Field(() => ID)
-  link_id: number
+  @Field(() => Int)
+  id: number
 
   @Field(() => AnimeName)
   relation: { en: string; ru: string }
@@ -53,7 +53,7 @@ class AnimeName {
 @ObjectType()
 export class AnimeInfoModel {
   @Field(() => Int)
-  shiki_id: number
+  id: number
 
   @Field(() => [String])
   labels: string[]
@@ -62,13 +62,16 @@ export class AnimeInfoModel {
   poster: string | null
 
   @Field()
-  kind: string
+  kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
+
+  @Field(() => Number)
+  scores: number
 
   @Field(() => [Number], { nullable: true })
-  scores: number[]
+  anotherScores: number[]
 
   @Field()
-  status: string
+  status: "anons" | "ongoing" | "released"
 
   @Field(() => Episodes)
   episodes: {
@@ -82,7 +85,7 @@ export class AnimeInfoModel {
   dates: { aired_on: Date | null; released_on: Date | null }
 
   @Field()
-  rating: string
+  rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
 
   @Field({ nullable: true })
   description: string | null
@@ -100,9 +103,9 @@ export class AnimeInfoModel {
   studios: number[]
 
   @Field(() => Relations)
-  relations: {
-    franchise: string | null
-    animes: [{ link_id: number; relation: { en: string; ru: string } }]
+  franshise: {
+    name: string | null
+    animes: [{ id: number; relation: { en: string; ru: string } }]
   }
 
   @Field()

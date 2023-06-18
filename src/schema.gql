@@ -1,0 +1,59 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Episodes {
+  count: Int
+  aired: Int
+  duration: Int!
+  next_episode_at: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Dates {
+  aired_on: DateTime
+  released_on: DateTime
+}
+
+type Relations {
+  name: String
+  animes: [RelationAnime!]!
+}
+
+type RelationAnime {
+  id: Int!
+  relation: AnimeName!
+}
+
+type AnimeName {
+  en: String!
+  ru: String!
+}
+
+type AnimeInfoModel {
+  id: Int!
+  labels: [String!]!
+  poster: String
+  kind: String!
+  scores: Float!
+  anotherScores: [Float!]
+  status: String!
+  episodes: Episodes!
+  dates: Dates!
+  rating: String!
+  description: String
+  screenshots: [String!]!
+  videos: [String!]!
+  genres: [Int!]!
+  studios: [Int!]!
+  franshise: Relations!
+  updateDate: DateTime!
+}
+
+type Query {
+  getOneAnime(id: ID!): AnimeInfoModel!
+}

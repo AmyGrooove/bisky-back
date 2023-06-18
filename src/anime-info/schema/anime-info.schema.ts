@@ -3,10 +3,10 @@ import mongoose, { HydratedDocument } from "mongoose"
 
 export type AnimeInfoDocument = HydratedDocument<AnimeInfo>
 
-@Schema({ collection: "AnimeInfo" })
+@Schema({ collection: "AnimeInfo", versionKey: false })
 export class AnimeInfo {
   @Prop({ required: true, unique: true })
-  shiki_id: number
+  id: number
 
   @Prop({
     type: [{ type: String }],
@@ -20,7 +20,7 @@ export class AnimeInfo {
 
   @Prop({
     type: mongoose.Schema.Types.Mixed,
-    set: (value) =>
+    set: (value: string) =>
       value.indexOf("missing") === -1
         ? value.slice(0, -15).substring(24)
         : null,
@@ -28,13 +28,16 @@ export class AnimeInfo {
   poster: string | null
 
   @Prop({ enum: ["tv", "movie", "ova", "ona", "special", "music"] })
-  kind: string
+  kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
 
-  @Prop({ type: Number, set: (value) => Number(value) })
-  scores: number[]
+  @Prop({ type: Number })
+  scores: number
+
+  @Prop({ type: Number, set: (value: string) => Number(value) })
+  anotherScores: number[]
 
   @Prop({ required: true, enum: ["anons", "ongoing", "released"] })
-  status: string
+  status: "anons" | "ongoing" | "released"
 
   @Prop({
     type: {
@@ -43,9 +46,11 @@ export class AnimeInfo {
       duration: Number,
       next_episode_at: mongoose.Schema.Types.Mixed,
     },
-    count: { set: (value) => (value !== 0 ? value : null) },
-    aired: { set: (value) => (value !== 0 ? value : null) },
-    next_episode_at: { set: (value) => (value ? new Date(value) : null) },
+    count: { set: (value: number) => (value !== 0 ? value : null) },
+    aired: { set: (value: number) => (value !== 0 ? value : null) },
+    next_episode_at: {
+      set: (value: string) => (value ? new Date(value) : null),
+    },
   })
   episodes: {
     count: number | null
@@ -59,17 +64,17 @@ export class AnimeInfo {
       aired_on: mongoose.Schema.Types.Mixed,
       released_on: mongoose.Schema.Types.Mixed,
     },
-    aired_on: { set: (value) => (value ? new Date(value) : null) },
-    released_on: { set: (value) => (value ? new Date(value) : null) },
+    aired_on: { set: (value: string) => (value ? new Date(value) : null) },
+    released_on: { set: (value: string) => (value ? new Date(value) : null) },
   })
   dates: { aired_on: Date | null; released_on: Date | null }
 
   @Prop({ enum: ["none", "g", "pg", "pg_13", "r", "r_plus", "rx"] })
-  rating: string
+  rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
 
   @Prop({
     type: String,
-    set: (value) =>
+    set: (value: string) =>
       value
         ? value
             .replace(/<(?!br\s*\/?)[^>]*>/gi, "")
@@ -80,38 +85,39 @@ export class AnimeInfo {
   })
   description: string | null
 
-  @Prop([{ type: String, set: (value) => value.slice(0, -15).substring(29) }])
+  @Prop([
+    { type: String, set: (value: string) => value.slice(0, -15).substring(29) },
+  ])
   screenshots: string[]
 
   @Prop([
     {
       type: String,
-      set: (value) =>
+      set: (value: string) =>
         value.replace("youtube.com", "youtu.be").replace("watch?v=", ""),
     },
   ])
   videos: string[]
 
-  @Prop({ type: [Number] })
+  @Prop({ type: [Number], ref: "Genres" })
   genres: number[]
 
-  @Prop({ type: [Number] })
+  @Prop({ type: [Number], ref: "Studios" })
   studios: number[]
 
   @Prop({
     type: {
-      franchise: mongoose.Schema.Types.Mixed,
+      name: String,
       anime: {
-        link_id: Number,
+        id: Number,
         relation: { en: String, ru: String },
       },
     },
-    franchise: { set: (value) => (value ? value : null) },
-    animes: [{ link_id: Number, relation: { en: String, ru: String } }],
+    animes: [{ id: Number, relation: { en: String, ru: String } }],
   })
-  relations: {
-    franchise: string | null
-    animes: [{ link_id: number; relation: { en: string; ru: string } }]
+  franshise: {
+    name: string | null
+    animes: [{ id: number; relation: { en: string; ru: string } }]
   }
 
   @Prop({ required: true })

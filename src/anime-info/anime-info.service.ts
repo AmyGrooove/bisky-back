@@ -15,9 +15,15 @@ export class AnimeInfoService {
     return await this.animeInfoModel.find().exec()
   }
 
-  async getOneItem(shiki_id?: number) {
-    console.log(await this.animeInfoModel.find().populate("genres"))
+  async getOneAnime(id?: number) {
+    // console.log(
+    //   await this.animeInfoModel
+    //     .findOne({ id })
+    //     .populate("genres")
+    //     .lean()
+    //     .exec(),
+    // )
 
-    return await this.animeInfoModel.findOne({ shiki_id }).exec()
+    return await this.animeInfoModel.findOne({ id }).lean().exec()
   }
 }
