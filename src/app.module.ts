@@ -6,6 +6,8 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default"
 
 import { AnimeInfoModule } from "./anime-info/anime-Info.module"
+import { join } from "path"
+import { ServeStaticModule } from "@nestjs/serve-static"
 
 @Module({
   imports: [
@@ -14,9 +16,12 @@ import { AnimeInfoModule } from "./anime-info/anime-Info.module"
     MongooseModule.forRoot(process.env.MONGODB_URI),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: true,
+      autoSchemaFile: join(__dirname, "..", "public/schema.gql"),
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "public"),
     }),
   ],
 })

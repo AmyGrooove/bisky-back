@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, ID } from "@nestjs/graphql"
+import { Resolver, Query, Args, Int } from "@nestjs/graphql"
 
 import { AnimeInfoModel } from "./entities/anime-info.entity"
 import { AnimeInfoService } from "./anime-info.service"
@@ -7,8 +7,8 @@ import { AnimeInfoService } from "./anime-info.service"
 export class AnimeInfoResolver {
   constructor(private animeInfoService: AnimeInfoService) {}
 
-  @Query((returns) => AnimeInfoModel, { name: "getOneAnime" })
-  async getAnimeInfo(@Args("id", { type: () => ID }) id: number) {
+  @Query(() => AnimeInfoModel, { name: "getOneAnime" })
+  async getAnimeInfo(@Args("id", { type: () => Int }) id: number) {
     return this.animeInfoService.getOneAnime(id)
   }
 }

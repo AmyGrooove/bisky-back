@@ -28,26 +28,41 @@ class Dates {
 class Relations {
   @Field({ nullable: true })
   name: string | null
-  @Field(() => [RelationAnime])
-  animes: [{ id: number; relation: { en: string; ru: string } }]
+  @Field(() => [RelationInfo])
+  animes: { id: number; relation: { en: string; ru: string } }[]
 }
 
 @ObjectType()
-class RelationAnime {
-  @Field(() => Int)
-  id: number
-
-  @Field(() => AnimeName)
-  relation: { en: string; ru: string }
-}
-
-@ObjectType()
-class AnimeName {
+class Language {
   @Field()
   en: string
 
   @Field()
   ru: string
+}
+
+@ObjectType()
+class GenresModel {
+  @Field()
+  id: number
+
+  @Field(() => Language)
+  name: { en: string; ru: string }
+
+  @Field({ nullable: true })
+  type: "anime" | "manga" | null
+}
+
+@ObjectType()
+class StudiosModel {
+  @Field()
+  id: number
+
+  @Field()
+  name: string
+
+  @Field({ nullable: true })
+  img: string | null
 }
 
 @ObjectType()
@@ -96,18 +111,56 @@ export class AnimeInfoModel {
   @Field(() => [String])
   videos: string[]
 
-  @Field(() => [Int])
-  genres: number[]
+  @Field(() => [GenresModel])
+  genres: {
+    id: number
+    name: {
+      en: string
+      ru: string
+    }
+    type: "anime" | "manga" | null
+  }[]
 
-  @Field(() => [Int])
-  studios: number[]
+  @Field(() => [StudiosModel])
+  studios: {
+    id: number
+    name: string
+    img: string | null
+  }[]
 
-  @Field(() => Relations)
+  @Field(() => RelationInfo)
   franshise: {
     name: string | null
-    animes: [{ id: number; relation: { en: string; ru: string } }]
+    animes: { id: number; relation: { en: string; ru: string } }[]
   }
 
   @Field()
   updateDate: Date
+}
+
+@ObjectType()
+class RelationInfo {
+  @Field(() => Language)
+  relation: { en: string; ru: string }
+
+  @Field(() => Int)
+  id: number
+
+  @Field(() => [String])
+  labels: string[]
+
+  @Field({ nullable: true })
+  poster: string | null
+
+  @Field()
+  kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
+
+  @Field(() => Number)
+  scores: number
+
+  @Field(() => [Number], { nullable: true })
+  anotherScores: number[]
+
+  @Field()
+  status: "anons" | "ongoing" | "released"
 }
