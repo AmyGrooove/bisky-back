@@ -1,27 +1,33 @@
 import { Controller, Request, Post, UseGuards, Get, Body } from "@nestjs/common"
-import { LocalAuthGuard } from "./guards/local-auth.guard"
 import { AuthService } from "./auth.service"
-import { JwtAuthGuard } from "./guards/jwt-auth.guard"
-import { CreateUserDto } from "./dto/create-user.dto"
+import { CreateUserDto } from "../users/dto/create-user.dto"
+import { LoginUserDto } from "../users/dto/login-user.dto"
+import { AccessTokenGuard } from "./guards/accessToken.guard"
+import { RefreshTokenGuard } from "./guards/refreshToken.guard"
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @UseGuards(LocalAuthGuard)
-  @Post("/login")
-  async login(@Request() req) {
-    return this.authService.login(req.user)
+  @Post("login")
+  login(@Body() loginUserDto: LoginUserDto) {
+    return this.authService.login(loginUserDto)
   }
 
-  @Post("/register")
-  async register(@Body() user: CreateUserDto) {
-    return this.authService.register(user)
+  @Post("register")
+  register(@Body() createUserDto: CreateUserDto) {
+    return this.authService.register(createUserDto)
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get("/profile")
-  getProfile(@Request() req) {
-    return this.authService.getUserInfo(req.user.userId)
+  @UseGuards(AccessTokenGuard)
+  @Get("logout")
+  logout(@Request() req) {
+    return this.authService.logout(req.user.id)
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get("refresh")
+  refreshTokens(@Request() req) {
+    return this.authService.refreshTokens(req.user.id, req.user.refreshToken)
   }
 }

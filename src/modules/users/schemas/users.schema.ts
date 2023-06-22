@@ -24,7 +24,7 @@ export class Users extends Document {
   name: string | null
 
   @Prop({ default: null })
-  hashedRt: string | null
+  refreshToken: string | null
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users)
