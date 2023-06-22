@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
-import { AnimeInfoService } from "./anime-info.service"
-import { AnimeInfoResolver } from "./anime-info.resolver"
-import { AnimeInfoSchema } from "./schema/anime-info.schema"
-import { GenresSchema } from "./schema/genres.schema"
-import { StudiosSchema } from "./schema/studios.schema"
+import { AnimeInfoService } from "./services/get-data.service"
+import { AnimeInfoResolver } from "./resolvers/get-data.resolver"
+import { AnimeInfoSchema } from "./schemas/anime-info.schema"
+import { GenresSchema } from "./schemas/genres.schema"
+import { StudiosSchema } from "./schemas/studios.schema"
 
 @Module({
   imports: [

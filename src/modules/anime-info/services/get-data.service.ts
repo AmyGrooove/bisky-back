@@ -2,8 +2,8 @@ import { Model } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 
-import { AnimeInfo } from "./schema/anime-info.schema"
-import { AnimeInfoModel } from "./entities/anime-info.entity"
+import { AnimeInfo } from "../schemas/anime-info.schema"
+import { AnimeInfoModel } from "../entities/anime-info.entity"
 
 @Injectable()
 export class AnimeInfoService {
@@ -59,6 +59,7 @@ export class AnimeInfoService {
         },
         {
           $project: {
+            _id: 1,
             id: 1,
             labels: 1,
             poster: 1,

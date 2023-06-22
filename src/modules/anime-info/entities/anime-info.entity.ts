@@ -25,14 +25,6 @@ class Dates {
 }
 
 @ObjectType()
-class Relations {
-  @Field({ nullable: true })
-  name: string | null
-  @Field(() => [RelationInfo])
-  animes: { id: number; relation: { en: string; ru: string } }[]
-}
-
-@ObjectType()
 class Language {
   @Field()
   en: string
@@ -128,10 +120,19 @@ export class AnimeInfoModel {
     img: string | null
   }[]
 
-  @Field(() => RelationInfo)
+  @Field(() => RelationInfo, { nullable: true })
   franshise: {
     name: string | null
-    animes: { id: number; relation: { en: string; ru: string } }[]
+    animes: {
+      id: number
+      relation: { en: string; ru: string }
+      labels: string[]
+      poster: string | null
+      kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
+      scores: number
+      anotherScores: number[]
+      status: "anons" | "ongoing" | "released"
+    }[]
   }
 
   @Field()
@@ -140,6 +141,24 @@ export class AnimeInfoModel {
 
 @ObjectType()
 class RelationInfo {
+  @Field({ nullable: true })
+  name: string | null
+
+  @Field(() => [RelationInfoAnime])
+  animes: {
+    id: number
+    relation: { en: string; ru: string }
+    labels: string[]
+    poster: string | null
+    kind: "tv" | "movie" | "ova" | "ona" | "special" | "music"
+    scores: number
+    anotherScores: number[]
+    status: "anons" | "ongoing" | "released"
+  }[]
+}
+
+@ObjectType()
+class RelationInfoAnime {
   @Field(() => Language)
   relation: { en: string; ru: string }
 

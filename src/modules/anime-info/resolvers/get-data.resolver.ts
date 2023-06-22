@@ -1,7 +1,7 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql"
 
-import { AnimeInfoModel } from "./entities/anime-info.entity"
-import { AnimeInfoService } from "./anime-info.service"
+import { AnimeInfoModel } from "../entities/anime-info.entity"
+import { AnimeInfoService } from "../services/get-data.service"
 
 @Resolver(() => AnimeInfoModel)
 export class AnimeInfoResolver {
