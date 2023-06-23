@@ -13,7 +13,7 @@ class LinkGenres {
 @ObjectType()
 export class GenresModel {
   @Field(() => LinkGenres)
-  link_id: {
+  linkId: {
     anime: number | null
     manga: number
   }

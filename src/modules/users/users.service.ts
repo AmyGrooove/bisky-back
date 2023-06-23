@@ -27,6 +27,15 @@ export class UsersService {
       .exec()
   }
 
+  async checkUser(username: string, email: string): Promise<boolean> {
+    const user = await this.usersModel
+      .findOne({ $or: [{ username }, { email }] })
+      .lean()
+      .exec()
+
+    return user !== undefined
+  }
+
   async update(id: ObjectId, updateUserDto: UpdateUserDto): Promise<Users> {
     return this.usersModel.findByIdAndUpdate(id, updateUserDto).exec()
   }

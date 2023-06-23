@@ -43,12 +43,12 @@ export class AnimeInfo {
     type: {
       count: mongoose.Schema.Types.Mixed,
       aired: mongoose.Schema.Types.Mixed,
-      duration: Number,
-      next_episode_at: mongoose.Schema.Types.Mixed,
+      duration: mongoose.Schema.Types.Mixed,
+      nextEpisodeAt: mongoose.Schema.Types.Mixed,
     },
     count: { set: (value: number) => (value !== 0 ? value : null) },
     aired: { set: (value: number) => (value !== 0 ? value : null) },
-    next_episode_at: {
+    nextEpisodeAt: {
       set: (value: string) => (value ? new Date(value) : null),
     },
   })
@@ -56,18 +56,18 @@ export class AnimeInfo {
     count: number | null
     aired: number | null
     duration: number
-    next_episode_at: Date | null
+    nextEpisodeAt: Date | null
   }
 
   @Prop({
     type: {
-      aired_on: mongoose.Schema.Types.Mixed,
-      released_on: mongoose.Schema.Types.Mixed,
+      airedOn: mongoose.Schema.Types.Mixed,
+      releasedOn: mongoose.Schema.Types.Mixed,
     },
-    aired_on: { set: (value: string) => (value ? new Date(value) : null) },
-    released_on: { set: (value: string) => (value ? new Date(value) : null) },
+    airedOn: { set: (value: string) => (value ? new Date(value) : null) },
+    releasedOn: { set: (value: string) => (value ? new Date(value) : null) },
   })
-  dates: { aired_on: Date | null; released_on: Date | null }
+  dates: { airedOn: Date | null; releasedOn: Date | null }
 
   @Prop({ enum: ["none", "g", "pg", "pg_13", "r", "r_plus", "rx"] })
   rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
@@ -115,7 +115,7 @@ export class AnimeInfo {
     },
     animes: [{ id: Number, relation: { en: String, ru: String } }],
   })
-  franshise: {
+  franchise: {
     name: string | null
     animes: [{ id: number; relation: { en: string; ru: string } }]
   }

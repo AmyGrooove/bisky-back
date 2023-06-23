@@ -1,5 +1,5 @@
 import { ObjectType, Field, Int } from "@nestjs/graphql"
-import { KindEnum, RatingEnum, StatusEnum } from "../enums/entities"
+import { KindEnum, RatingEnum, StatusEnum } from "../types/entities"
 import { GenresModel } from "../../additional-info/entities/genres.entity"
 import { StudiosModel } from "../../additional-info/entities/studios.entity"
 import { Language } from "../../additional-info/entities/additional.entity"
@@ -12,20 +12,20 @@ class Episodes {
   @Field(() => Int, { nullable: true })
   aired: number | null
 
-  @Field(() => Int)
-  duration: number
+  @Field(() => Int, { nullable: true })
+  duration: number | null
 
   @Field({ nullable: true })
-  next_episode_at: Date | null
+  nextEpisodeAt: Date | null
 }
 
 @ObjectType()
 class Dates {
   @Field({ nullable: true })
-  aired_on: Date | null
+  airedOn: Date | null
 
   @Field({ nullable: true })
-  released_on: Date | null
+  releasedOn: Date | null
 }
 
 @ObjectType()
@@ -100,12 +100,12 @@ export class AnimeInfoModel {
   episodes: {
     count: number | null
     aired: number | null
-    duration: number
-    next_episode_at: Date | null
+    duration: number | null
+    nextEpisodeAt: Date | null
   }
 
   @Field(() => Dates)
-  dates: { aired_on: Date | null; released_on: Date | null }
+  dates: { airedOn: Date | null; releasedOn: Date | null }
 
   @Field(() => RatingEnum)
   rating: "none" | "g" | "pg" | "pg_13" | "r" | "r_plus" | "rx"
@@ -121,7 +121,7 @@ export class AnimeInfoModel {
 
   @Field(() => [GenresModel])
   genres: {
-    link_id: {
+    linkId: {
       anime: number | null
       manga: number
     }
@@ -140,7 +140,7 @@ export class AnimeInfoModel {
   }[]
 
   @Field(() => RelationInfo, { nullable: true })
-  franshise: {
+  franchise: {
     name: string | null
     animes: {
       id: number

@@ -10,6 +10,7 @@ import { ObjectId } from "mongoose"
 import { UsersService } from "../users/users.service"
 import { LoginUserDto } from "../users/dto/login-user.dto"
 import { ConfigService } from "@nestjs/config"
+import { emailValidation, usernameValidation } from "./types"
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,13 @@ export class AuthService {
   ) {}
 
   async register(data: CreateUserDto) {
+    if (!emailValidation.test(data.email))
+      throw new BadRequestException("Incorrect email")
+    if (!usernameValidation.test(data.username))
+      throw new BadRequestException("Incorrect username")
+    if (data.password.length < 4)
+      throw new BadRequestException("The password is small")
+
     const userExists = await this.usersService.findByUsername(data.username)
     if (userExists) {
       throw new BadRequestException("User already exists")
@@ -38,6 +46,11 @@ export class AuthService {
   }
 
   async login(data: LoginUserDto) {
+    if (!usernameValidation.test(data.username))
+      throw new BadRequestException("Incorrect username")
+    if (data.password.length < 4)
+      throw new BadRequestException("The password is small")
+
     const user = await this.usersService.findByUsername(data.username)
     if (!user) throw new BadRequestException("User does not exist")
 

@@ -4,6 +4,8 @@ import { InjectModel } from "@nestjs/mongoose"
 
 import { AnimeInfo } from "../schemas/anime-info.schema"
 import { AnimeInfoModel } from "../entities/anime-info.entity"
+import { animeAggregate } from "../types/aggregate"
+import { FilterArgs, SortArgs } from "../types/resolvers"
 
 @Injectable()
 export class AnimeInfoService {
@@ -16,231 +18,100 @@ export class AnimeInfoService {
     const response: AnimeInfoModel = (
       await this.animeInfoModel.aggregate([
         { $match: { id: id } },
-        {
-          $lookup: {
-            from: "AnimeInfo",
-            localField: "franshise.animes.id",
-            foreignField: "id",
-            as: "relationsAnime",
-          },
-        },
-        {
-          $addFields: {
-            "franshise.animes": {
-              $map: {
-                input: "$franshise.animes",
-                as: "anime",
-                in: {
-                  $mergeObjects: [
-                    { relation: "$$anime.relation" },
-                    {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$relationsAnime",
-                            as: "relAnime",
-                            cond: {
-                              $eq: ["$$relAnime.id", "$$anime.id"],
-                            },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                  ],
-                },
-              },
-            },
-          },
-        },
-        {
-          $lookup: {
-            from: "Genres",
-            localField: "genres",
-            foreignField: "link_id.anime",
-            as: "genres",
-          },
-        },
-        {
-          $lookup: {
-            from: "Studios",
-            localField: "studios",
-            foreignField: "id",
-            as: "studios",
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            id: 1,
-            labels: 1,
-            poster: 1,
-            kind: 1,
-            scores: 1,
-            anotherScores: 1,
-            status: 1,
-            episodes: 1,
-            dates: 1,
-            rating: 1,
-            description: 1,
-            screenshots: 1,
-            videos: 1,
-            genres: 1,
-            studios: 1,
-            franshise: {
-              name: 1,
-              animes: {
-                relation: 1,
-                id: 1,
-                labels: 1,
-                poster: 1,
-                kind: 1,
-                scores: 1,
-                anotherScores: 1,
-                status: 1,
-              },
-            },
-            updateDate: 1,
-          },
-        },
+        ...animeAggregate,
       ])
     )[0]
 
-    response.franshise.animes = response.franshise.animes
+    response.franchise.animes = response.franchise.animes
       .filter((el) => el.id !== undefined)
       .sort((a, b) => a.id - b.id)
 
-    response.genres.sort((a, b) => a.link_id.anime - b.link_id.anime)
+    response.genres.sort((a, b) => a.linkId.anime - b.linkId.anime)
     response.studios.sort((a, b) => a.id - b.id)
 
     return response
   }
 
-  async getAnimePages(page: number, sort: "ongoing" | "best" | "last") {
-    const matchValue =
-      sort === "ongoing"
-        ? [
-            {
-              $match: {
-                status: "ongoing",
-                "episodes.next_episode_at": { $ne: null },
-                "dates.aired_on": {
-                  $gte: new Date((new Date().getFullYear() - 1).toString()),
+  async getAnimePages(page: number, filter?: FilterArgs, sort?: SortArgs) {
+    const matchValue = []
+    const sortValue = []
+    const makerSort = (value: boolean) => (value ? -1 : 1)
+
+    for (const el in filter) {
+      switch (el) {
+        case "kind":
+          matchValue.push({ $match: { kind: filter[el] } })
+          break
+        case "status":
+          matchValue.push({ $match: { status: filter[el] } })
+          break
+        case "rating":
+          matchValue.push({ $match: { rating: filter[el] } })
+          break
+        case "airedOn":
+          matchValue.push(
+            filter[el].to
+              ? {
+                  $match: {
+                    "dates.airedOn": {
+                      $gte: filter[el].from,
+                      $lte: filter[el].to,
+                    },
+                  },
+                }
+              : {
+                  $match: { "dates.airedOn": { $gte: filter[el].from } },
                 },
-              },
-            },
-          ]
-        : []
+          )
+          break
+        case "genres":
+          matchValue.push({ $match: { genres: filter[el] } })
+          break
+        case "studios":
+          matchValue.push({ $match: { studios: filter[el] } })
+          break
+        case "franchiseName":
+          matchValue.push({ $match: { "franchise.name": filter[el] } })
+          break
+        default:
+          break
+      }
+    }
+
+    for (const el in sort) {
+      switch (el) {
+        case "scores":
+          sortValue.push({ $sort: { anotherScores: makerSort(sort[el]) } })
+          break
+        case "airedOn":
+          sortValue.push({ $sort: { "dates.airedOn": makerSort(sort[el]) } })
+          break
+        case "updateDate":
+          sortValue.push({ $sort: { updateDate: makerSort(sort[el]) } })
+          break
+        default:
+          break
+      }
+    }
 
     const response: AnimeInfoModel[] = await this.animeInfoModel.aggregate([
       ...matchValue,
-      {
-        $sort:
-          sort === "best" || sort === "ongoing"
-            ? { anotherScores: -1 }
-            : { updateDate: -1 },
-      },
+      ...sortValue,
       { $skip: 10 * (page - 1) },
       { $limit: 10 },
-      {
-        $lookup: {
-          from: "AnimeInfo",
-          localField: "franshise.animes.id",
-          foreignField: "id",
-          as: "relationsAnime",
-        },
-      },
-      {
-        $addFields: {
-          "franshise.animes": {
-            $map: {
-              input: "$franshise.animes",
-              as: "anime",
-              in: {
-                $mergeObjects: [
-                  { relation: "$$anime.relation" },
-                  {
-                    $arrayElemAt: [
-                      {
-                        $filter: {
-                          input: "$relationsAnime",
-                          as: "relAnime",
-                          cond: {
-                            $eq: ["$$relAnime.id", "$$anime.id"],
-                          },
-                        },
-                      },
-                      0,
-                    ],
-                  },
-                ],
-              },
-            },
-          },
-        },
-      },
-      {
-        $lookup: {
-          from: "Genres",
-          localField: "genres",
-          foreignField: "link_id.anime",
-          as: "genres",
-        },
-      },
-      {
-        $lookup: {
-          from: "Studios",
-          localField: "studios",
-          foreignField: "id",
-          as: "studios",
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          id: 1,
-          labels: 1,
-          poster: 1,
-          kind: 1,
-          scores: 1,
-          anotherScores: 1,
-          status: 1,
-          episodes: 1,
-          dates: 1,
-          rating: 1,
-          description: 1,
-          screenshots: 1,
-          videos: 1,
-          genres: 1,
-          studios: 1,
-          franshise: {
-            name: 1,
-            animes: {
-              relation: 1,
-              id: 1,
-              labels: 1,
-              poster: 1,
-              kind: 1,
-              scores: 1,
-              anotherScores: 1,
-              status: 1,
-            },
-          },
-          updateDate: 1,
-        },
-      },
+      ...animeAggregate,
     ])
 
     response.forEach((el) => {
-      if (el.franshise.animes.length === 0) {
-        el.franshise = null
+      if (el.franchise.animes.length === 0) {
+        el.franchise = null
       } else {
-        el.franshise.animes = el.franshise.animes
+        el.franchise.animes = el.franchise.animes
           .filter((el) => el.id !== undefined)
           .sort((a, b) => a.id - b.id)
       }
 
-      el.genres.sort((a, b) => a.link_id.anime - b.link_id.anime)
+      el.genres.sort((a, b) => a.linkId.anime - b.linkId.anime)
       el.studios.sort((a, b) => a.id - b.id)
     })
 

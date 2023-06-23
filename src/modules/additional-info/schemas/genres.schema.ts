@@ -12,7 +12,7 @@ export class Genres {
     },
     anime: { ref: "AnimeInfo" },
   })
-  link_id: {
+  linkId: {
     anime: number | null
     manga: number
   }
