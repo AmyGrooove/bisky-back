@@ -5,8 +5,17 @@ export type GenresDocument = HydratedDocument<Genres>
 
 @Schema({ collection: "Genres", versionKey: false })
 export class Genres {
-  @Prop({ required: true, unique: true, ref: "AnimeInfo" })
-  id: number
+  @Prop({
+    type: {
+      anime: mongoose.Schema.Types.Mixed,
+      manga: Number,
+    },
+    anime: { ref: "AnimeInfo" },
+  })
+  link_id: {
+    anime: number | null
+    manga: number
+  }
 
   @Prop({ type: { en: String, ru: String } })
   name: {
@@ -14,8 +23,8 @@ export class Genres {
     ru: string
   }
 
-  @Prop({ type: mongoose.Schema.Types.Mixed })
-  type: "anime" | "manga" | null
+  @Prop({ type: Boolean })
+  hentai: boolean
 }
 
 export const GenresSchema = SchemaFactory.createForClass(Genres)
