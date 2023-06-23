@@ -7,6 +7,7 @@ import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin
 import { AnimeInfoModule } from "../anime-info/anime-Info.module"
 import { AuthModule } from "../auth/auth.module"
 import { UsersModule } from "../users/users.module"
+import { AdditionalInfoModule } from "../additional-info/additional-info.module"
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from "../users/users.module"
     UsersModule,
     AuthModule,
     AnimeInfoModule,
+    AdditionalInfoModule,
   ],
 })
 export class AppModule {}

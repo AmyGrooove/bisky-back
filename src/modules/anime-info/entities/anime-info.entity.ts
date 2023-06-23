@@ -1,8 +1,8 @@
 import { ObjectType, Field, Int } from "@nestjs/graphql"
-import { GenresModel } from "./genres.entity"
-import { Language } from "./additional.entity"
-import { StudiosModel } from "./studios.entity"
 import { KindEnum, RatingEnum, StatusEnum } from "../enums/entities"
+import { GenresModel } from "../../additional-info/entities/genres.entity"
+import { StudiosModel } from "../../additional-info/entities/studios.entity"
+import { Language } from "../../additional-info/entities/additional.entity"
 
 @ObjectType()
 class Episodes {

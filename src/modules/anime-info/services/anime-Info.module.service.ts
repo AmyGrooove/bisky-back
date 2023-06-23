@@ -4,20 +4,13 @@ import { InjectModel } from "@nestjs/mongoose"
 
 import { AnimeInfo } from "../schemas/anime-info.schema"
 import { AnimeInfoModel } from "../entities/anime-info.entity"
-import { Genres } from "../schemas/genres.schema"
 
 @Injectable()
 export class AnimeInfoService {
   constructor(
     @InjectModel("AnimeInfo")
     private readonly animeInfoModel: Model<AnimeInfo>,
-    @InjectModel("Genres")
-    private readonly genresModel: Model<Genres>,
   ) {}
-
-  async getAll() {
-    return await this.animeInfoModel.find().exec()
-  }
 
   async getOneAnime(id: number) {
     const response: AnimeInfoModel = (
@@ -252,9 +245,5 @@ export class AnimeInfoService {
     })
 
     return response
-  }
-
-  async getGenres() {
-    return this.genresModel.find().select({ _id: 0 }).lean().exec()
   }
 }

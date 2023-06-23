@@ -1,8 +1,7 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql"
 
 import { AnimeInfoModel } from "../entities/anime-info.entity"
-import { AnimeInfoService } from "../services/get-data.service"
-import { GenresModel } from "../entities/genres.entity"
+import { AnimeInfoService } from "../services/anime-Info.module.service"
 import { sortType } from "../enums/resolvers"
 
 @Resolver(() => AnimeInfoModel)
@@ -21,10 +20,5 @@ export class AnimeInfoResolver {
     sort: "ongoing" | "best" | "last",
   ) {
     return this.animeInfoService.getAnimePages(page, sort)
-  }
-
-  @Query(() => [GenresModel], { name: "getAllGenres" })
-  async getAllGenres() {
-    return this.animeInfoService.getGenres()
   }
 }
