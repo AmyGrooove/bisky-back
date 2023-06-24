@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/mongoose"
 
 import { AnimeInfo } from "../schemas/anime-info.schema"
 import { AnimeInfoModel } from "../entities/anime-info.entity"
-import { animeAggregate } from "../types/aggregate"
+import { animeAggregate, replaceText } from "../types/aggregate"
 import { FilterArgs, SortArgs } from "../types/resolvers"
 
 @Injectable()
@@ -32,7 +32,12 @@ export class AnimeInfoService {
     return response
   }
 
-  async getAnimePages(page: number, filter?: FilterArgs, sort?: SortArgs) {
+  async getAnimePages(
+    page: number,
+    filter?: FilterArgs,
+    sort?: SortArgs,
+    value?: string,
+  ) {
     const matchValue = []
     const sortValue = []
     const makerSort = (value: boolean) => (value ? -1 : 1)
@@ -94,7 +99,12 @@ export class AnimeInfoService {
       }
     }
 
+    const valueSearch = value
+      ? [{ $match: { labels: { $regex: replaceText(value), $options: "i" } } }]
+      : []
+
     const response: AnimeInfoModel[] = await this.animeInfoModel.aggregate([
+      ...valueSearch,
       ...matchValue,
       ...sortValue,
       { $skip: 10 * (page - 1) },

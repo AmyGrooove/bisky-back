@@ -20,7 +20,9 @@ export class AnimeInfoResolver {
     filter?: FilterArgs,
     @Args("sort", { type: () => SortArgs, nullable: true })
     sort?: SortArgs,
+    @Args("value", { type: () => String, nullable: true })
+    value?: string,
   ) {
-    return this.animeInfoService.getAnimePages(page, filter, sort)
+    return this.animeInfoService.getAnimePages(page, filter, sort, value)
   }
 }
