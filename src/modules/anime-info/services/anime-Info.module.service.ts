@@ -14,6 +14,10 @@ export class AnimeInfoService {
     private readonly animeInfoModel: Model<AnimeInfo>,
   ) {}
 
+  async checkAnime(id: number) {
+    return (await this.animeInfoModel.findOne({ id }).exec()) !== null
+  }
+
   async getOneAnime(id: number) {
     const response: AnimeInfoModel = (
       await this.animeInfoModel.aggregate([
@@ -34,6 +38,7 @@ export class AnimeInfoService {
 
   async getAnimePages(
     page: number,
+    count: number,
     filter?: FilterArgs,
     sort?: SortArgs,
     value?: string,
@@ -107,8 +112,8 @@ export class AnimeInfoService {
       ...valueSearch,
       ...matchValue,
       ...sortValue,
-      { $skip: 10 * (page - 1) },
-      { $limit: 10 },
+      { $skip: count * (page - 1) },
+      { $limit: count },
       ...animeAggregate,
     ])
 

@@ -16,6 +16,7 @@ export class AnimeInfoResolver {
   @Query(() => [AnimeInfoModel], { name: "getAnimePages" })
   async getAnimePages(
     @Args("page", { type: () => Int, defaultValue: 1 }) page: number,
+    @Args("count", { type: () => Int, defaultValue: 10 }) count: number,
     @Args("filter", { type: () => FilterArgs, nullable: true })
     filter?: FilterArgs,
     @Args("sort", { type: () => SortArgs, nullable: true })
@@ -23,6 +24,6 @@ export class AnimeInfoResolver {
     @Args("value", { type: () => String, nullable: true })
     value?: string,
   ) {
-    return this.animeInfoService.getAnimePages(page, filter, sort, value)
+    return this.animeInfoService.getAnimePages(page, count, filter, sort, value)
   }
 }

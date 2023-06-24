@@ -14,8 +14,14 @@ export class AdditionalInfoService {
     private readonly factsModel: Model<Facts>,
   ) {}
 
-  async getGenres() {
-    return this.genresModel.find().select({ _id: 0 }).lean().exec()
+  async getGenres(page: number, count: number, hentai: boolean) {
+    return this.genresModel
+      .find({ hentai: hentai })
+      .skip(count * (page - 1))
+      .limit(count)
+      .select({ _id: 0 })
+      .lean()
+      .exec()
   }
 
   async getRandomFact() {
