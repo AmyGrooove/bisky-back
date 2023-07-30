@@ -48,6 +48,9 @@ export class FilterArgs {
 
   @Field({ nullable: true })
   franchiseName?: string
+
+  @Field(() => Int, { nullable: true })
+  screenshotsCount?: number
 }
 
 @InputType()
