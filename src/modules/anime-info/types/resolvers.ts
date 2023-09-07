@@ -51,6 +51,12 @@ export class FilterArgs {
 
   @Field(() => Int, { nullable: true })
   screenshotsCount?: number
+
+  @Field(() => Int, { nullable: true })
+  labelCount?: number
+
+  @Field(() => Number, { nullable: true })
+  score?: number
 }
 
 @InputType()

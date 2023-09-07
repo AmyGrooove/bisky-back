@@ -7,30 +7,6 @@ import { AnimeInfoModel } from "../entities/anime-info.entity"
 import { animeAggregate, replaceText } from "../types/aggregate"
 import { FilterArgs, SortArgs } from "../types/resolvers"
 
-const getSeasonStartDate = () => {
-  const date = new Date()
-
-  const year = date.getFullYear()
-  const seasonsStartDates = [
-    new Date(year, 11, 1),
-    new Date(year, 8, 1),
-    new Date(year, 5, 1),
-    new Date(year, 2, 1),
-  ]
-
-  const startDate = seasonsStartDates.find((el) => el < date)
-
-  if (!startDate) {
-    return "Invalid dateValue"
-  }
-
-  const formattedDate = `${startDate.getFullYear()}.${(startDate.getMonth() + 1)
-    .toString()
-    .padStart(2, "0")}.${startDate.getDate().toString().padStart(2, "0")}`
-
-  return formattedDate
-}
-
 @Injectable()
 export class AnimeInfoService {
   constructor(
@@ -73,6 +49,9 @@ export class AnimeInfoService {
 
     for (const el in filter) {
       switch (el) {
+        case "score":
+          matchValue.push({ $match: { anotherScores: { $gte: filter[el] } } })
+          break
         case "kind":
           matchValue.push({ $match: { kind: filter[el] } })
           break
@@ -140,8 +119,11 @@ export class AnimeInfoService {
     ])
 
     response.forEach((el) => {
-      if (filter["screenshotsCount"] && el.screenshots.length !== 0)
-        el.screenshots.length = filter["screenshotsCount"]
+      if (filter?.screenshotsCount && el.screenshots.length !== 0)
+        el.screenshots.length = filter?.screenshotsCount
+
+      if (filter?.labelCount && el.labels.length !== 0)
+        el.labels.length = filter?.labelCount
 
       if (el.franchise.animes.length === 0) {
         el.franchise = null
