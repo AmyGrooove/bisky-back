@@ -1,0 +1,1 @@
+export { getQueryObject } from "./getQueryObject"
