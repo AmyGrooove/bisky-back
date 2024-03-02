@@ -1,8 +1,8 @@
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql"
-import { PlatformsModel } from "src/modules/platforms/entities/platforms.entity"
-import { GenresModel } from "src/modules/genres/entities/genres.entity"
-import { StudiosModel } from "src/modules/studios/entities/studios.entity"
-import { FranchisesModel } from "src/modules/franchises/entities/franchises.entity"
+import { PlatformsModel } from "../../../modules/platforms/entities/platforms.entity"
+import { GenresModel } from "../../../modules/genres/entities/genres.entity"
+import { StudiosModel } from "../../../modules/studios/entities/studios.entity"
+import { FranchisesModel } from "../../../modules/franchises/entities/franchises.entity"
 import { StatusEnum, RatingEnum, KindEnum } from "./enums"
 
 @ObjectType({ description: "Names in different languages" })

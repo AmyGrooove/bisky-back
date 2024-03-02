@@ -1,6 +1,10 @@
 import { Field, InputType } from "@nestjs/graphql"
 import { ObjectId } from "mongoose"
-import { FromToDateQuery, FromToFloatQuery, FromToIntQuery } from "src/queries"
+import {
+  FromToDateQuery,
+  FromToFloatQuery,
+  FromToIntQuery,
+} from "../../../../queries"
 import { KindEnum, StatusEnum, RatingEnum } from "../../entities/enums"
 
 @InputType({ description: "Filter by a particular field" })

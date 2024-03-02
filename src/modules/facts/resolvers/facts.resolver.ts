@@ -1,5 +1,5 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql"
-import { LanguageModel } from "src/entities"
+import { LanguageModel } from "../../../entities"
 import { FactsService } from "../services/facts.service"
 import { SpecificFactsQuery } from "./queries"
 

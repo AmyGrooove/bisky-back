@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Franchises } from "../schemas/franchises.schema"
 import { SpecificFranchisesQuery } from "../resolvers/queries"
-import { getQueryObject } from "src/functions"
+import { getQueryObject } from "../../../functions"
 
 @Injectable()
 class FranchisesService {

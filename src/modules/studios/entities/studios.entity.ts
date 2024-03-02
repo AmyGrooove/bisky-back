@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { LanguageModel } from "src/entities"
+import { LanguageModel } from "../../../entities"
 
 @ObjectType({
   description: "The studios that are developing this or that anime",

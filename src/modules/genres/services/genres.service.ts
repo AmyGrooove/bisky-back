@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 
 import { Genres } from "../schemas/genres.schema"
-import { getQueryObject } from "src/functions"
+import { getQueryObject } from "../../../functions"
 import { SpecificGenresQuery } from "../resolvers/queries"
 
 @Injectable()

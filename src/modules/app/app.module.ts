@@ -19,7 +19,7 @@ import { AppController } from "./controllers/app.controller"
     MongooseModule.forRoot(process.env.MONGODB_URI),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), "./schema.gql"),
+      autoSchemaFile: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),

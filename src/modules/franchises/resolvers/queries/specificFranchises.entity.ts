@@ -1,6 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql"
 import { ObjectId } from "mongoose"
-import { LanguageQuery } from "src/queries"
+import { LanguageQuery } from "../../../../queries"
 
 @InputType({ description: "Get specific values" })
 class SpecificFranchisesQuery {
