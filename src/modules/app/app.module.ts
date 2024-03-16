@@ -12,6 +12,8 @@ import { FranchiseModule } from "../franchise/franchise.module"
 import { GenreModule } from "../genre/genre.module"
 import { PlatformModule } from "../platform/platform.module"
 import { StudioModule } from "../studio/studio.module"
+import { UserModule } from "../user/user.module"
+import { AuthModule } from "../auth/auth.module"
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { StudioModule } from "../studio/studio.module"
     PlatformModule,
     StudioModule,
     AnimeCommentModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })
