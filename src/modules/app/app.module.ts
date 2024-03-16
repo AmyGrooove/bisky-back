@@ -4,14 +4,14 @@ import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { MongooseModule } from "@nestjs/mongoose"
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default"
-import { join } from "path"
-import { PlatformsModule } from "../platforms/platforms.module"
-import { AnimeInfoModule } from "../animeInfo/animeInfo.module"
-import { GenresModule } from "../genres/platforms.module"
-import { FactsModule } from "../facts/facts.module"
-import { StudiosModule } from "../studios/studios.module"
-import { FranchisesModule } from "../franchises/franchises.module"
 import { AppController } from "./controllers/app.controller"
+import { AnimeModule } from "../anime/anime.module"
+import { AnimeCommentModule } from "../animeComment/animeComment.module"
+import { FactModule } from "../fact/fact.module"
+import { FranchiseModule } from "../franchise/franchise.module"
+import { GenreModule } from "../genre/genre.module"
+import { PlatformModule } from "../platform/platform.module"
+import { StudioModule } from "../studio/studio.module"
 
 @Module({
   imports: [
@@ -23,12 +23,13 @@ import { AppController } from "./controllers/app.controller"
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
-    PlatformsModule,
-    GenresModule,
-    AnimeInfoModule,
-    FactsModule,
-    StudiosModule,
-    FranchisesModule,
+    AnimeModule,
+    FactModule,
+    FranchiseModule,
+    GenreModule,
+    PlatformModule,
+    StudioModule,
+    AnimeCommentModule,
   ],
   controllers: [AppController],
 })
