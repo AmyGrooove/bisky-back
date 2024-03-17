@@ -14,7 +14,7 @@ class SingleEpisodeModel {
     defaultValue: null,
     description: "Episode release date",
   })
-  airedAt: Date | null
+  airedOn: Date | null
 
   @Field(() => Int, { defaultValue: 0, description: "Episode duration" })
   duration: number

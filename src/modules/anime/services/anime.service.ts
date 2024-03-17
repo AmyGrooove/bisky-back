@@ -119,7 +119,7 @@ class AnimeService {
                   $cond: {
                     if: { $eq: ["$status", EStatus.released] },
                     then: null,
-                    else: { $last: "$episodes.singleEpisodes.airedAt" },
+                    else: { $last: "$episodes.singleEpisodes.airedOn" },
                   },
                 },
                 lastEpisodeAiredDate: {
@@ -129,10 +129,10 @@ class AnimeService {
                     else: {
                       $cond: {
                         if: { $eq: ["$status", EStatus.released] },
-                        then: { $last: "$episodes.singleEpisodes.airedAt" },
+                        then: { $last: "$episodes.singleEpisodes.airedOn" },
                         else: {
                           $arrayElemAt: [
-                            "$episodes.singleEpisodes.airedAt",
+                            "$episodes.singleEpisodes.airedOn",
                             -2,
                           ],
                         },

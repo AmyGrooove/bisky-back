@@ -23,7 +23,7 @@ class AnimeResolver {
 
   @Query(() => [AnimeFullModel], { name: "getAnimes" })
   async getAnimes(
-    @Args("AnimeQuery", {
+    @Args("animeQuery", {
       type: () => GeneralAnimeQuery,
       defaultValue: { page: 1, count: 10 },
     })
@@ -41,7 +41,7 @@ class AnimeResolver {
     })
     genreQuery: GeneralGenreQuery,
 
-    @Args("PlatformQuery", {
+    @Args("platformQuery", {
       type: () => GeneralPlatformQuery,
       defaultValue: { page: 1, count: 100 },
     })

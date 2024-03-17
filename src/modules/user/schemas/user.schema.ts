@@ -1,17 +1,21 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
+import { ApiProperty } from "@nestjs/swagger"
 import { HydratedDocument } from "mongoose"
 
 @Schema({ collection: "User", versionKey: false })
 class User {
+  @ApiProperty()
   @Prop({ type: String, required: true, unique: true })
   username: string
 
   @Prop({ type: String, required: true })
   passwordHash: string
 
+  @ApiProperty()
   @Prop({ type: String, required: true, unique: true })
   email: string
 
+  @ApiProperty()
   @Prop({ type: String, default: null })
   avatar: string | null
 

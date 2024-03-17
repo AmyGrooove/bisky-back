@@ -9,7 +9,7 @@ class PlatformResolver {
 
   @Query(() => [PlatformModel], { name: "getPlatforms" })
   async getPlatforms(
-    @Args("PlatformQuery", {
+    @Args("platformQuery", {
       type: () => GeneralPlatformQuery,
       defaultValue: { page: 1, count: 10 },
     })

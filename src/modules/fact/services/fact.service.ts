@@ -25,6 +25,7 @@ class FactService {
     return this.factModel
       .findOne()
       .skip(Math.floor(Math.random() * (await this.factModel.countDocuments())))
+      .select({ _id: 0 })
       .lean()
       .exec()
   }

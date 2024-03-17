@@ -4,7 +4,7 @@ import { HydratedDocument } from "mongoose"
 @Schema({ collection: "Dates", _id: false, versionKey: false })
 class Dates {
   @Prop({ type: Date, default: null })
-  airedAt: Date | null
+  airedOn: Date | null
 
   @Prop({ type: Date, default: null })
   releasedOn: Date | null

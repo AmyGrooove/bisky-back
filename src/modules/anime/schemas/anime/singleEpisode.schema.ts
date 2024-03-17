@@ -7,7 +7,7 @@ class SingleEpisode {
   name: string | null
 
   @Prop({ type: Date, default: null })
-  airedAt: Date | null
+  airedOn: Date | null
 
   @Prop({ type: Number, default: 0 })
   duration: number

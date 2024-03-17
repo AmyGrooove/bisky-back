@@ -8,7 +8,7 @@ class SortAnimeQuery {
   score_averageScore?: boolean | null
 
   @Field(() => Boolean, { nullable: true, defaultValue: null })
-  dates_airedAt?: boolean | null
+  dates_airedOn?: boolean | null
 
   @Field(() => Boolean, { nullable: true, defaultValue: null })
   dates_releasedOn?: boolean | null

@@ -13,7 +13,11 @@ class UserService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const createdUser = new this.userModel(createUserDto)
+    const createdUser = new this.userModel({
+      username: createUserDto.username,
+      passwordHash: createUserDto.password,
+      email: createUserDto.email,
+    })
     return createdUser.save()
   }
 
@@ -21,10 +25,18 @@ class UserService {
     return this.userModel.findById(id).lean().exec()
   }
 
+  async findPublicById(id: ObjectId) {
+    return this.userModel
+      .findById(id)
+      .select({ passwordHash: 0, refreshToken: 0 })
+      .lean()
+      .exec()
+  }
+
   async findByUsername(username: string) {
     return this.userModel
       .findOne({ username })
-      .select({ _id: 1, username: 1, image: 1, role: 1, name: 1 })
+      .select({ _id: 1, username: 1, image: 1, role: 1, avatar: 1, name: 1 })
       .lean()
       .exec()
   }

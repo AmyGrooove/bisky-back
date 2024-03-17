@@ -4,7 +4,9 @@ import { AccessTokenGuard } from "./guards/accessToken.guard"
 import { RefreshTokenGuard } from "./guards/refreshToken.guard"
 import { LoginUserDto } from "../user/dto/login-user.dto"
 import { CreateUserDto } from "../user/dto/create-user.dto"
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
 
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -19,12 +21,14 @@ export class AuthController {
     return this.authService.register(createUserDto)
   }
 
+  @ApiBearerAuth()
   @UseGuards(AccessTokenGuard)
   @Get("logout")
   logout(@Request() req) {
     return this.authService.logout(req.user.id)
   }
 
+  @ApiBearerAuth()
   @UseGuards(RefreshTokenGuard)
   @Get("refresh")
   refreshTokens(@Request() req) {

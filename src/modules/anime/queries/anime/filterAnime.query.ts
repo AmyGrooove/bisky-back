@@ -39,7 +39,7 @@ class FilterAnimeQuery {
   score_averageScore?: FloatBetweenQuery | null
 
   @Field(() => DateBetweenQuery, { nullable: true, defaultValue: null })
-  dates_airedAt?: DateBetweenQuery | null
+  dates_airedOn?: DateBetweenQuery | null
 
   @Field(() => DateBetweenQuery, { nullable: true, defaultValue: null })
   dates_releasedOn?: DateBetweenQuery | null

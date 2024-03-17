@@ -14,6 +14,8 @@ import { PlatformModule } from "../platform/platform.module"
 import { StudioModule } from "../studio/studio.module"
 import { UserModule } from "../user/user.module"
 import { AuthModule } from "../auth/auth.module"
+import { join } from "path"
+import { ServeStaticModule } from "@nestjs/serve-static"
 
 @Module({
   imports: [
@@ -24,9 +26,12 @@ import { AuthModule } from "../auth/auth.module"
       autoSchemaFile: true,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
+      sortSchema: true,
+      introspection: true,
     }),
-    AnimeModule,
+    ServeStaticModule.forRoot({ rootPath: join(process.cwd(), "public") }),
     FactModule,
+    AnimeModule,
     FranchiseModule,
     GenreModule,
     PlatformModule,

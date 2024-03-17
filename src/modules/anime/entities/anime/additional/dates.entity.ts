@@ -7,7 +7,7 @@ class DatesModel {
     defaultValue: null,
     description: "Anime release date",
   })
-  airedAt: Date | null
+  airedOn: Date | null
 
   @Field(() => Date, {
     nullable: true,
