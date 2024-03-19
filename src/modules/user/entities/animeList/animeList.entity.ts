@@ -1,7 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql"
 import { EStatus } from "../../../../auxiliary"
-import { UserPublicModel } from "../../../user/entities/userPublic.entity"
-import { AnimeSimpleModel } from "../anime/animeSimple.entity"
+import { AnimeSimpleModel } from "../../../anime/entities/animeSimple.entity"
 
 @ObjectType()
 class AnimeListModel {
@@ -10,9 +9,6 @@ class AnimeListModel {
 
   @Field(() => EStatus)
   status: EStatus
-
-  @Field(() => UserPublicModel)
-  author: UserPublicModel
 
   @Field(() => AnimeSimpleModel)
   base: AnimeSimpleModel

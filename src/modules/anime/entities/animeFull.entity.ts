@@ -1,9 +1,9 @@
 import { Field, ObjectType } from "@nestjs/graphql"
 import { AnimeModel } from "./anime.entity"
 import { RelatedAnimeFullModel } from "./additional/relatedAnimeFull.entity"
-import { FranchiseSimpleModel } from "../../../franchise/entities/franchiseSimple.entity"
-import { GenreSimpleModel } from "../../../genre/entities/genreSimple.entity"
-import { StudioSimpleModel } from "../../../studio/entities/studioSimple.entity"
+import { FranchiseSimpleModel } from "../../franchise/entities/franchiseSimple.entity"
+import { GenreSimpleModel } from "../../genre/entities/genreSimple.entity"
+import { StudioSimpleModel } from "../../studio/entities/studioSimple.entity"
 import { OtherPlatformFullModel } from "./additional/otherPlatformFull.entity"
 
 @ObjectType({ description: "Anime Full Data" })

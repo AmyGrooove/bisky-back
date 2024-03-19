@@ -24,6 +24,10 @@ export class UserController {
   @UseGuards(AccessTokenGuard)
   @Get("whoami")
   async whoami(@Request() req) {
-    return this.userService.findPublicUserData({ _id: req.user.id })
+    await this.userService.updateUser({
+      _id: req.user._id,
+      updateUserDto: { lastOnlineDate: new Date() },
+    })
+    return this.userService.findPublicUserData({ _id: req.user._id })
   }
 }

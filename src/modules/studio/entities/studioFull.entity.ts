@@ -1,6 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql"
 import { StudioModel } from "./studio.entity"
-import { AnimeSimpleModel } from "../../anime/entities/anime/animeSimple.entity"
+import { AnimeSimpleModel } from "../../anime/entities/animeSimple.entity"
 
 @ObjectType({
   description: "The studios that are developing this or that anime",

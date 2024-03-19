@@ -26,15 +26,56 @@ class UserService {
     return this.userModel.findById(_id).lean().exec()
   }
 
-  async findPublicUserData(props: { _id?: ObjectId; username?: string }) {
+  async findPublicUserData(props: {
+    _id?: ObjectId | null
+    username?: string | null
+  }) {
+    const filteredProps = Object.fromEntries(
+      Object.entries(props).filter(([_, value]) => value !== null),
+    )
+
     return this.userModel
-      .findOne(props)
+      .findOne(filteredProps)
       .select({ passwordHash: 0, refreshToken: 0 })
       .lean()
       .exec()
   }
 
-  async getUser(props: { _id?: ObjectId; username?: string }) {}
+  async getUser(props: { _id?: ObjectId; username?: string }) {
+    const filteredProps = Object.fromEntries(
+      Object.entries(props).filter(([_, value]) => value !== null),
+    )
+
+    return (
+      await this.userModel.aggregate([
+        { $match: filteredProps },
+        {
+          $lookup: {
+            from: "AnimeEstimate",
+            localField: "_id",
+            foreignField: "author",
+            as: "animeEstimates",
+          },
+        },
+        {
+          $lookup: {
+            from: "AnimeList",
+            localField: "_id",
+            foreignField: "author",
+            as: "animeLists",
+          },
+        },
+        // {
+        //   $lookup: {
+        //     from: "AnimeComments",
+        //     localField: "_id",
+        //     foreignField: "author",
+        //     as: "animeComments",
+        //   },
+        // },
+      ])
+    )[0]
+  }
 
   async checkUser(props: { username: string; email: string }) {
     const { username, email } = props

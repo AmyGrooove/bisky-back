@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql"
 import { AnimeCommentLikeModel } from "./animeCommentLike.entity"
-import { AnimeSimpleModel } from "../../anime/entities/anime/animeSimple.entity"
 import { UserPublicModel } from "../../user/entities/userPublic.entity"
+import { AnimeSimpleModel } from "../../anime/entities/animeSimple.entity"
 
 @ObjectType()
 class AnimeCommentModel {
