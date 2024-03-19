@@ -3,8 +3,7 @@ import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { Anime } from "../schemas/anime/anime.schema"
 import { GeneralAnimeQuery } from "../queries/anime/generalAnime.query"
-import { EStatus } from "../../../auxiliary"
-import { EListStatus } from "../../../auxiliary/enums/listStatus.entity"
+import { EListStatus, EStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,
   getQueryAggregateObject,

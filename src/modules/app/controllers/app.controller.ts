@@ -1,5 +1,5 @@
 import { Controller, Get } from "@nestjs/common"
-import { ApiExcludeEndpoint, ApiTags } from "@nestjs/swagger"
+import { ApiExcludeEndpoint } from "@nestjs/swagger"
 
 const backgrounds = [
   "https://drive.google.com/thumbnail?id=1-RZ-_-bDV-jFfS_nj-hP1X0XroDO840x&sz=w1024",
@@ -55,8 +55,3 @@ class AppController {
 }
 
 export { AppController }
-function ApiExclude(
-  arg0: string,
-): (target: typeof AppController) => void | typeof AppController {
-  throw new Error("Function not implemented.")
-}

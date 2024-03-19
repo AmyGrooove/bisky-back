@@ -17,28 +17,19 @@ paths:
   /api/user/whoami:
     get:
       operationId: UserController_whoami
+      summary: Check access-token
       parameters: []
       responses:
         '200':
-          description: ''
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
       tags:
         - User
       security:
         - bearer: []
-  /api/user/profile/{username}:
-    get:
-      operationId: UserController_getUser
-      parameters:
-        - name: username
-          required: true
-          in: path
-          schema:
-            type: string
-      responses:
-        '200':
-          description: ''
-      tags:
-        - User
   /api/auth/login:
     post:
       operationId: AuthController_login
@@ -89,6 +80,8 @@ paths:
           description: ''
       tags:
         - Auth
+      security:
+        - bearer: []
 info:
   title: Bisky API
   description: ''
@@ -113,6 +106,31 @@ components:
       required:
         - en
         - ru
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum:
+            - user
+            - moderator
+            - admin
+        lastOnlineDate:
+          format: date-time
+          type: string
+      required:
+        - username
+        - email
+        - avatar
+        - role
+        - lastOnlineDate
     LoginUserDto:
       type: object
       properties:
@@ -128,11 +146,11 @@ components:
       properties:
         username:
           type: string
-        email:
-          type: string
         password:
+          type: string
+        email:
           type: string
       required:
         - username
-        - email
         - password
+        - email

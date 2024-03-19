@@ -1,6 +1,6 @@
 import { ApiProperty, PartialType } from "@nestjs/swagger"
-import { CreateUserDto } from "./create-user.dto"
 import { IsString } from "class-validator"
+import { CreateUserDto } from "./createUser.dto"
 
 class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty()
@@ -11,9 +11,9 @@ class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   image?: string
 
-  @ApiProperty()
-  @IsString()
   refreshToken?: string
+
+  lastOnlineDate?: Date
 }
 
 export { UpdateUserDto }

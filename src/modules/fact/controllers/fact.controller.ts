@@ -15,7 +15,7 @@ export class FactController {
     type: FactModel,
   })
   @Get("/")
-  getOneRandomFact() {
+  async getOneRandomFact() {
     return this.factService.getOneRandomFact()
   }
 }

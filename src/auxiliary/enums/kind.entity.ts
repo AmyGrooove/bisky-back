@@ -9,6 +9,8 @@ enum EKind {
   music = "music",
   tv_special = "tv_special",
   none = "none",
+  pv = "pv",
+  cm = "cm",
 }
 
 registerEnumType(EKind, { name: "KindEnum", description: "Anime type" })

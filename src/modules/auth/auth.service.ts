@@ -8,9 +8,9 @@ import * as bcrypt from "bcrypt"
 import { ObjectId } from "mongoose"
 import { ConfigService } from "@nestjs/config"
 import { emailValidation, usernameValidation } from "./types"
-import { CreateUserDto } from "../user/dto/create-user.dto"
-import { LoginUserDto } from "../user/dto/login-user.dto"
 import { UserService } from "../user/services/user.service"
+import { CreateUserDto } from "../user/dto/createUser.dto"
+import { LoginUserDto } from "../user/dto/loginUser.dto"
 
 @Injectable()
 export class AuthService {
@@ -28,13 +28,15 @@ export class AuthService {
     if (data.password.length < 4)
       throw new BadRequestException("The password is small")
 
-    const userExists = await this.userService.findByUsername(data.username)
+    const userExists = await this.userService.findPublicUserData({
+      username: data.username,
+    })
     if (userExists) {
       throw new BadRequestException("User already exists")
     }
 
     const hash = await this.hashData(data.password)
-    const newUser = await this.userService.create({
+    const newUser = await this.userService.createNewUser({
       ...data,
       password: hash,
     })
@@ -57,10 +59,12 @@ export class AuthService {
     if (data.password.length < 4)
       throw new BadRequestException("The password is small")
 
-    const user = await this.userService.findByUsername(data.username)
+    const user = await this.userService.findPublicUserData({
+      username: data.username,
+    })
     if (!user) throw new BadRequestException("User does not exist")
 
-    const fullUser = await this.userService.findById(
+    const fullUser = await this.userService.findFullUserById(
       user._id as unknown as ObjectId,
     )
 
@@ -82,18 +86,18 @@ export class AuthService {
     return tokens
   }
 
-  async logout(userId: ObjectId) {
-    const user = await this.userService.findById(userId)
+  async logout(_id: ObjectId) {
+    const user = await this.userService.findFullUserById(_id)
 
     if (user.refreshToken === null) throw new BadRequestException("Already out")
 
-    this.userService.update(userId, { refreshToken: null })
+    this.userService.updateUser({ _id, updateUserDto: { refreshToken: null } })
 
     return true
   }
 
-  async refreshTokens(userId: ObjectId, refreshToken: string) {
-    const user = await this.userService.findById(userId)
+  async refreshTokens(_id: ObjectId, refreshToken: string) {
+    const user = await this.userService.findFullUserById(_id)
 
     if (!user || !user.refreshToken)
       throw new ForbiddenException(
@@ -124,9 +128,12 @@ export class AuthService {
     return bcrypt.hash(data, 10)
   }
 
-  async updateRefreshToken(userId: ObjectId, refreshToken: string) {
+  async updateRefreshToken(_id: ObjectId, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken)
-    await this.userService.update(userId, { refreshToken: hashedRefreshToken })
+    await this.userService.updateUser({
+      _id,
+      updateUserDto: { refreshToken: hashedRefreshToken },
+    })
   }
 
   async getTokens(userId: ObjectId, username: string) {

@@ -2,9 +2,9 @@ import { Controller, Request, Post, UseGuards, Get, Body } from "@nestjs/common"
 import { AuthService } from "./auth.service"
 import { AccessTokenGuard } from "./guards/accessToken.guard"
 import { RefreshTokenGuard } from "./guards/refreshToken.guard"
-import { LoginUserDto } from "../user/dto/login-user.dto"
-import { CreateUserDto } from "../user/dto/create-user.dto"
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
+import { CreateUserDto } from "../user/dto/createUser.dto"
+import { LoginUserDto } from "../user/dto/loginUser.dto"
 
 @ApiTags("Auth")
 @Controller("auth")

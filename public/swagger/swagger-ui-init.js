@@ -36,10 +36,18 @@ window.onload = function() {
       "/api/user/whoami": {
         "get": {
           "operationId": "UserController_whoami",
+          "summary": "Check access-token",
           "parameters": [],
           "responses": {
             "200": {
-              "description": ""
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
             }
           },
           "tags": [
@@ -49,29 +57,6 @@ window.onload = function() {
             {
               "bearer": []
             }
-          ]
-        }
-      },
-      "/api/user/profile/{username}": {
-        "get": {
-          "operationId": "UserController_getUser",
-          "parameters": [
-            {
-              "name": "username",
-              "required": true,
-              "in": "path",
-              "schema": {
-                "type": "string"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "User"
           ]
         }
       },
@@ -153,6 +138,11 @@ window.onload = function() {
           },
           "tags": [
             "Auth"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
           ]
         }
       }
@@ -189,6 +179,40 @@ window.onload = function() {
             "ru"
           ]
         },
+        "User": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "avatar": {
+              "type": "string",
+              "nullable": true
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "user",
+                "moderator",
+                "admin"
+              ]
+            },
+            "lastOnlineDate": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "email",
+            "avatar",
+            "role",
+            "lastOnlineDate"
+          ]
+        },
         "LoginUserDto": {
           "type": "object",
           "properties": {
@@ -210,17 +234,17 @@ window.onload = function() {
             "username": {
               "type": "string"
             },
-            "email": {
+            "password": {
               "type": "string"
             },
-            "password": {
+            "email": {
               "type": "string"
             }
           },
           "required": [
             "username",
-            "email",
-            "password"
+            "password",
+            "email"
           ]
         }
       }

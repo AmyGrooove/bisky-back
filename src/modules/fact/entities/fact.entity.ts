@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ApiProperty, ApiTags } from "@nestjs/swagger"
+import { ApiProperty } from "@nestjs/swagger"
 import { ObjectId } from "mongoose"
 
 @ObjectType({ description: "Facts about anime/manga/Japan, etc." })
