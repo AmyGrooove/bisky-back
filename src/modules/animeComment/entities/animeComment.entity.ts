@@ -1,15 +1,10 @@
-import { Field, ObjectType } from "@nestjs/graphql"
-import { AnimeCommentLikeModel } from "./animeCommentLike.entity"
+import { Field, Int, ObjectType } from "@nestjs/graphql"
 import { UserPublicModel } from "../../user/entities/userPublic.entity"
-import { AnimeSimpleModel } from "../../anime/entities/animeSimple.entity"
 
 @ObjectType()
 class AnimeCommentModel {
   @Field(() => UserPublicModel)
   author: UserPublicModel
-
-  @Field(() => AnimeSimpleModel)
-  base: AnimeSimpleModel
 
   @Field(() => Date)
   createTime: Date
@@ -23,14 +18,8 @@ class AnimeCommentModel {
   @Field(() => [String])
   violations: string[]
 
-  @Field(() => AnimeCommentModel)
-  parent: AnimeCommentModel
-
-  @Field(() => [AnimeCommentModel])
-  childrens: AnimeCommentModel[]
-
-  @Field(() => [AnimeCommentLikeModel])
-  likes: AnimeCommentLikeModel[]
+  @Field(() => Int, { defaultValue: 0 })
+  likesCount: number
 }
 
 export { AnimeCommentModel }

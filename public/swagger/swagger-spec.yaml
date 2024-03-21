@@ -14,22 +14,6 @@ paths:
                 $ref: '#/components/schemas/FactModel'
       tags:
         - Fact
-  /api/user/whoami:
-    get:
-      operationId: UserController_whoami
-      summary: Check access-token
-      parameters: []
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/User'
-      tags:
-        - User
-      security:
-        - bearer: []
   /api/auth/login:
     post:
       operationId: AuthController_login
@@ -82,6 +66,22 @@ paths:
         - Auth
       security:
         - bearer: []
+  /api/auth/whoami:
+    get:
+      operationId: AuthController_whoami
+      summary: Check access-token
+      parameters: []
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      tags:
+        - Auth
+      security:
+        - bearer: []
 info:
   title: Bisky API
   description: ''
@@ -106,6 +106,29 @@ components:
       required:
         - en
         - ru
+    LoginUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+    CreateUserDto:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        email:
+          type: string
+      required:
+        - username
+        - password
+        - email
     User:
       type: object
       properties:
@@ -131,26 +154,3 @@ components:
         - avatar
         - role
         - lastOnlineDate
-    LoginUserDto:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-      required:
-        - username
-        - password
-    CreateUserDto:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-        email:
-          type: string
-      required:
-        - username
-        - password
-        - email

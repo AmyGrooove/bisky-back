@@ -1,5 +1,6 @@
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
+import { EStatus } from "../../../auxiliary"
 
 @Schema({ collection: "AnimeEstimate", versionKey: false })
 class AnimeEstimate {
@@ -12,8 +13,14 @@ class AnimeEstimate {
   @Prop({ type: Date, required: true, set: () => new Date() })
   createTime: Date
 
-  @Prop({ type: Number, required: true })
-  score: number
+  @Prop({ type: String, enum: EStatus, required: true })
+  status: EStatus
+
+  @Prop({ type: Number, default: null })
+  score: number | null
+
+  @Prop({ type: Number, default: 0 })
+  watchedSeries: number
 }
 
 type AnimeEstimateDocument = HydratedDocument<AnimeEstimate>

@@ -28,6 +28,7 @@ import { ServeStaticModule } from "@nestjs/serve-static"
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
       sortSchema: true,
       introspection: true,
+      context: ({ req }) => ({ req }),
     }),
     ServeStaticModule.forRoot({ rootPath: join(process.cwd(), "public") }),
     FactModule,

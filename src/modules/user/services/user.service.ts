@@ -1,9 +1,9 @@
 import { Model, ObjectId } from "mongoose"
-import { Injectable } from "@nestjs/common"
+import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { User } from "../schemas/user.schema"
-import { CreateUserDto } from "../dto/createUser.dto"
-import { UpdateUserDto } from "../dto/updateUser.dto"
+import { CreateUserDto } from "../../auth/dto/createUser.dto"
+import { UpdateUserDto } from "../../auth/dto/updateUser.dto"
 
 @Injectable()
 class UserService {
@@ -46,7 +46,10 @@ class UserService {
       Object.entries(props).filter(([_, value]) => value !== null),
     )
 
-    return (
+    if (Object.keys(filteredProps).length === 0)
+      throw new BadRequestException("Invalid data entered")
+
+    const data = (
       await this.userModel.aggregate([
         { $match: filteredProps },
         {
@@ -65,16 +68,12 @@ class UserService {
             as: "animeLists",
           },
         },
-        // {
-        //   $lookup: {
-        //     from: "AnimeComments",
-        //     localField: "_id",
-        //     foreignField: "author",
-        //     as: "animeComments",
-        //   },
-        // },
       ])
     )[0]
+
+    if (!data) throw new BadRequestException("The entered user does not exist")
+
+    return data
   }
 
   async checkUser(props: { username: string; email: string }) {

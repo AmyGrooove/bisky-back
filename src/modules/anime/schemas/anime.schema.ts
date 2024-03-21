@@ -1,21 +1,24 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
-import { LabelsSchema, LabelsDocument } from "./labels.schema"
+import {
+  EKind,
+  EStatus,
+  ERating,
+  LanguageSchema,
+  LanguageDocument,
+} from "../../../auxiliary"
+import { DatesSchema, DatesDocument } from "./additional/dates.schema"
+import { EpisodesSchema, EpisodesDocument } from "./additional/episodes.schema"
+import { LabelsSchema, LabelsDocument } from "./additional/labels.schema"
 import {
   OtherPlatformSchema,
   OtherPlatformDocument,
-} from "./otherPlatform.schema"
-import { EpisodesDocument, EpisodesSchema } from "./episodes.schema"
-import { DatesDocument, DatesSchema } from "./dates.schema"
+} from "./additional/otherPlatform.schema"
 import {
-  EKind,
-  ERating,
-  EStatus,
-  LanguageDocument,
-  LanguageSchema,
-} from "../../../../auxiliary"
-import { RelatedAnimeDocument, RelatedAnimeSchema } from "./relatedAnime.schema"
-import { VideoDocument, VideoSchema } from "./video.schema"
+  RelatedAnimeSchema,
+  RelatedAnimeDocument,
+} from "./additional/relatedAnime.schema"
+import { VideoSchema, VideoDocument } from "./additional/video.schema"
 
 @Schema({ collection: "Anime", versionKey: false })
 class Anime {

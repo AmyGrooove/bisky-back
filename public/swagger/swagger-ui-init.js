@@ -33,33 +33,6 @@ window.onload = function() {
           ]
         }
       },
-      "/api/user/whoami": {
-        "get": {
-          "operationId": "UserController_whoami",
-          "summary": "Check access-token",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": "Success",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/User"
-                  }
-                }
-              }
-            }
-          },
-          "tags": [
-            "User"
-          ],
-          "security": [
-            {
-              "bearer": []
-            }
-          ]
-        }
-      },
       "/api/auth/login": {
         "post": {
           "operationId": "AuthController_login",
@@ -145,6 +118,33 @@ window.onload = function() {
             }
           ]
         }
+      },
+      "/api/auth/whoami": {
+        "get": {
+          "operationId": "AuthController_whoami",
+          "summary": "Check access-token",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
       }
     },
     "info": {
@@ -179,40 +179,6 @@ window.onload = function() {
             "ru"
           ]
         },
-        "User": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            },
-            "avatar": {
-              "type": "string",
-              "nullable": true
-            },
-            "role": {
-              "type": "string",
-              "enum": [
-                "user",
-                "moderator",
-                "admin"
-              ]
-            },
-            "lastOnlineDate": {
-              "format": "date-time",
-              "type": "string"
-            }
-          },
-          "required": [
-            "username",
-            "email",
-            "avatar",
-            "role",
-            "lastOnlineDate"
-          ]
-        },
         "LoginUserDto": {
           "type": "object",
           "properties": {
@@ -245,6 +211,40 @@ window.onload = function() {
             "username",
             "password",
             "email"
+          ]
+        },
+        "User": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "avatar": {
+              "type": "string",
+              "nullable": true
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "user",
+                "moderator",
+                "admin"
+              ]
+            },
+            "lastOnlineDate": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "email",
+            "avatar",
+            "role",
+            "lastOnlineDate"
           ]
         }
       }

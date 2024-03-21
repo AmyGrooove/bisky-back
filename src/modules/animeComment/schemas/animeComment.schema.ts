@@ -20,13 +20,6 @@ class AnimeComment {
 
   @Prop({ type: [String], default: [] })
   violations: string[]
-
-  @Prop({
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-    ref: "AnimeComment",
-  })
-  parent: ObjectId
 }
 
 type AnimeCommentDocument = HydratedDocument<AnimeComment>

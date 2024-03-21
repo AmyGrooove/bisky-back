@@ -9,8 +9,8 @@ import { ObjectId } from "mongoose"
 import { ConfigService } from "@nestjs/config"
 import { emailValidation, usernameValidation } from "./types"
 import { UserService } from "../user/services/user.service"
-import { CreateUserDto } from "../user/dto/createUser.dto"
-import { LoginUserDto } from "../user/dto/loginUser.dto"
+import { CreateUserDto } from "./dto/createUser.dto"
+import { LoginUserDto } from "./dto/loginUser.dto"
 
 @Injectable()
 export class AuthService {

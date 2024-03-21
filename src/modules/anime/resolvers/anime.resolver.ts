@@ -1,4 +1,4 @@
-import { Args, Query, Resolver } from "@nestjs/graphql"
+import { Args, Context, Query, Resolver } from "@nestjs/graphql"
 import { AnimeService } from "../services/anime.service"
 import { GeneralAnimeQuery } from "../queries/anime/generalAnime.query"
 import { FranchiseService } from "../../franchise/services/franchise.service"
@@ -10,6 +10,8 @@ import { GeneralFranchiseQuery } from "../../franchise/queries/generalFranchise.
 import { GeneralGenreQuery } from "../../genre/queries/generalGenre.query"
 import { GeneralPlatformQuery } from "../../platform/queries/generalPlatform.query"
 import { GeneralStudioQuery } from "../../studio/queries/generalStudio.query"
+import { UseGuards } from "@nestjs/common"
+import { SimpleAccessTokenGuard } from "../../auth/guards/SimpleAccessToken.guard"
 
 @Resolver()
 class AnimeResolver {
@@ -21,6 +23,7 @@ class AnimeResolver {
     private studioService: StudioService,
   ) {}
 
+  @UseGuards(SimpleAccessTokenGuard)
   @Query(() => [AnimeFullModel], { name: "getAnimes" })
   async getAnimes(
     @Args("animeQuery", {
@@ -52,9 +55,13 @@ class AnimeResolver {
       defaultValue: { page: 1, count: 10 },
     })
     studioQuery: GeneralStudioQuery,
+
+    @Context() context,
   ) {
     return Promise.all(
-      (await this.animeService.getAnimes(animeQuery)).map(async (el) => {
+      (
+        await this.animeService.getAnimes(animeQuery, context.req?.user?._id)
+      ).map(async (el) => {
         const franchises = await this.franchiseService.getFranchises({
           ...franchiseQuery,
           filter: {

@@ -1,13 +1,13 @@
-import { Model } from "mongoose"
+import { Model, ObjectId, Types } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
-import { Anime } from "../schemas/anime/anime.schema"
 import { GeneralAnimeQuery } from "../queries/anime/generalAnime.query"
 import { EListStatus, EStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,
   getQueryAggregateObject,
 } from "../../../functions"
+import { Anime } from "../schemas/anime.schema"
 
 @Injectable()
 class AnimeService {
@@ -16,7 +16,7 @@ class AnimeService {
     private readonly animeModel: Model<Anime>,
   ) {}
 
-  async getAnimes(query: GeneralAnimeQuery) {
+  async getAnimes(query: GeneralAnimeQuery, userId?: ObjectId) {
     const { page, count, limit, filter, sort } = query
 
     return this.animeModel
@@ -27,25 +27,47 @@ class AnimeService {
               from: "AnimeEstimate",
               localField: "_id",
               foreignField: "base",
-              as: "scoresCollection",
-            },
-          },
-          {
-            $lookup: {
-              from: "AnimeList",
-              localField: "_id",
-              foreignField: "base",
-              as: "listsCollection",
+              as: "estimatesCollection",
             },
           },
           {
             $addFields: {
+              userData: {
+                $let: {
+                  vars: {
+                    matchingObj: {
+                      $arrayElemAt: [
+                        {
+                          $filter: {
+                            input: "$estimatesCollection",
+                            as: "estimate",
+                            cond: {
+                              $eq: [
+                                "$$estimate.author",
+                                new Types.ObjectId(userId as unknown as string),
+                              ],
+                            },
+                          },
+                        },
+                        0,
+                      ],
+                    },
+                  },
+                  in: {
+                    animeStatus: { $ifNull: ["$$matchingObj.status", null] },
+                    score: { $ifNull: ["$$matchingObj.score", null] },
+                    watchedSeries: {
+                      $ifNull: ["$$matchingObj.watchedSeries", null],
+                    },
+                  },
+                },
+              },
               usersList: {
-                generalCount: { $size: "$listsCollection" },
+                generalCount: { $size: "$estimatesCollection" },
                 addedCount: {
                   $sum: {
                     $map: {
-                      input: "$listsCollection",
+                      input: "$estimatesCollection",
                       as: "list",
                       in: {
                         $cond: [
@@ -60,7 +82,7 @@ class AnimeService {
                 watchingCount: {
                   $sum: {
                     $map: {
-                      input: "$listsCollection",
+                      input: "$estimatesCollection",
                       as: "list",
                       in: {
                         $cond: [
@@ -75,7 +97,7 @@ class AnimeService {
                 completedCount: {
                   $sum: {
                     $map: {
-                      input: "$listsCollection",
+                      input: "$estimatesCollection",
                       as: "list",
                       in: {
                         $cond: [
@@ -90,7 +112,7 @@ class AnimeService {
                 droppedCount: {
                   $sum: {
                     $map: {
-                      input: "$listsCollection",
+                      input: "$estimatesCollection",
                       as: "list",
                       in: {
                         $cond: [
@@ -103,16 +125,7 @@ class AnimeService {
                   },
                 },
               },
-              score: {
-                averageScore: {
-                  $cond: {
-                    if: { $gt: [{ $size: "$scoresCollection" }, 0] },
-                    then: { $avg: "$scoresCollection.score" },
-                    else: 0,
-                  },
-                },
-                count: { $size: "$scoresCollection" },
-              },
+              score: { $avg: "$estimatesCollection.score" },
               episodes: {
                 nextEpisodeAiredDate: {
                   $cond: {
@@ -156,7 +169,7 @@ class AnimeService {
               videos: { $slice: ["$videos", limit?.videosCount ?? 100] },
             },
           },
-          { $project: { scoresCollection: 0, listsCollection: 0 } },
+          { $project: { estimatesCollection: 0 } },
           ...getQueryAggregateObject(filter),
           ...getSortQueryAggregate(sort),
           { $skip: (page - 1) * count },
