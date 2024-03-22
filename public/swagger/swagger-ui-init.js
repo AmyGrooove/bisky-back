@@ -33,6 +33,98 @@ window.onload = function() {
           ]
         }
       },
+      "/api/user/{animeId}/status": {
+        "patch": {
+          "operationId": "AnimeEstimateController_updateAnimeStatus",
+          "summary": "Update anime in list",
+          "parameters": [
+            {
+              "name": "animeId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeStatusDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeEstimate"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
+      "/api/user/{animeId}/score": {
+        "patch": {
+          "operationId": "AnimeEstimateController_updateAnimeScore",
+          "summary": "Update anime score",
+          "parameters": [
+            {
+              "name": "animeId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeScoreDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeEstimate"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
       "/api/auth/login": {
         "post": {
           "operationId": "AuthController_login",
@@ -177,6 +269,38 @@ window.onload = function() {
           "required": [
             "en",
             "ru"
+          ]
+        },
+        "UpdateAnimeStatusDto": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "added",
+                "watching",
+                "completed",
+                "dropped"
+              ],
+              "nullable": true
+            }
+          },
+          "required": [
+            "status"
+          ]
+        },
+        "UpdateAnimeScoreDto": {
+          "type": "object",
+          "properties": {
+            "score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 10,
+              "nullable": true
+            }
+          },
+          "required": [
+            "score"
           ]
         },
         "LoginUserDto": {

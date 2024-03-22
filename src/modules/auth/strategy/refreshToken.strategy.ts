@@ -5,10 +5,7 @@ import { Injectable } from "@nestjs/common"
 import { JwtPayload } from "../types"
 
 @Injectable()
-export class RefreshTokenStrategy extends PassportStrategy(
-  Strategy,
-  "jwt-refresh",
-) {
+class RefreshTokenStrategy extends PassportStrategy(Strategy, "jwt-refresh") {
   constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -23,3 +20,5 @@ export class RefreshTokenStrategy extends PassportStrategy(
     return { ...payload, refreshToken }
   }
 }
+
+export { RefreshTokenStrategy }

@@ -43,4 +43,6 @@ import { ServeStaticModule } from "@nestjs/serve-static"
   ],
   controllers: [AppController],
 })
-export class AppModule {}
+class AppModule {}
+
+export { AppModule }

@@ -5,7 +5,7 @@ import { FactModel } from "../entities/fact.entity"
 
 @ApiTags("Fact")
 @Controller("getOneRandomFact")
-export class FactController {
+class FactController {
   constructor(private factService: FactService) {}
 
   @ApiOperation({ summary: "Get a random fact" })
@@ -19,3 +19,5 @@ export class FactController {
     return this.factService.getOneRandomFact()
   }
 }
+
+export { FactController }
