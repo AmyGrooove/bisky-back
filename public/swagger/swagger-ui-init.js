@@ -125,6 +125,52 @@ window.onload = function() {
           ]
         }
       },
+      "/api/user/{animeId}/watchedSeriesCount": {
+        "patch": {
+          "operationId": "AnimeEstimateController_updateAnimeWatchedSeriesCount",
+          "summary": "Update anime watched series count",
+          "parameters": [
+            {
+              "name": "animeId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeWatchedSeriesDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeEstimate"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
       "/api/auth/login": {
         "post": {
           "operationId": "AuthController_login",
@@ -301,6 +347,18 @@ window.onload = function() {
           },
           "required": [
             "score"
+          ]
+        },
+        "UpdateAnimeWatchedSeriesDto": {
+          "type": "object",
+          "properties": {
+            "watchedSeriesCount": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "watchedSeriesCount"
           ]
         },
         "LoginUserDto": {

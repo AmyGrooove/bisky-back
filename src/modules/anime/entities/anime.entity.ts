@@ -1,5 +1,5 @@
 import { LanguageModel } from "../../../auxiliary"
-import { Field, Float, Int, ObjectType } from "@nestjs/graphql"
+import { Field, Int, ObjectType } from "@nestjs/graphql"
 import { LabelsModel } from "./additional/labels.entity"
 import { EKind } from "../../../auxiliary/enums/kind.entity"
 import { EStatus } from "../../../auxiliary/enums/status.entity"
@@ -10,6 +10,7 @@ import { VideModel } from "./additional/video.entity"
 import { UserListModel } from "./additional/userList.entity"
 import { ObjectId } from "mongoose"
 import { AnimeUserDataModel } from "./additional/animeUserData.entity"
+import { UserScoresModel } from "./additional/userScores.entite"
 
 @ObjectType({ description: "Anime Data" })
 class AnimeModel {
@@ -62,8 +63,8 @@ class AnimeModel {
   @Field(() => UserListModel)
   usersList: UserListModel
 
-  @Field(() => Float)
-  score: number
+  @Field(() => UserScoresModel)
+  score: UserScoresModel
 
   @Field(() => AnimeUserDataModel)
   userData: AnimeUserDataModel

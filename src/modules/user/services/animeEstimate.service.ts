@@ -79,6 +79,33 @@ class AnimeEstimateService {
 
     return true
   }
+
+  async updateAnimeWatchedSeriesCount(query: {
+    userId: ObjectId
+    animeId: ObjectId
+    animeWatchedSeriesCount: number
+  }) {
+    const { userId, animeId, animeWatchedSeriesCount } = query
+
+    const animeIdParsed = new Types.ObjectId(animeId as unknown as string)
+    const userIdParsed = new Types.ObjectId(userId as unknown as string)
+
+    if (!(await this.animeModel.findById(animeIdParsed).lean().exec()))
+      throw new BadRequestException("No such anime found")
+
+    const existingDocument = await this.animeEstimate.findOne({
+      base: animeIdParsed,
+      author: userIdParsed,
+    })
+
+    if (!existingDocument)
+      throw new BadRequestException("This anime is not yet listed")
+
+    existingDocument.watchedSeries = animeWatchedSeriesCount
+    await existingDocument.save()
+
+    return true
+  }
 }
 
 export { AnimeEstimateService }

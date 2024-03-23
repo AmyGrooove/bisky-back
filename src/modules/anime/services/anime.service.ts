@@ -32,6 +32,17 @@ class AnimeService {
           },
           {
             $addFields: {
+              scoredCollection: {
+                $filter: {
+                  input: "$estimatesCollection",
+                  as: "estimate",
+                  cond: { $ne: ["$$estimate.score", null] },
+                },
+              },
+            },
+          },
+          {
+            $addFields: {
               userData: {
                 $let: {
                   vars: {
@@ -125,7 +136,16 @@ class AnimeService {
                   },
                 },
               },
-              score: { $avg: "$estimatesCollection.score" },
+              score: {
+                count: { $size: "$scoredCollection" },
+                averageScore: {
+                  $cond: {
+                    if: { $eq: [{ $size: "$scoredCollection" }, 0] },
+                    then: 0,
+                    else: { $avg: "$scoredCollection.score" },
+                  },
+                },
+              },
               episodes: {
                 nextEpisodeAiredDate: {
                   $cond: {
@@ -169,7 +189,7 @@ class AnimeService {
               videos: { $slice: ["$videos", limit?.videosCount ?? 100] },
             },
           },
-          { $project: { estimatesCollection: 0 } },
+          { $project: { estimatesCollection: 0, scoredCollection: 0 } },
           ...getQueryAggregateObject(filter),
           ...getSortQueryAggregate(sort),
           { $skip: (page - 1) * count },

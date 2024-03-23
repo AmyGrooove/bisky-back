@@ -19,6 +19,7 @@ import { ObjectId } from "mongoose"
 import { AnimeEstimateService } from "../services/animeEstimate.service"
 import { UpdateAnimeScoreDto } from "../dto/updateAnimeScore.dto"
 import { UpdateAnimeStatusDto } from "../dto/updateAnimeStatus.dto"
+import { UpdateAnimeWatchedSeriesDto } from "../dto/updateAnimeWatchedSeriesCount.dto"
 
 @ApiTags("AnimeEstimate")
 @Controller("user")
@@ -66,6 +67,28 @@ class AnimeEstimateController {
       userId: req.user._id,
       animeId,
       animeScore: animeScore.score,
+    })
+  }
+
+  @ApiOperation({ summary: "Update anime watched series count" })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Success",
+    type: Boolean,
+  })
+  @ApiParam({ name: "animeId", type: String })
+  @UseGuards(AccessTokenGuard)
+  @Patch("/:animeId/watchedSeriesCount")
+  async updateAnimeWatchedSeriesCount(
+    @Request() req,
+    @Param("animeId") animeId: ObjectId,
+    @Body() animeWatchedSeriesCount: UpdateAnimeWatchedSeriesDto,
+  ) {
+    return this.animeEstimateService.updateAnimeWatchedSeriesCount({
+      userId: req.user._id,
+      animeId,
+      animeWatchedSeriesCount: animeWatchedSeriesCount.watchedSeriesCount,
     })
   }
 }
