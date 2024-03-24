@@ -206,9 +206,9 @@ window.onload = function() {
         }
       },
       "/api/user/{animeId}/status": {
-        "put": {
+        "patch": {
           "operationId": "AnimeEstimateController_updateAnimeStatus",
-          "summary": "Add/update anime from the list",
+          "summary": "Add/Update anime from the list",
           "parameters": [
             {
               "name": "animeId",
@@ -377,92 +377,6 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/login": {
-        "post": {
-          "operationId": "AuthController_login",
-          "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginUserDto"
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Auth"
-          ]
-        }
-      },
-      "/api/auth/register": {
-        "post": {
-          "operationId": "AuthController_register",
-          "parameters": [],
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateUserDto"
-                }
-              }
-            }
-          },
-          "responses": {
-            "201": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Auth"
-          ]
-        }
-      },
-      "/api/auth/logout": {
-        "get": {
-          "operationId": "AuthController_logout",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Auth"
-          ],
-          "security": [
-            {
-              "bearer": []
-            }
-          ]
-        }
-      },
-      "/api/auth/refresh": {
-        "get": {
-          "operationId": "AuthController_refreshTokens",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description": ""
-            }
-          },
-          "tags": [
-            "Auth"
-          ],
-          "security": [
-            {
-              "bearer": []
-            }
-          ]
-        }
-      },
       "/api/auth/whoami": {
         "get": {
           "operationId": "AuthController_whoami",
@@ -489,12 +403,163 @@ window.onload = function() {
             }
           ]
         }
+      },
+      "/api/auth/register": {
+        "put": {
+          "operationId": "AuthController_register",
+          "summary": "Sign Up",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokensModel"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/auth/login": {
+        "post": {
+          "operationId": "AuthController_login",
+          "summary": "Sign In",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginUserDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokensModel"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/auth/refresh": {
+        "patch": {
+          "operationId": "AuthController_refreshTokens",
+          "summary": "Renew Access Token",
+          "parameters": [
+            {
+              "name": "Authorization",
+              "required": true,
+              "in": "header",
+              "description": "RefreshToken (starting with \"Bearer \")",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/TokensModel"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/auth/logout": {
+        "patch": {
+          "operationId": "AuthController_logout",
+          "summary": "Log off the network (remove refreshToken from the database)",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Auth"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
+      "/api/auth/google": {
+        "get": {
+          "operationId": "OAuth2Controller_googleLogin",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
+      },
+      "/api/auth/google/callback": {
+        "get": {
+          "operationId": "OAuth2Controller_googleLoginCallback",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          },
+          "tags": [
+            "Auth"
+          ]
+        }
       }
     },
     "info": {
       "title": "Bisky API",
       "description": "",
-      "version": "2.0",
+      "version": "1.2.0",
       "contact": {}
     },
     "tags": [],
@@ -593,40 +658,6 @@ window.onload = function() {
             "watchedSeriesCount"
           ]
         },
-        "LoginUserDto": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "username",
-            "password"
-          ]
-        },
-        "CreateUserDto": {
-          "type": "object",
-          "properties": {
-            "username": {
-              "type": "string"
-            },
-            "password": {
-              "type": "string"
-            },
-            "email": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "username",
-            "password",
-            "email"
-          ]
-        },
         "User": {
           "type": "object",
           "properties": {
@@ -659,6 +690,61 @@ window.onload = function() {
             "avatar",
             "role",
             "lastOnlineDate"
+          ]
+        },
+        "CreateUserDto": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 30
+            },
+            "password": {
+              "type": "string",
+              "minLength": 6
+            },
+            "email": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "username",
+            "password",
+            "email"
+          ]
+        },
+        "TokensModel": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "accessToken",
+            "refreshToken"
+          ]
+        },
+        "LoginUserDto": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 30
+            },
+            "password": {
+              "type": "string",
+              "minLength": 6
+            }
+          },
+          "required": [
+            "username",
+            "password"
           ]
         }
       }

@@ -4,7 +4,7 @@ import { InjectModel } from "@nestjs/mongoose"
 import { AnimeComment } from "../schemas/animeComment.schema"
 import { SortAnimeCommentQuery } from "../query/sortAnimeComment.query"
 import { getSortQueryAggregate } from "../../../functions"
-import { Anime } from "src/modules/anime/schemas/anime.schema"
+import { Anime } from "../../anime/schemas/anime.schema"
 import { AnimeCommentLike } from "../schemas/animeCommentLike.schema"
 
 @Injectable()

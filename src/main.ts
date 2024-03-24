@@ -20,7 +20,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle("Bisky API")
-    .setVersion("2.0")
+    .setVersion("1.2.0")
     .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)

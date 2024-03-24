@@ -7,7 +7,6 @@ import {
   UseGuards,
   Body,
   Delete,
-  Put,
 } from "@nestjs/common"
 import {
   ApiBearerAuth,
@@ -27,7 +26,7 @@ import { UpdateAnimeWatchedSeriesDto } from "../dto/updateAnimeWatchedSeriesCoun
 class AnimeEstimateController {
   constructor(private animeEstimateService: AnimeEstimateService) {}
 
-  @ApiOperation({ summary: "Add/update anime from the list" })
+  @ApiOperation({ summary: "Add/Update anime from the list" })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -36,7 +35,7 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
-  @Put("/:animeId/status")
+  @Patch("/:animeId/status")
   async updateAnimeStatus(
     @Request() req,
     @Param("animeId") animeId: string,

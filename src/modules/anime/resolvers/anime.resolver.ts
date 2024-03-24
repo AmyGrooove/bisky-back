@@ -11,7 +11,7 @@ import { GeneralGenreQuery } from "../../genre/queries/generalGenre.query"
 import { GeneralPlatformQuery } from "../../platform/queries/generalPlatform.query"
 import { GeneralStudioQuery } from "../../studio/queries/generalStudio.query"
 import { UseGuards } from "@nestjs/common"
-import { SimpleAccessTokenGuard } from "../../auth/guards/SimpleAccessToken.guard"
+import { SimpleAccessTokenGuard } from "../../auth/guards/simpleAccessToken.guard"
 
 @Resolver()
 class AnimeResolver {

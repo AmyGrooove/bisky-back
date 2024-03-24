@@ -12,38 +12,9 @@ class UserService {
     private readonly userModel: Model<User>,
   ) {}
 
-  async createNewUser(createUserDto: CreateUserDto) {
-    const createdUser = new this.userModel({
-      username: createUserDto.username,
-      passwordHash: createUserDto.password,
-      email: createUserDto.email,
-    })
-
-    return createdUser.save()
-  }
-
-  async findFullUserById(_id: string) {
-    return this.userModel.findById(_id).lean().exec()
-  }
-
-  async findPublicUserData(props: {
-    _id?: string | null
-    username?: string | null
-  }) {
+  async getUser(query: { _id?: string; username?: string }) {
     const filteredProps = Object.fromEntries(
-      Object.entries(props).filter(([_, value]) => value !== null),
-    )
-
-    return this.userModel
-      .findOne(filteredProps)
-      .select({ passwordHash: 0, refreshToken: 0 })
-      .lean()
-      .exec()
-  }
-
-  async getUser(props: { _id?: string; username?: string }) {
-    const filteredProps = Object.fromEntries(
-      Object.entries(props).filter(([_, value]) => value !== null),
+      Object.entries(query).filter(([_, value]) => value !== null),
     )
 
     if (Object.keys(filteredProps).length === 0)
@@ -76,19 +47,38 @@ class UserService {
     return data
   }
 
-  async checkUser(props: { username: string; email: string }) {
-    const { username, email } = props
+  async findPublicUserData(query: {
+    _id?: string | null
+    username?: string | null
+    email?: string | null
+  }) {
+    const filteredProps = Object.fromEntries(
+      Object.entries(query).filter(([_, value]) => value !== null),
+    )
 
-    const user = await this.userModel
-      .findOne({ $or: [{ username }, { email }] })
+    return this.userModel
+      .findOne(filteredProps)
+      .select({ passwordHash: 0, refreshToken: 0 })
       .lean()
       .exec()
-
-    return !!user
   }
 
-  async updateUser(props: { _id: string; updateUserDto: UpdateUserDto }) {
-    const { _id, updateUserDto } = props
+  async findFullUserById(userId: string) {
+    return this.userModel.findById(userId).lean().exec()
+  }
+
+  async createNewUser(createUserDto: CreateUserDto) {
+    const createdUser = new this.userModel({
+      username: createUserDto.username,
+      passwordHash: createUserDto.password,
+      email: createUserDto.email,
+    })
+
+    return createdUser.save()
+  }
+
+  async updateUser(query: { _id: string; updateUserDto: UpdateUserDto }) {
+    const { _id, updateUserDto } = query
 
     return this.userModel.findByIdAndUpdate(_id, updateUserDto).lean().exec()
   }
