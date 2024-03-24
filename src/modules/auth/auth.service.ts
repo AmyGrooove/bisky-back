@@ -5,7 +5,6 @@ import {
 } from "@nestjs/common"
 import { JwtService } from "@nestjs/jwt"
 import * as bcrypt from "bcrypt"
-import { ObjectId } from "mongoose"
 import { ConfigService } from "@nestjs/config"
 import { emailValidation, usernameValidation } from "./types"
 import { UserService } from "../user/services/user.service"
@@ -42,13 +41,10 @@ export class AuthService {
     })
 
     const tokens = await this.getTokens(
-      newUser._id as unknown as ObjectId,
+      newUser._id.toString(),
       newUser.username,
     )
-    await this.updateRefreshToken(
-      newUser._id as unknown as ObjectId,
-      tokens.refreshToken,
-    )
+    await this.updateRefreshToken(newUser._id.toString(), tokens.refreshToken)
 
     return tokens
   }
@@ -65,7 +61,7 @@ export class AuthService {
     if (!user) throw new BadRequestException("User does not exist")
 
     const fullUser = await this.userService.findFullUserById(
-      user._id as unknown as ObjectId,
+      user._id.toString(),
     )
 
     const passwordMatches = await bcrypt.compare(
@@ -75,18 +71,15 @@ export class AuthService {
     if (!passwordMatches) throw new BadRequestException("Password is incorrect")
 
     const tokens = await this.getTokens(
-      fullUser._id as unknown as ObjectId,
+      fullUser._id.toString(),
       fullUser.username,
     )
-    await this.updateRefreshToken(
-      fullUser._id as unknown as ObjectId,
-      tokens.refreshToken,
-    )
+    await this.updateRefreshToken(fullUser._id.toString(), tokens.refreshToken)
 
     return tokens
   }
 
-  async logout(_id: ObjectId) {
+  async logout(_id: string) {
     const user = await this.userService.findFullUserById(_id)
 
     if (user.refreshToken === null) throw new BadRequestException("Already out")
@@ -96,7 +89,7 @@ export class AuthService {
     return true
   }
 
-  async refreshTokens(_id: ObjectId, refreshToken: string) {
+  async refreshTokens(_id: string, refreshToken: string) {
     const user = await this.userService.findFullUserById(_id)
 
     if (!user || !user.refreshToken)
@@ -112,14 +105,8 @@ export class AuthService {
     if (!refreshTokenMatches)
       throw new ForbiddenException("Tokens do not match")
 
-    const tokens = await this.getTokens(
-      user._id as unknown as ObjectId,
-      user.username,
-    )
-    await this.updateRefreshToken(
-      user._id as unknown as ObjectId,
-      tokens.refreshToken,
-    )
+    const tokens = await this.getTokens(user._id.toString(), user.username)
+    await this.updateRefreshToken(user._id.toString(), tokens.refreshToken)
 
     return tokens
   }
@@ -128,7 +115,7 @@ export class AuthService {
     return bcrypt.hash(data, 10)
   }
 
-  async updateRefreshToken(_id: ObjectId, refreshToken: string) {
+  async updateRefreshToken(_id: string, refreshToken: string) {
     const hashedRefreshToken = await this.hashData(refreshToken)
     await this.userService.updateUser({
       _id,
@@ -136,23 +123,17 @@ export class AuthService {
     })
   }
 
-  async getTokens(userId: ObjectId, username: string) {
+  async getTokens(userId: string, username: string) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        {
-          _id: userId,
-          username,
-        },
+        { _id: userId, username },
         {
           secret: this.configService.get<string>("JWT_ACCESS_SECRET"),
           expiresIn: "1d",
         },
       ),
       this.jwtService.signAsync(
-        {
-          _id: userId,
-          username,
-        },
+        { _id: userId, username },
         {
           secret: this.configService.get<string>("JWT_REFRESH_SECRET"),
           expiresIn: "30d",

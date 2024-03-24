@@ -8,14 +8,13 @@ import { DatesModel } from "./additional/dates.entity"
 import { ERating } from "../../../auxiliary/enums/rating.entity"
 import { VideModel } from "./additional/video.entity"
 import { UserListModel } from "./additional/userList.entity"
-import { ObjectId } from "mongoose"
 import { AnimeUserDataModel } from "./additional/animeUserData.entity"
 import { UserScoresModel } from "./additional/userScores.entite"
 
 @ObjectType({ description: "Anime Data" })
 class AnimeModel {
   @Field(() => String)
-  _id: ObjectId
+  _id: string
 
   @Field(() => Int)
   shikiId: number

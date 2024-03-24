@@ -6,6 +6,8 @@ import {
   Param,
   UseGuards,
   Body,
+  Delete,
+  Put,
 } from "@nestjs/common"
 import {
   ApiBearerAuth,
@@ -15,7 +17,6 @@ import {
   ApiTags,
 } from "@nestjs/swagger"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
-import { ObjectId } from "mongoose"
 import { AnimeEstimateService } from "../services/animeEstimate.service"
 import { UpdateAnimeScoreDto } from "../dto/updateAnimeScore.dto"
 import { UpdateAnimeStatusDto } from "../dto/updateAnimeStatus.dto"
@@ -26,7 +27,7 @@ import { UpdateAnimeWatchedSeriesDto } from "../dto/updateAnimeWatchedSeriesCoun
 class AnimeEstimateController {
   constructor(private animeEstimateService: AnimeEstimateService) {}
 
-  @ApiOperation({ summary: "Update anime in list" })
+  @ApiOperation({ summary: "Add/update anime from the list" })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -35,10 +36,10 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
-  @Patch("/:animeId/status")
+  @Put("/:animeId/status")
   async updateAnimeStatus(
     @Request() req,
-    @Param("animeId") animeId: ObjectId,
+    @Param("animeId") animeId: string,
     @Body() animeStatus: UpdateAnimeStatusDto,
   ) {
     return this.animeEstimateService.updateAnimeStatus({
@@ -48,7 +49,7 @@ class AnimeEstimateController {
     })
   }
 
-  @ApiOperation({ summary: "Update anime score" })
+  @ApiOperation({ summary: "Update anime rating in the list" })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -60,7 +61,7 @@ class AnimeEstimateController {
   @Patch("/:animeId/score")
   async updateAnimeScore(
     @Request() req,
-    @Param("animeId") animeId: ObjectId,
+    @Param("animeId") animeId: string,
     @Body() animeScore: UpdateAnimeScoreDto,
   ) {
     return this.animeEstimateService.updateAnimeScore({
@@ -70,7 +71,9 @@ class AnimeEstimateController {
     })
   }
 
-  @ApiOperation({ summary: "Update anime watched series count" })
+  @ApiOperation({
+    summary: "Update the number of watched anime episodes in the list",
+  })
   @ApiBearerAuth()
   @ApiResponse({
     status: HttpStatus.OK,
@@ -82,13 +85,30 @@ class AnimeEstimateController {
   @Patch("/:animeId/watchedSeriesCount")
   async updateAnimeWatchedSeriesCount(
     @Request() req,
-    @Param("animeId") animeId: ObjectId,
+    @Param("animeId") animeId: string,
     @Body() animeWatchedSeriesCount: UpdateAnimeWatchedSeriesDto,
   ) {
     return this.animeEstimateService.updateAnimeWatchedSeriesCount({
       userId: req.user._id,
       animeId,
       animeWatchedSeriesCount: animeWatchedSeriesCount.watchedSeriesCount,
+    })
+  }
+
+  @ApiOperation({ summary: "Remove anime from list" })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: "Success",
+    type: Boolean,
+  })
+  @ApiParam({ name: "animeId", type: String })
+  @UseGuards(AccessTokenGuard)
+  @Delete("/:animeId/status")
+  async deleteAnimeFromList(@Request() req, @Param("animeId") animeId: string) {
+    return this.animeEstimateService.deleteAnimeFromList({
+      userId: req.user._id,
+      animeId,
     })
   }
 }

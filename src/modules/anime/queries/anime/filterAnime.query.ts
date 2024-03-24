@@ -1,5 +1,4 @@
 import { Field, InputType } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import {
   DateBetweenQuery,
   EKind,
@@ -11,8 +10,12 @@ import {
 
 @InputType({ description: "Limit documents by these parameters" })
 class FilterAnimeQuery {
-  @Field(() => [String], { nullable: true, defaultValue: null })
-  _id_ID?: ObjectId[] | null
+  @Field(() => [String], {
+    nullable: true,
+    defaultValue: null,
+    description: "Anime _ids",
+  })
+  _id_ID?: string[] | null
 
   @Field(() => [Number], { nullable: true, defaultValue: null })
   shikiId?: number[] | null
@@ -26,14 +29,26 @@ class FilterAnimeQuery {
   @Field(() => [ERating], { nullable: true, defaultValue: null })
   rating?: ERating[] | null
 
-  @Field(() => [String], { nullable: true, defaultValue: null })
-  genres_ID?: ObjectId[] | null
+  @Field(() => [String], {
+    nullable: true,
+    defaultValue: null,
+    description: "Genre _ids",
+  })
+  genres_ID?: string[] | null
 
-  @Field(() => [String], { nullable: true, defaultValue: null })
-  studios_ID?: ObjectId[] | null
+  @Field(() => [String], {
+    nullable: true,
+    defaultValue: null,
+    description: "Studio _ids",
+  })
+  studios_ID?: string[] | null
 
-  @Field(() => [String], { nullable: true, defaultValue: null })
-  franchises_ID?: ObjectId[] | null
+  @Field(() => [String], {
+    nullable: true,
+    defaultValue: null,
+    description: "Franchise _ids",
+  })
+  franchises_ID?: string[] | null
 
   @Field(() => FloatBetweenQuery, { nullable: true, defaultValue: null })
   score_averageScore?: FloatBetweenQuery | null

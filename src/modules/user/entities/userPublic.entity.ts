@@ -1,5 +1,4 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import { ERole } from "../../../auxiliary"
 import { ApiProperty } from "@nestjs/swagger"
 
@@ -7,7 +6,7 @@ import { ApiProperty } from "@nestjs/swagger"
 class UserPublicModel {
   @ApiProperty({ type: String })
   @Field(() => String)
-  _id: ObjectId
+  _id: string
 
   @ApiProperty()
   @Field(() => String)

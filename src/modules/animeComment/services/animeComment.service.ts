@@ -1,28 +1,31 @@
-import { Model, ObjectId, Types } from "mongoose"
+import { Model, Types } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { AnimeComment } from "../schemas/animeComment.schema"
 import { SortAnimeCommentQuery } from "../query/sortAnimeComment.query"
 import { getSortQueryAggregate } from "../../../functions"
+import { Anime } from "src/modules/anime/schemas/anime.schema"
 
 @Injectable()
 class AnimeCommentService {
   constructor(
     @InjectModel("AnimeComment")
     private readonly animeCommentModel: Model<AnimeComment>,
+    @InjectModel("Anime")
+    private readonly animeModel: Model<Anime>,
   ) {}
 
-  async getComments(props: {
-    base: ObjectId
+  async getComments(query: {
+    animeId: string
     page: number
     count: number
     sort: SortAnimeCommentQuery
   }) {
-    const { base, page, count, sort } = props
+    const { animeId, page, count, sort } = query
 
     try {
       return this.animeCommentModel.aggregate([
-        { $match: { base: new Types.ObjectId(base as unknown as string) } },
+        { $match: { base: new Types.ObjectId(animeId) } },
         {
           $lookup: {
             from: "User",
@@ -67,6 +70,64 @@ class AnimeCommentService {
     } catch (error: any) {
       throw new BadRequestException(error.message)
     }
+  }
+
+  async addAnimeComment(query: {
+    userId: string
+    animeId: string
+    text: string
+  }) {
+    const { userId, animeId, text } = query
+
+    if (!(await this.animeModel.findById(animeId).lean().exec()))
+      throw new BadRequestException("No such anime found")
+
+    const newDocument = new this.animeCommentModel({
+      base: animeId,
+      author: userId,
+      text: text,
+    })
+    await newDocument.save()
+
+    return true
+  }
+
+  async updateAnimeComment(query: {
+    userId: string
+    commentId: string
+    text: string
+  }) {
+    const { userId, commentId, text } = query
+
+    const existingDocument = await this.animeCommentModel.findById(commentId)
+
+    if (!existingDocument)
+      throw new BadRequestException("No such comment found")
+
+    if (String(existingDocument.author) !== userId)
+      throw new BadRequestException("The comment does not belong to the user")
+
+    existingDocument.text = text
+    existingDocument.updateTime = new Date()
+    await existingDocument.save()
+
+    return true
+  }
+
+  async deleteAnimeComment(query: { userId: string; commentId: string }) {
+    const { userId, commentId } = query
+
+    const existingDocument = await this.animeCommentModel.findById(commentId)
+
+    if (!existingDocument)
+      throw new BadRequestException("No such comment found")
+
+    if (String(existingDocument.author) !== userId)
+      throw new BadRequestException("The comment does not belong to the user")
+
+    await existingDocument.deleteOne()
+
+    return true
   }
 }
 

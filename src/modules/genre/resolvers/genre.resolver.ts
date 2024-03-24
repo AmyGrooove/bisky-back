@@ -2,7 +2,6 @@ import { Args, Query, Resolver } from "@nestjs/graphql"
 import { GenreService } from "../services/genre.service"
 import { GeneralGenreQuery } from "../queries/generalGenre.query"
 import { GenreFullModel } from "../entities/genreFull.entity"
-import { ObjectId } from "mongoose"
 import { AnimeService } from "../../anime/services/anime.service"
 import { GeneralAnimeQuery } from "../../anime/queries/anime/generalAnime.query"
 
@@ -31,10 +30,7 @@ class GenreResolver {
       (await this.genreService.getGenres(genreQuery)).map(async (el) => {
         const relatedWorks = await this.animeService.getAnimes({
           ...animeQuery,
-          filter: {
-            ...animeQuery.filter,
-            genres_ID: [el._id as unknown as ObjectId],
-          },
+          filter: { ...animeQuery.filter, genres_ID: [el._id.toString()] },
         })
 
         return { ...el, relatedWorks: relatedWorks }

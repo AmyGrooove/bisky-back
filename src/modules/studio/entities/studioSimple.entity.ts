@@ -1,5 +1,4 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import { StudioModel } from "./studio.entity"
 
 @ObjectType({
@@ -7,7 +6,7 @@ import { StudioModel } from "./studio.entity"
 })
 class StudioSimpleModel extends StudioModel {
   @Field(() => [String])
-  relatedWorks: ObjectId[]
+  relatedWorks: string[]
 }
 
 export { StudioSimpleModel }

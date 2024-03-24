@@ -23,7 +23,9 @@ const getQueryAggregateObject = (
     if (itemObject[value]) {
       const newValue =
         value.indexOf("_ID") !== -1 && !!itemObject[value]
-          ? { $in: itemObject[value].map((el) => new Types.ObjectId(el)) }
+          ? {
+              $in: itemObject[value].map((el) => new Types.ObjectId(el)),
+            }
           : itemObject[value].from === null ||
             itemObject[value].to === null ||
             !!itemObject[value]?.from ||

@@ -1,5 +1,4 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import { AnimeModel } from "./anime.entity"
 import { RelatedAnimeSimpleModel } from "./additional/relatedAnimeSimple.entity"
 import { OtherPlatformSimpleModel } from "./additional/otherPlatformSimple.entity"
@@ -9,20 +8,20 @@ class AnimeSimpleModel extends AnimeModel {
   @Field(() => [RelatedAnimeSimpleModel])
   related: RelatedAnimeSimpleModel[]
 
-  @Field(() => [String], { description: "Genres of this anime (ID)" })
-  genres: ObjectId[]
+  @Field(() => [String], { description: "Genres of this anime (_id)" })
+  genres: string[]
 
   @Field(() => [String], {
-    description: "The studios that developed this anime (ID)",
+    description: "The studios that developed this anime (_id)",
   })
-  studios: ObjectId[]
+  studios: string[]
 
   @Field(() => String, {
     nullable: true,
     defaultValue: null,
-    description: "Related other projects with this anime (ID)",
+    description: "Related other projects with this anime (_id)",
   })
-  franchise: ObjectId | null
+  franchise: string | null
 
   @Field(() => [OtherPlatformSimpleModel])
   otherPlatforms: OtherPlatformSimpleModel[]

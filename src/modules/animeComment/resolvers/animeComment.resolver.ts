@@ -1,5 +1,4 @@
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import { AnimeCommentService } from "../services/animeComment.service"
 import { AnimeCommentModel } from "../entities/animeComment.entity"
 import { SortAnimeCommentQuery } from "../query/sortAnimeComment.query"
@@ -10,8 +9,8 @@ class AnimeCommentResolver {
 
   @Query(() => [AnimeCommentModel], { name: "getAnimeComments" })
   async getAnimeComments(
-    @Args("animeId", { type: () => String })
-    base: ObjectId,
+    @Args("animeId", { type: () => String, description: "Anime _id" })
+    animeId: string,
 
     @Args("page", {
       type: () => Int,
@@ -34,7 +33,7 @@ class AnimeCommentResolver {
     })
     sort: SortAnimeCommentQuery | null,
   ) {
-    return this.animeCommentService.getComments({ base, page, count, sort })
+    return this.animeCommentService.getComments({ animeId, page, count, sort })
   }
 }
 

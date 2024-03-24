@@ -9,10 +9,10 @@ class AnimeComment {
   @Prop({ type: mongoose.Schema.Types.ObjectId, required: true, ref: "Anime" })
   base: ObjectId
 
-  @Prop({ type: Date, required: true, set: (el: Date) => el ?? new Date() })
+  @Prop({ type: Date, default: new Date() })
   createTime: Date
 
-  @Prop({ type: Date, required: true, set: () => new Date() })
+  @Prop({ type: Date, default: new Date() })
   updateTime: Date
 
   @Prop({ type: String, required: true })

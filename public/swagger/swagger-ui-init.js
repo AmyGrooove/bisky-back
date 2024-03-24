@@ -33,10 +33,136 @@ window.onload = function() {
           ]
         }
       },
-      "/api/user/{animeId}/status": {
+      "/api/user/{animeId}/comment": {
+        "put": {
+          "operationId": "AnimeCommentController_addAnimeComment",
+          "summary": "Add a comment to the anime",
+          "parameters": [
+            {
+              "name": "animeId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeCommentDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeComment"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
+      "/api/user/{commentId}": {
         "patch": {
+          "operationId": "AnimeCommentController_updateAnimeComment",
+          "summary": "Update comment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeCommentDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeComment"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "AnimeCommentController_deleteAnimeComment",
+          "summary": "Delete comment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeComment"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
+      "/api/user/{animeId}/status": {
+        "put": {
           "operationId": "AnimeEstimateController_updateAnimeStatus",
-          "summary": "Update anime in list",
+          "summary": "Add/update anime from the list",
           "parameters": [
             {
               "name": "animeId",
@@ -77,12 +203,46 @@ window.onload = function() {
               "bearer": []
             }
           ]
+        },
+        "delete": {
+          "operationId": "AnimeEstimateController_deleteAnimeFromList",
+          "summary": "Remove anime from list",
+          "parameters": [
+            {
+              "name": "animeId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeEstimate"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
         }
       },
       "/api/user/{animeId}/score": {
         "patch": {
           "operationId": "AnimeEstimateController_updateAnimeScore",
-          "summary": "Update anime score",
+          "summary": "Update anime rating in the list",
           "parameters": [
             {
               "name": "animeId",
@@ -128,7 +288,7 @@ window.onload = function() {
       "/api/user/{animeId}/watchedSeriesCount": {
         "patch": {
           "operationId": "AnimeEstimateController_updateAnimeWatchedSeriesCount",
-          "summary": "Update anime watched series count",
+          "summary": "Update the number of watched anime episodes in the list",
           "parameters": [
             {
               "name": "animeId",
@@ -315,6 +475,19 @@ window.onload = function() {
           "required": [
             "en",
             "ru"
+          ]
+        },
+        "UpdateAnimeCommentDto": {
+          "type": "object",
+          "properties": {
+            "text": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 450
+            }
+          },
+          "required": [
+            "text"
           ]
         },
         "UpdateAnimeStatusDto": {

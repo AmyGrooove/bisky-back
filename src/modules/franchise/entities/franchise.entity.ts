@@ -1,11 +1,10 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ObjectId } from "mongoose"
 import { LanguageModel } from "../../../auxiliary"
 
 @ObjectType({ description: "Related projects" })
 class FranchiseModel {
   @Field(() => String)
-  _id: ObjectId
+  _id: string
 
   @Field(() => LanguageModel)
   name: LanguageModel

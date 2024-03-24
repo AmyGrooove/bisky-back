@@ -1,4 +1,4 @@
-import { Model, ObjectId, Types } from "mongoose"
+import { Model, Types } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { GeneralAnimeQuery } from "../queries/anime/generalAnime.query"
@@ -16,8 +16,11 @@ class AnimeService {
     private readonly animeModel: Model<Anime>,
   ) {}
 
-  async getAnimes(query: GeneralAnimeQuery, userId?: ObjectId) {
+  async getAnimes(query: GeneralAnimeQuery, userId?: string) {
     const { page, count, limit, filter, sort } = query
+
+    console.log(getSortQueryAggregate(sort))
+    console.log(sort)
 
     return this.animeModel
       .aggregate(
@@ -55,7 +58,7 @@ class AnimeService {
                             cond: {
                               $eq: [
                                 "$$estimate.author",
-                                new Types.ObjectId(userId as unknown as string),
+                                new Types.ObjectId(userId),
                               ],
                             },
                           },

@@ -1,7 +1,6 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
 import { UserService } from "../services/user.service"
 import { UserPublicFullModel } from "../entities/userPublicFull.entity"
-import { ObjectId } from "mongoose"
 
 @Resolver()
 class UserResolver {
@@ -10,7 +9,7 @@ class UserResolver {
   @Query(() => UserPublicFullModel, { name: "getUserPublicData" })
   async getUserPublicData(
     @Args("_id", { type: () => String, nullable: true, defaultValue: null })
-    _id?: ObjectId,
+    _id?: string,
 
     @Args("username", {
       type: () => String,

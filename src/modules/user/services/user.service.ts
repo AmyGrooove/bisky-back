@@ -1,4 +1,4 @@
-import { Model, ObjectId } from "mongoose"
+import { Model } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { User } from "../schemas/user.schema"
@@ -22,12 +22,12 @@ class UserService {
     return createdUser.save()
   }
 
-  async findFullUserById(_id: ObjectId) {
+  async findFullUserById(_id: string) {
     return this.userModel.findById(_id).lean().exec()
   }
 
   async findPublicUserData(props: {
-    _id?: ObjectId | null
+    _id?: string | null
     username?: string | null
   }) {
     const filteredProps = Object.fromEntries(
@@ -41,7 +41,7 @@ class UserService {
       .exec()
   }
 
-  async getUser(props: { _id?: ObjectId; username?: string }) {
+  async getUser(props: { _id?: string; username?: string }) {
     const filteredProps = Object.fromEntries(
       Object.entries(props).filter(([_, value]) => value !== null),
     )
@@ -87,7 +87,7 @@ class UserService {
     return !!user
   }
 
-  async updateUser(props: { _id: ObjectId; updateUserDto: UpdateUserDto }) {
+  async updateUser(props: { _id: string; updateUserDto: UpdateUserDto }) {
     const { _id, updateUserDto } = props
 
     return this.userModel.findByIdAndUpdate(_id, updateUserDto).lean().exec()
