@@ -5,12 +5,15 @@ import { AnimeComment } from "../schemas/animeComment.schema"
 import { SortAnimeCommentQuery } from "../query/sortAnimeComment.query"
 import { getSortQueryAggregate } from "../../../functions"
 import { Anime } from "src/modules/anime/schemas/anime.schema"
+import { AnimeCommentLike } from "../schemas/animeCommentLike.schema"
 
 @Injectable()
 class AnimeCommentService {
   constructor(
     @InjectModel("AnimeComment")
     private readonly animeCommentModel: Model<AnimeComment>,
+    @InjectModel("AnimeCommentLike")
+    private readonly animeCommentLikeModel: Model<AnimeCommentLike>,
     @InjectModel("Anime")
     private readonly animeModel: Model<Anime>,
   ) {}
@@ -126,6 +129,43 @@ class AnimeCommentService {
       throw new BadRequestException("The comment does not belong to the user")
 
     await existingDocument.deleteOne()
+
+    return true
+  }
+
+  async updateAnimeCommentLike(query: {
+    userId: string
+    commentId: string
+    like: boolean | null
+  }) {
+    const { userId, commentId, like } = query
+
+    if (!(await this.animeCommentModel.findById(commentId).lean().exec()))
+      throw new BadRequestException("No such comment found")
+
+    const existingDocument = await this.animeCommentLikeModel.findOne({
+      base: commentId,
+      author: userId,
+    })
+
+    if (!existingDocument) {
+      if (like === null) throw new BadRequestException("Like doesn't exist")
+      else {
+        const newDocument = new this.animeCommentLikeModel({
+          base: commentId,
+          author: userId,
+          isLiked: like,
+        })
+        await newDocument.save()
+      }
+    } else {
+      if (like === null) await existingDocument.deleteOne()
+      else {
+        existingDocument.isLiked = like
+        existingDocument.updateTime = new Date()
+        await existingDocument.save()
+      }
+    }
 
     return true
   }

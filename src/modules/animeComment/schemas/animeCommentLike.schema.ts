@@ -13,8 +13,8 @@ class AnimeCommentLike {
   })
   base: ObjectId
 
-  @Prop({ type: Date, required: true, set: () => new Date() })
-  createTime: Date
+  @Prop({ type: Date, default: new Date() })
+  updateTime: Date
 
   @Prop({ type: Boolean, required: true })
   isLiked: boolean

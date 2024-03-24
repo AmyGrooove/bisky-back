@@ -159,6 +159,52 @@ window.onload = function() {
           ]
         }
       },
+      "/api/user/{commentId}/like": {
+        "patch": {
+          "operationId": "AnimeCommentLikeController_updateAnimeCommentLike",
+          "summary": "Add/Delete/Update like on comment",
+          "parameters": [
+            {
+              "name": "commentId",
+              "required": true,
+              "in": "path",
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAnimeCommentLikeDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "AnimeComment"
+          ],
+          "security": [
+            {
+              "bearer": []
+            }
+          ]
+        }
+      },
       "/api/user/{animeId}/status": {
         "put": {
           "operationId": "AnimeEstimateController_updateAnimeStatus",
@@ -488,6 +534,19 @@ window.onload = function() {
           },
           "required": [
             "text"
+          ]
+        },
+        "UpdateAnimeCommentLikeDto": {
+          "type": "object",
+          "properties": {
+            "like": {
+              "type": "boolean",
+              "nullable": true,
+              "description": "If null, then the like is deleted"
+            }
+          },
+          "required": [
+            "like"
           ]
         },
         "UpdateAnimeStatusDto": {
