@@ -8,7 +8,7 @@ import {
   Body,
 } from "@nestjs/common"
 import {
-  ApiBearerAuth,
+  ApiSecurity,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -24,7 +24,7 @@ class AnimeCommentLikeController {
   constructor(private animeCommentLikeService: AnimeCommentLikeService) {}
 
   @ApiOperation({ summary: "Add/Delete/Update like on comment" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",

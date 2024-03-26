@@ -21,7 +21,8 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle("Bisky API")
     .setVersion("1.2.0")
-    .addBearerAuth()
+    .addSecurity("AccessToken", { type: "http", scheme: "bearer" })
+    .addSecurity("RefreshToken", { type: "http", scheme: "bearer" })
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup("/swagger", app, document, {

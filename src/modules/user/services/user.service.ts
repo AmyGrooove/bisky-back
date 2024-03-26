@@ -1,4 +1,4 @@
-import { Model } from "mongoose"
+import { Model, Types } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { User } from "../schemas/user.schema"
@@ -12,7 +12,7 @@ class UserService {
     private readonly userModel: Model<User>,
   ) {}
 
-  async getUser(query: { _id?: string; username?: string }) {
+  async getUser(query: { _id?: Types.ObjectId; username?: string }) {
     const filteredProps = Object.fromEntries(
       Object.entries(query).filter(([_, value]) => value !== null),
     )

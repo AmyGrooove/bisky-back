@@ -74,7 +74,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -120,7 +120,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         },
@@ -154,7 +154,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -200,7 +200,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -246,7 +246,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         },
@@ -280,7 +280,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -326,7 +326,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -372,7 +372,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -399,7 +399,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -475,9 +475,9 @@ window.onload = function() {
           "parameters": [
             {
               "name": "Authorization",
-              "required": true,
+              "required": false,
               "in": "header",
-              "description": "RefreshToken (starting with \"Bearer \")",
+              "description": "(Leave empty. Use lock icon on the top-right to authorize)",
               "schema": {
                 "type": "string"
               }
@@ -497,6 +497,11 @@ window.onload = function() {
           },
           "tags": [
             "Auth"
+          ],
+          "security": [
+            {
+              "RefreshToken": []
+            }
           ]
         }
       },
@@ -522,7 +527,7 @@ window.onload = function() {
           ],
           "security": [
             {
-              "bearer": []
+              "AccessToken": []
             }
           ]
         }
@@ -566,10 +571,13 @@ window.onload = function() {
     "servers": [],
     "components": {
       "securitySchemes": {
-        "bearer": {
-          "scheme": "bearer",
-          "bearerFormat": "JWT",
-          "type": "http"
+        "AccessToken": {
+          "type": "http",
+          "scheme": "bearer"
+        },
+        "RefreshToken": {
+          "type": "http",
+          "scheme": "bearer"
         }
       },
       "schemas": {

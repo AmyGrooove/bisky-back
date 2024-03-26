@@ -12,10 +12,10 @@ import {
 } from "@nestjs/common"
 import {
   ApiTags,
-  ApiBearerAuth,
   ApiOperation,
   ApiResponse,
   ApiHeader,
+  ApiSecurity,
 } from "@nestjs/swagger"
 import { User } from "../../user/schemas/user.schema"
 import { UserService } from "../../user/services/user.service"
@@ -40,7 +40,7 @@ class AuthController {
     description: "Success",
     type: User,
   })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @UseGuards(AccessTokenGuard)
   @Get("whoami")
   async whoami(@Request() req) {
@@ -82,8 +82,10 @@ class AuthController {
   })
   @ApiHeader({
     name: "Authorization",
-    description: `RefreshToken (starting with "Bearer ")`,
+    required: false,
+    description: "(Leave empty. Use lock icon on the top-right to authorize)",
   })
+  @ApiSecurity("RefreshToken")
   @UseGuards(RefreshTokenGuard)
   @Patch("refresh")
   refreshTokens(
@@ -91,7 +93,7 @@ class AuthController {
     @Request() req,
   ) {
     return this.authService.refreshTokens({
-      userId: req.user.id,
+      userId: req.user._id,
       refreshToken: authentication.replace("Bearer ", ""),
     })
   }
@@ -104,7 +106,7 @@ class AuthController {
     description: "Success",
     type: Boolean,
   })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @UseGuards(AccessTokenGuard)
   @Patch("logout")
   logout(@Request() req) {

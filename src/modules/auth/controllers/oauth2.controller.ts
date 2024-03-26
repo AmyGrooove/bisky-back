@@ -19,8 +19,6 @@ class OAuth2Controller {
   @Get("google/callback")
   @UseGuards(AuthGuard("google"))
   googleLoginCallback(@Req() req) {
-    console.log(req.user, 123)
-
     return req.user
   }
 }

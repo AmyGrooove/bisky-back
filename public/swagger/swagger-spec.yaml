@@ -40,7 +40,7 @@ paths:
       tags:
         - AnimeComment
       security:
-        - bearer: []
+        - AccessToken: []
   /api/user/{commentId}:
     patch:
       operationId: AnimeCommentController_updateAnimeComment
@@ -67,7 +67,7 @@ paths:
       tags:
         - AnimeComment
       security:
-        - bearer: []
+        - AccessToken: []
     delete:
       operationId: AnimeCommentController_deleteAnimeComment
       summary: Delete comment
@@ -87,7 +87,7 @@ paths:
       tags:
         - AnimeComment
       security:
-        - bearer: []
+        - AccessToken: []
   /api/user/{commentId}/like:
     patch:
       operationId: AnimeCommentLikeController_updateAnimeCommentLike
@@ -114,7 +114,7 @@ paths:
       tags:
         - AnimeComment
       security:
-        - bearer: []
+        - AccessToken: []
   /api/user/{animeId}/status:
     patch:
       operationId: AnimeEstimateController_updateAnimeStatus
@@ -141,7 +141,7 @@ paths:
       tags:
         - AnimeEstimate
       security:
-        - bearer: []
+        - AccessToken: []
     delete:
       operationId: AnimeEstimateController_deleteAnimeFromList
       summary: Remove anime from list
@@ -161,7 +161,7 @@ paths:
       tags:
         - AnimeEstimate
       security:
-        - bearer: []
+        - AccessToken: []
   /api/user/{animeId}/score:
     patch:
       operationId: AnimeEstimateController_updateAnimeScore
@@ -188,7 +188,7 @@ paths:
       tags:
         - AnimeEstimate
       security:
-        - bearer: []
+        - AccessToken: []
   /api/user/{animeId}/watchedSeriesCount:
     patch:
       operationId: AnimeEstimateController_updateAnimeWatchedSeriesCount
@@ -215,7 +215,7 @@ paths:
       tags:
         - AnimeEstimate
       security:
-        - bearer: []
+        - AccessToken: []
   /api/auth/whoami:
     get:
       operationId: AuthController_whoami
@@ -231,7 +231,7 @@ paths:
       tags:
         - Auth
       security:
-        - bearer: []
+        - AccessToken: []
   /api/auth/register:
     put:
       operationId: AuthController_register
@@ -278,9 +278,9 @@ paths:
       summary: Renew Access Token
       parameters:
         - name: Authorization
-          required: true
+          required: false
           in: header
-          description: RefreshToken (starting with "Bearer ")
+          description: (Leave empty. Use lock icon on the top-right to authorize)
           schema:
             type: string
       responses:
@@ -292,6 +292,8 @@ paths:
                 $ref: '#/components/schemas/TokensModel'
       tags:
         - Auth
+      security:
+        - RefreshToken: []
   /api/auth/logout:
     patch:
       operationId: AuthController_logout
@@ -307,7 +309,7 @@ paths:
       tags:
         - Auth
       security:
-        - bearer: []
+        - AccessToken: []
   /api/auth/google:
     get:
       operationId: OAuth2Controller_googleLogin
@@ -335,10 +337,12 @@ tags: []
 servers: []
 components:
   securitySchemes:
-    bearer:
-      scheme: bearer
-      bearerFormat: JWT
+    AccessToken:
       type: http
+      scheme: bearer
+    RefreshToken:
+      type: http
+      scheme: bearer
   schemas:
     FactModel:
       type: object

@@ -127,7 +127,7 @@ class AuthService {
         { _id: userId, username },
         {
           secret: this.configService.get("JWT_ACCESS_SECRET"),
-          expiresIn: "3m",
+          expiresIn: "1d",
         },
       ),
       this.jwtService.signAsync(

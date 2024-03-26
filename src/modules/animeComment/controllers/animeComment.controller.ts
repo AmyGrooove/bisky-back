@@ -10,7 +10,7 @@ import {
   Delete,
 } from "@nestjs/common"
 import {
-  ApiBearerAuth,
+  ApiSecurity,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -26,7 +26,7 @@ class AnimeCommentController {
   constructor(private animeCommentService: AnimeCommentService) {}
 
   @ApiOperation({ summary: "Add a comment to the anime" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
@@ -48,7 +48,7 @@ class AnimeCommentController {
   }
 
   @ApiOperation({ summary: "Update comment" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
@@ -70,7 +70,7 @@ class AnimeCommentController {
   }
 
   @ApiOperation({ summary: "Delete comment" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",

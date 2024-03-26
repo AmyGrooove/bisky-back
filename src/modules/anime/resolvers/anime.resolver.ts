@@ -94,11 +94,13 @@ class AnimeResolver {
           },
         })
 
-        // const relatedAnimes = await this.animeService.getAnimes({
-        //   count: animeQuery.limit?.relatedCount ?? 100,
-        //   page: 1,
-        //   filter: { _id: el.related.map((item) => item.base) },
-        // })
+        const relatedAnimes = await this.animeService.getAnimes({
+          count: animeQuery.limit?.relatedCount ?? 100,
+          page: 1,
+          filter: {
+            _id_ID: el.related.map((item) => item.base).filter((item) => item),
+          },
+        })
 
         return {
           ...el,
@@ -109,11 +111,13 @@ class AnimeResolver {
             platform: platforms[index],
           })),
           studios: studios,
-          // related: el.related.map((item, index) => ({
-          //   shikiId: item.shikiId,
-          //   relation: item.relation,
-          //   base: relatedAnimes[index],
-          // })),
+          related: el.related
+            .filter((item) => item.base)
+            .map((item, index) => ({
+              shikiId: item.shikiId,
+              relation: item.relation,
+              base: relatedAnimes[index],
+            })),
         }
       }),
     )

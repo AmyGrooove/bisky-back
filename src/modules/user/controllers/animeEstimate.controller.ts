@@ -9,7 +9,7 @@ import {
   Delete,
 } from "@nestjs/common"
 import {
-  ApiBearerAuth,
+  ApiSecurity,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -27,7 +27,7 @@ class AnimeEstimateController {
   constructor(private animeEstimateService: AnimeEstimateService) {}
 
   @ApiOperation({ summary: "Add/Update anime from the list" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
@@ -49,7 +49,7 @@ class AnimeEstimateController {
   }
 
   @ApiOperation({ summary: "Update anime rating in the list" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
@@ -73,7 +73,7 @@ class AnimeEstimateController {
   @ApiOperation({
     summary: "Update the number of watched anime episodes in the list",
   })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
@@ -95,7 +95,7 @@ class AnimeEstimateController {
   }
 
   @ApiOperation({ summary: "Remove anime from list" })
-  @ApiBearerAuth()
+  @ApiSecurity("AccessToken")
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",

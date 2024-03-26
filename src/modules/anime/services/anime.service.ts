@@ -19,9 +19,6 @@ class AnimeService {
   async getAnimes(query: GeneralAnimeQuery, userId?: string) {
     const { page, count, limit, filter, sort } = query
 
-    console.log(getSortQueryAggregate(sort))
-    console.log(sort)
-
     return this.animeModel
       .aggregate(
         [

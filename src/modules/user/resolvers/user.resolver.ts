@@ -1,6 +1,7 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
 import { UserService } from "../services/user.service"
 import { UserPublicFullModel } from "../entities/userPublicFull.entity"
+import { Types } from "mongoose"
 
 @Resolver()
 class UserResolver {
@@ -18,7 +19,10 @@ class UserResolver {
     })
     username?: string,
   ) {
-    return this.userService.getUser({ _id, username })
+    return this.userService.getUser({
+      _id: _id === null ? null : new Types.ObjectId(_id),
+      username,
+    })
   }
 }
 
