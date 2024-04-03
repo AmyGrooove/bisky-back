@@ -7,6 +7,7 @@ import { GenreModule } from "../genre/genre.module"
 import { PlatformModule } from "../platform/platform.module"
 import { StudioModule } from "../studio/studio.module"
 import { AnimeSchema } from "./schemas/anime.schema"
+import { AnimeController } from "./controllers/anime.controller"
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AnimeSchema } from "./schemas/anime.schema"
   ],
   providers: [AnimeResolver, AnimeService],
   exports: [AnimeService],
+  controllers: [AnimeController],
 })
 class AnimeModule {}
 

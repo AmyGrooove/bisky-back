@@ -33,6 +33,31 @@ window.onload = function() {
           ]
         }
       },
+      "/api/auth/allIds": {
+        "get": {
+          "operationId": "AnimeController_whoami",
+          "summary": "Get all id`s",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Anime"
+          ]
+        }
+      },
       "/api/user/{animeId}/comment": {
         "put": {
           "operationId": "AnimeCommentController_addAnimeComment",

@@ -199,6 +199,12 @@ class AnimeService {
       )
       .exec()
   }
+
+  async getAllAnimeIds() {
+    return (await this.animeModel.find().select("_id").lean().exec()).map(
+      (item) => item._id,
+    )
+  }
 }
 
 export { AnimeService }
