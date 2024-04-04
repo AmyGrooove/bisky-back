@@ -11,6 +11,13 @@ class GeneralAnimeQuery {
   @Field(() => Int, { defaultValue: 10, description: "Number of output items" })
   count?: number
 
+  @Field(() => String, {
+    nullable: true,
+    defaultValue: null,
+    description: "Search anime by all titles (including incorrect case)",
+  })
+  searchInput?: string | null
+
   @Field(() => FilterAnimeQuery, {
     nullable: true,
     defaultValue: null,

@@ -6,6 +6,7 @@ import { EListStatus, EStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,
   getQueryAggregateObject,
+  convertIncorrectKeyboard,
 } from "../../../functions"
 import { Anime } from "../schemas/anime.schema"
 
@@ -17,7 +18,25 @@ class AnimeService {
   ) {}
 
   async getAnimes(query: GeneralAnimeQuery, userId?: string) {
-    const { page, count, limit, filter, sort } = query
+    const { page, count, limit, filter, sort, searchInput } = query
+
+    const convertedSearchInput = searchInput
+      ? convertIncorrectKeyboard(searchInput)
+      : null
+
+    const searchMatch = !!convertedSearchInput
+      ? [
+          {
+            $match: {
+              $or: [
+                { "labels.en": { $in: convertedSearchInput } },
+                { "labels.ru": { $in: convertedSearchInput } },
+                { "labels.synonymous": { $in: convertedSearchInput } },
+              ],
+            },
+          },
+        ]
+      : []
 
     return this.animeModel
       .aggregate(
@@ -172,7 +191,9 @@ class AnimeService {
                     },
                   },
                 },
-                averageDuration: { $avg: "$episodes.singleEpisodes.duration" },
+                averageDuration: {
+                  $ceil: { $avg: "$episodes.singleEpisodes.duration" },
+                },
                 airedCount: {
                   $cond: {
                     if: { $eq: ["$status", EStatus.anons] },
@@ -191,6 +212,7 @@ class AnimeService {
           },
           { $project: { estimatesCollection: 0, scoredCollection: 0 } },
           ...getQueryAggregateObject(filter),
+          ...searchMatch,
           ...getSortQueryAggregate(sort),
           { $skip: (page - 1) * count },
           { $limit: count },

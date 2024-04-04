@@ -112,12 +112,12 @@ class AnimeResolver {
           })),
           studios: studios,
           related: el.related
-            .filter((item) => item.base)
             .map((item, index) => ({
               shikiId: item.shikiId,
               relation: item.relation,
               base: relatedAnimes[index],
-            })),
+            }))
+            .filter((item) => item.base),
         }
       }),
     )

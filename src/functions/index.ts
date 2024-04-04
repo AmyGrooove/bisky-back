@@ -1,3 +1,5 @@
 export { getQueryObject } from "./getQueryObject"
 export { getSortQueryAggregate } from "./getSortQueryAggregate"
 export { getQueryAggregateObject } from "./getQueryAggregateObject"
+export { convertIncorrectKeyboard } from "./convertIncorrectKeyboard"
+export { getSortAggregateString } from "./getSortAggregateString"

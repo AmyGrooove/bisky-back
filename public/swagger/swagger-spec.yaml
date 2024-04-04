@@ -14,7 +14,7 @@ paths:
                 $ref: '#/components/schemas/FactModel'
       tags:
         - Fact
-  /api/auth/allIds:
+  /api/anime/allIds:
     get:
       operationId: AnimeController_whoami
       summary: Get all id`s

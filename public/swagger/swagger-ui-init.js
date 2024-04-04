@@ -33,7 +33,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/auth/allIds": {
+      "/api/anime/allIds": {
         "get": {
           "operationId": "AnimeController_whoami",
           "summary": "Get all id`s",
