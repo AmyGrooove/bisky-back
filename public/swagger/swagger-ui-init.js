@@ -450,7 +450,7 @@ window.onload = function() {
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/TokensModel"
+                    "$ref": "#/components/schemas/UserWithTokensModel"
                   }
                 }
               }
@@ -482,7 +482,7 @@ window.onload = function() {
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/TokensModel"
+                    "$ref": "#/components/schemas/UserWithTokensModel"
                   }
                 }
               }
@@ -747,9 +747,31 @@ window.onload = function() {
             "email"
           ]
         },
-        "TokensModel": {
+        "UserWithTokensModel": {
           "type": "object",
           "properties": {
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "avatar": {
+              "type": "string",
+              "nullable": true
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "user",
+                "moderator",
+                "admin"
+              ]
+            },
+            "lastOnlineDate": {
+              "format": "date-time",
+              "type": "string"
+            },
             "accessToken": {
               "type": "string"
             },
@@ -758,6 +780,11 @@ window.onload = function() {
             }
           },
           "required": [
+            "username",
+            "email",
+            "avatar",
+            "role",
+            "lastOnlineDate",
             "accessToken",
             "refreshToken"
           ]
@@ -778,6 +805,21 @@ window.onload = function() {
           "required": [
             "username",
             "password"
+          ]
+        },
+        "TokensModel": {
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "refreshToken": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "accessToken",
+            "refreshToken"
           ]
         }
       }

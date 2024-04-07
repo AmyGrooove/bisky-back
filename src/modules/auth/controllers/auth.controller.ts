@@ -24,6 +24,7 @@ import { CreateUserDto } from "../dto/createUser.dto"
 import { LoginUserDto } from "../dto/loginUser.dto"
 import { AccessTokenGuard } from "../guards/accessToken.guard"
 import { RefreshTokenGuard } from "../guards/refreshToken.guard"
+import { UserWithTokensModel } from "../entities/userWithTokens.entity"
 import { TokensModel } from "../entities/tokens.entity"
 
 @ApiTags("Auth")
@@ -56,22 +57,30 @@ class AuthController {
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
-    type: TokensModel,
+    type: UserWithTokensModel,
   })
   @Put("register")
-  register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.register(createUserDto)
+  async register(@Body() createUserDto: CreateUserDto) {
+    const tokensData = await this.authService.register(createUserDto)
+
+    const userData = await this.whoami({ user: { _id: tokensData._id } })
+
+    return { ...tokensData, ...userData }
   }
 
   @ApiOperation({ summary: "Sign In" })
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
-    type: TokensModel,
+    type: UserWithTokensModel,
   })
   @Post("login")
-  login(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto)
+  async login(@Body() loginUserDto: LoginUserDto) {
+    const tokensData = await this.authService.login(loginUserDto)
+
+    const userData = await this.whoami({ user: { _id: tokensData._id } })
+
+    return { ...tokensData, ...userData }
   }
 
   @ApiOperation({ summary: "Renew Access Token" })

@@ -31,14 +31,6 @@ class UserService {
             as: "animeEstimates",
           },
         },
-        {
-          $lookup: {
-            from: "AnimeList",
-            localField: "_id",
-            foreignField: "author",
-            as: "animeLists",
-          },
-        },
       ])
     )[0]
 

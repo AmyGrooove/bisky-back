@@ -265,7 +265,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokensModel'
+                $ref: '#/components/schemas/UserWithTokensModel'
       tags:
         - Auth
   /api/auth/login:
@@ -285,7 +285,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokensModel'
+                $ref: '#/components/schemas/UserWithTokensModel'
       tags:
         - Auth
   /api/auth/refresh:
@@ -460,14 +460,35 @@ components:
         - username
         - password
         - email
-    TokensModel:
+    UserWithTokensModel:
       type: object
       properties:
+        username:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        role:
+          type: string
+          enum:
+            - user
+            - moderator
+            - admin
+        lastOnlineDate:
+          format: date-time
+          type: string
         accessToken:
           type: string
         refreshToken:
           type: string
       required:
+        - username
+        - email
+        - avatar
+        - role
+        - lastOnlineDate
         - accessToken
         - refreshToken
     LoginUserDto:
@@ -483,3 +504,13 @@ components:
       required:
         - username
         - password
+    TokensModel:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken

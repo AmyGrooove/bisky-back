@@ -44,7 +44,7 @@ class AuthService {
       refreshToken: tokens.refreshToken,
     })
 
-    return tokens
+    return { ...tokens, _id: newUser._id }
   }
 
   async login(query: LoginUserDto) {
@@ -69,7 +69,7 @@ class AuthService {
       refreshToken: tokens.refreshToken,
     })
 
-    return tokens
+    return { ...tokens, _id: fullUser._id }
   }
 
   async logout(userId: string) {

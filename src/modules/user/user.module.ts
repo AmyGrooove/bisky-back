@@ -7,6 +7,7 @@ import { AnimeEstimateSchema } from "./schemas/animeEstimate.schema"
 import { AnimeEstimateController } from "./controllers/animeEstimate.controller"
 import { AnimeEstimateService } from "./services/animeEstimate.service"
 import { AnimeSchema } from "../anime/schemas/anime.schema"
+import { AnimeModule } from "../anime/anime.module"
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AnimeSchema } from "../anime/schemas/anime.schema"
       { name: "Anime", schema: AnimeSchema },
       { name: "AnimeEstimate", schema: AnimeEstimateSchema },
     ]),
+    AnimeModule,
   ],
   providers: [UserResolver, UserService, AnimeEstimateService],
   controllers: [AnimeEstimateController],
