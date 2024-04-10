@@ -6,7 +6,7 @@ import {
   EStatus,
   FloatBetweenQuery,
   IntBetweenQuery,
-} from "../../../../auxiliary"
+} from "../../../auxiliary"
 
 @InputType({ description: "Limit documents by these parameters" })
 class FilterAnimeQuery {

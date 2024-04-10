@@ -24,14 +24,16 @@ const getQueryAggregateObject = (
       const newValue =
         value.indexOf("_ID") !== -1 && !!itemObject[value]
           ? {
-              $in: itemObject[value].map((el) => new Types.ObjectId(el)),
+              $in: [itemObject[value]]
+                .flat()
+                .map((el) => new Types.ObjectId(el)),
             }
           : itemObject[value].from === null ||
             itemObject[value].to === null ||
             !!itemObject[value]?.from ||
             !!itemObject[value]?.to
           ? getBetweenMatch(itemObject[value])
-          : { $in: itemObject[value] }
+          : { $in: [itemObject[value]].flat() }
 
       const newMatch = {
         $match: {

@@ -1,9 +1,11 @@
-import { Args, Query, Resolver } from "@nestjs/graphql"
+import { Args, Context, Query, Resolver } from "@nestjs/graphql"
 import { UserService } from "../services/user.service"
 import { UserPublicFullModel } from "../entities/userPublicFull.entity"
-import { Types } from "mongoose"
-import { GeneralAnimeQuery } from "../../anime/queries/anime/generalAnime.query"
+import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
 import { AnimeService } from "../../anime/services/anime.service"
+import { UseGuards } from "@nestjs/common"
+import { SimpleAccessTokenGuard } from "../../auth/guards/simpleAccessToken.guard"
+import { GeneralUserQuery } from "../queries/generalUser.query"
 
 @Resolver()
 class UserResolver {
@@ -12,6 +14,7 @@ class UserResolver {
     private animeService: AnimeService,
   ) {}
 
+  @UseGuards(SimpleAccessTokenGuard)
   @Query(() => UserPublicFullModel, { name: "getUserPublicData" })
   async getUserPublicData(
     @Args("animeQuery", {
@@ -20,30 +23,37 @@ class UserResolver {
     })
     animeQuery: GeneralAnimeQuery,
 
-    @Args("_id", { type: () => String, nullable: true, defaultValue: null })
-    _id?: string,
+    @Args("userQuery", {
+      type: () => GeneralUserQuery,
+      defaultValue: { isCurrentUser: false },
+    })
+    userQuery: GeneralUserQuery,
 
-    @Args("username", {
-      type: () => String,
-      nullable: true,
-      defaultValue: null,
-    })
-    username?: string,
+    @Context() context,
   ) {
-    const userData = await this.userService.getUser({
-      _id: _id === null ? null : new Types.ObjectId(_id),
-      username,
-    })
-    userData.animeEstimates.filter((item) => item.base)
+    const userData = await this.userService.getUser(
+      userQuery,
+      context.req?.user?._id,
+    )
+    userData.animeEstimates = userData.animeEstimates.filter((item) =>
+      !!item.base && !!animeQuery.filter._id_ID
+        ? animeQuery.filter._id_ID[0] === item.base._id.toString()
+        : true,
+    )
 
     const relatedAnimes = (
-      await this.animeService.getAnimes({
-        ...animeQuery,
-        filter: {
-          ...animeQuery.filter,
-          _id_ID: userData.animeEstimates.map((item) => item.base),
+      await this.animeService.getAnimes(
+        {
+          ...animeQuery,
+          filter: {
+            ...animeQuery.filter,
+            _id_ID:
+              animeQuery.filter._id_ID ??
+              userData.animeEstimates.map((item) => item.base),
+          },
         },
-      })
+        context.req?.user?._id,
+      )
     ).map((item, index) => ({
       ...userData.animeEstimates[index],
       base: item,

@@ -1,9 +1,11 @@
-import { Model, Types } from "mongoose"
+import { Model } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 import { User } from "../schemas/user.schema"
 import { CreateUserDto } from "../../auth/dto/createUser.dto"
 import { UpdateUserDto } from "../../auth/dto/updateUser.dto"
+import { GeneralUserQuery } from "../queries/generalUser.query"
+import { getQueryAggregateObject } from "../../../functions"
 
 @Injectable()
 class UserService {
@@ -12,17 +14,35 @@ class UserService {
     private readonly userModel: Model<User>,
   ) {}
 
-  async getUser(query: { _id?: Types.ObjectId; username?: string }) {
-    const filteredProps = Object.fromEntries(
-      Object.entries(query).filter(([_, value]) => value !== null),
+  async getUser(query: GeneralUserQuery, userId?: string) {
+    const { filter, animeListStatus } = query
+
+    const filteredProps = getQueryAggregateObject(
+      userId ? { _id_ID: [userId] } : filter,
     )
 
-    if (Object.keys(filteredProps).length === 0)
+    if (filteredProps.length === 0)
       throw new BadRequestException("Invalid data entered")
+
+    const filterAnimes = animeListStatus
+      ? [
+          {
+            $addFields: {
+              animeEstimates: {
+                $filter: {
+                  input: "$animeEstimates",
+                  as: "estimate",
+                  cond: { $eq: ["$$estimate.status", animeListStatus] },
+                },
+              },
+            },
+          },
+        ]
+      : []
 
     const data = (
       await this.userModel.aggregate([
-        { $match: filteredProps },
+        ...filteredProps,
         {
           $lookup: {
             from: "AnimeEstimate",
@@ -31,6 +51,7 @@ class UserService {
             as: "animeEstimates",
           },
         },
+        ...filterAnimes,
       ])
     )[0]
 
@@ -45,6 +66,7 @@ class UserService {
     email?: string | null
   }) {
     const filteredProps = Object.fromEntries(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       Object.entries(query).filter(([_, value]) => value !== null),
     )
 

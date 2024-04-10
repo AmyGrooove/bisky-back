@@ -2,7 +2,7 @@ import { Args, Query, Resolver } from "@nestjs/graphql"
 import { StudioService } from "../services/studio.service"
 import { GeneralStudioQuery } from "../queries/generalStudio.query"
 import { StudioFullModel } from "../entities/studioFull.entity"
-import { GeneralAnimeQuery } from "../../anime/queries/anime/generalAnime.query"
+import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
 import { AnimeService } from "../../anime/services/anime.service"
 
 @Resolver()

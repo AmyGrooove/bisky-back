@@ -3,7 +3,7 @@ import { FranchiseService } from "../services/franchise.service"
 import { GeneralFranchiseQuery } from "../queries/generalFranchise.query"
 import { FranchiseFullModel } from "../entities/franchiseFull.entity"
 import { AnimeService } from "../../anime/services/anime.service"
-import { GeneralAnimeQuery } from "../../anime/queries/anime/generalAnime.query"
+import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
 
 @Resolver()
 class FranchiseResolver {

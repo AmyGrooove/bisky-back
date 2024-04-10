@@ -75,7 +75,7 @@ const convertIncorrectKeyboard = (value: string | null) =>
         value,
         value
           .split("")
-          .map((item) => getInverseWord(item))
+          .map((item) => getInverseWord(item.toLowerCase()))
           .join(""),
       ].map((item) => new RegExp(item, "i"))
     : null

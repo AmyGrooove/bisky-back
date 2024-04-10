@@ -1,7 +1,7 @@
 import { Model, Types } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
-import { GeneralAnimeQuery } from "../queries/anime/generalAnime.query"
+import { GeneralAnimeQuery } from "../queries/generalAnime.query"
 import { EListStatus, EStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,

@@ -3,7 +3,7 @@ import { GenreService } from "../services/genre.service"
 import { GeneralGenreQuery } from "../queries/generalGenre.query"
 import { GenreFullModel } from "../entities/genreFull.entity"
 import { AnimeService } from "../../anime/services/anime.service"
-import { GeneralAnimeQuery } from "../../anime/queries/anime/generalAnime.query"
+import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
 
 @Resolver()
 class GenreResolver {
