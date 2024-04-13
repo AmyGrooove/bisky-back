@@ -24,7 +24,7 @@ class AnimeService {
       ? convertIncorrectKeyboard(searchInput)
       : null
 
-    const searchMatch = !!convertedSearchInput
+    const searchMatch = convertedSearchInput
       ? [
           {
             $match: {
@@ -166,6 +166,7 @@ class AnimeService {
                 },
               },
               episodes: {
+                count: { $subtract: ["$episodes.count", 1] },
                 nextEpisodeAiredDate: {
                   $cond: {
                     if: { $eq: ["$status", EStatus.released] },

@@ -70,7 +70,7 @@ const getInverseWord = (letter: string) =>
   }[letter] ?? letter)
 
 const convertIncorrectKeyboard = (value: string | null) =>
-  !!value
+  value
     ? [
         value,
         value

@@ -36,7 +36,7 @@ class UserResolver {
       context.req?.user?._id,
     )
     userData.animeEstimates = userData.animeEstimates.filter((item) =>
-      !!item.base && !!animeQuery.filter._id_ID
+      !!item.base && !!animeQuery.filter?._id_ID
         ? animeQuery.filter._id_ID[0] === item.base._id.toString()
         : true,
     )
@@ -48,7 +48,7 @@ class UserResolver {
           filter: {
             ...animeQuery.filter,
             _id_ID:
-              animeQuery.filter._id_ID ??
+              animeQuery.filter?._id_ID ??
               userData.animeEstimates.map((item) => item.base),
           },
         },
