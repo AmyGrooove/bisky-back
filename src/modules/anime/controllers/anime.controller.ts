@@ -14,7 +14,7 @@ class AnimeController {
     type: [String],
   })
   @Get("allIds")
-  async whoami() {
+  async allIds() {
     return this.animeService.getAllAnimeIds()
   }
 }

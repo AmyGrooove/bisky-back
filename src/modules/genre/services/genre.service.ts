@@ -22,6 +22,10 @@ class GenreService {
       .lean()
       .exec()
   }
+
+  async getAllGenreIdsAndNames() {
+    return this.genreModel.find().select("_id name").lean().exec()
+  }
 }
 
 export { GenreService }

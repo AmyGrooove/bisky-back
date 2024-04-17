@@ -22,6 +22,10 @@ class StudioService {
       .lean()
       .exec()
   }
+
+  async getAllStudioIdsAndNames() {
+    return this.studioModel.find().select("_id name").lean().exec()
+  }
 }
 
 export { StudioService }

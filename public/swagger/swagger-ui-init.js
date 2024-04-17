@@ -35,7 +35,7 @@ window.onload = function() {
       },
       "/api/anime/allIds": {
         "get": {
-          "operationId": "AnimeController_whoami",
+          "operationId": "AnimeController_allIds",
           "summary": "Get all id`s",
           "parameters": [],
           "responses": {
@@ -55,6 +55,56 @@ window.onload = function() {
           },
           "tags": [
             "Anime"
+          ]
+        }
+      },
+      "/api/studio/allIdsAndNames": {
+        "get": {
+          "operationId": "StudioController_allIdsAndNames",
+          "summary": "Get all id`s and names",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/StudioIdAndName"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Studio"
+          ]
+        }
+      },
+      "/api/genre/allIdsAndNames": {
+        "get": {
+          "operationId": "GenreController_allIdsAndNames",
+          "summary": "Get all id`s and names",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/GenreIdAndName"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "Genre"
           ]
         }
       },
@@ -619,6 +669,53 @@ window.onload = function() {
           "required": [
             "en",
             "ru"
+          ]
+        },
+        "StudioIdAndName": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "_id"
+          ]
+        },
+        "LanguageModel": {
+          "type": "object",
+          "properties": {
+            "en": {
+              "type": "string",
+              "nullable": true
+            },
+            "ru": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          "required": [
+            "en",
+            "ru"
+          ]
+        },
+        "GenreIdAndName": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "$ref": "#/components/schemas/LanguageModel"
+            },
+            "_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name",
+            "_id"
           ]
         },
         "UpdateAnimeCommentDto": {
