@@ -28,7 +28,7 @@ class AnimeResolver {
   async getAnimes(
     @Args("animeQuery", {
       type: () => GeneralAnimeQuery,
-      defaultValue: { page: 1, count: 10 },
+      defaultValue: { page: 1, count: 10, isPaginationOff: false },
     })
     animeQuery: GeneralAnimeQuery,
 
@@ -56,17 +56,18 @@ class AnimeResolver {
     })
     studioQuery: GeneralStudioQuery,
 
-    @Args("isSimpleData", { type: () => Boolean, defaultValue: false })
-    isSimpleData = false,
+    @Args("isWithoutRelations", { type: () => Boolean, defaultValue: true })
+    isWithoutRelations = true,
 
     @Context() context,
   ) {
     return Promise.all(
       (
-        await this.animeService.getAnimes(animeQuery, context.req?.user?._id)
+        await this.animeService.getAnimes({
+          query: animeQuery,
+          userId: context.req?.user?._id,
+        })
       ).map(async (el) => {
-        if (isSimpleData) return el
-
         const franchises = await this.franchiseService.getFranchises({
           ...franchiseQuery,
           filter: {
@@ -99,13 +100,20 @@ class AnimeResolver {
           },
         })
 
-        const relatedAnimes = await this.animeService.getAnimes({
-          count: animeQuery.limit?.relatedCount ?? 100,
-          page: 1,
-          filter: {
-            _id_ID: el.related.map((item) => item.base).filter((item) => item),
-          },
-        })
+        const relatedAnimes = isWithoutRelations
+          ? []
+          : await this.animeService.getAnimes({
+              query: {
+                count: animeQuery.limit?.relatedCount ?? 100,
+                page: 1,
+                filter: {
+                  _id_ID: el.related
+                    .map((item) => item.base)
+                    .filter((item) => item),
+                },
+                isPaginationOff: true,
+              },
+            })
 
         return {
           ...el,

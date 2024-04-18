@@ -1,4 +1,7 @@
-const getSortQueryAggregate = (itemObject: Record<string, any> | null) => {
+const getSortQueryAggregate = (
+  itemObject: Record<string, any> | null,
+  isPaginationOff = false,
+) => {
   if (!itemObject) return []
 
   const newObject = {}
@@ -8,7 +11,7 @@ const getSortQueryAggregate = (itemObject: Record<string, any> | null) => {
       newObject[key.replace("_", ".")] = itemObject[key] ? -1 : 1
   })
 
-  newObject["shikiId"] = 1
+  if (!isPaginationOff) newObject["shikiId"] = 1
 
   return Object.keys(newObject).length === 0 ? [] : [{ $sort: newObject }]
 }

@@ -35,6 +35,9 @@ class GeneralAnimeQuery {
     defaultValue: null,
   })
   limit?: LimitQuantityAnimeQuery | null
+
+  @Field(() => Boolean, { defaultValue: false })
+  isPaginationOff?: boolean
 }
 
 export { GeneralAnimeQuery }

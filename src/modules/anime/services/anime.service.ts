@@ -17,8 +17,15 @@ class AnimeService {
     private readonly animeModel: Model<Anime>,
   ) {}
 
-  async getAnimes(query: GeneralAnimeQuery, userId?: string) {
-    const { page, count, limit, filter, sort, searchInput } = query
+  async getAnimes({
+    query,
+    userId,
+  }: {
+    query: GeneralAnimeQuery
+    userId?: string
+  }) {
+    const { page, count, limit, filter, sort, searchInput, isPaginationOff } =
+      query
 
     const convertedSearchInput = searchInput
       ? convertIncorrectKeyboard(searchInput)
@@ -214,7 +221,7 @@ class AnimeService {
           { $project: { estimatesCollection: 0, scoredCollection: 0 } },
           ...getQueryAggregateObject(filter),
           ...searchMatch,
-          ...getSortQueryAggregate(sort),
+          ...getSortQueryAggregate(sort, isPaginationOff),
           { $skip: (page - 1) * count },
           { $limit: count },
         ],

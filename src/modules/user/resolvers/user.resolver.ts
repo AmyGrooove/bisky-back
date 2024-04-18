@@ -19,7 +19,7 @@ class UserResolver {
   async getUserPublicData(
     @Args("animeQuery", {
       type: () => GeneralAnimeQuery,
-      defaultValue: { page: 1, count: 20 },
+      defaultValue: { page: 1, count: 20, isPaginationOff: false },
     })
     animeQuery: GeneralAnimeQuery,
 
@@ -42,8 +42,8 @@ class UserResolver {
     )
 
     const relatedAnimes = (
-      await this.animeService.getAnimes(
-        {
+      await this.animeService.getAnimes({
+        query: {
           ...animeQuery,
           filter: {
             ...animeQuery.filter,
@@ -52,8 +52,8 @@ class UserResolver {
               userData.animeEstimates.map((item) => item.base),
           },
         },
-        context.req?.user?._id,
-      )
+        userId: context.req?.user?._id,
+      })
     ).map((item, index) => ({
       ...userData.animeEstimates[index],
       base: item,

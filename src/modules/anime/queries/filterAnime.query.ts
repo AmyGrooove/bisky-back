@@ -34,21 +34,21 @@ class FilterAnimeQuery {
     defaultValue: null,
     description: "Genre _ids",
   })
-  genres_ID?: string[] | null
+  genres_ID_ONLY?: string[] | null
 
   @Field(() => [String], {
     nullable: true,
     defaultValue: null,
     description: "Studio _ids",
   })
-  studios_ID?: string[] | null
+  studios_ID_ONLY?: string[] | null
 
   @Field(() => [String], {
     nullable: true,
     defaultValue: null,
     description: "Franchise _ids",
   })
-  franchises_ID?: string[] | null
+  franchises_ID_ONLY?: string[] | null
 
   @Field(() => FloatBetweenQuery, { nullable: true, defaultValue: null })
   score_averageScore?: FloatBetweenQuery | null

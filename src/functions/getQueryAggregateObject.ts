@@ -22,9 +22,15 @@ const getQueryAggregateObject = (
   items.forEach((value) => {
     if (itemObject[value]) {
       const newValue =
-        value.indexOf("_ID") !== -1 && !!itemObject[value]
+        value.indexOf("_ID_ONLY") !== -1 && !!itemObject[value]
           ? {
               $all: [itemObject[value]]
+                .flat()
+                .map((el) => new Types.ObjectId(el)),
+            }
+          : value.indexOf("_ID") !== -1 && !!itemObject[value]
+          ? {
+              $in: [itemObject[value]]
                 .flat()
                 .map((el) => new Types.ObjectId(el)),
             }
@@ -37,15 +43,22 @@ const getQueryAggregateObject = (
 
       const newMatch = {
         $match: {
-          [value.replace("_ID", "").replace("_", ".").replace(".id", "_id")]:
-            newValue,
+          [value
+            .replace("_ID_ONLY", "")
+            .replace("_ID", "")
+            .replace("_", ".")
+            .replace(".id", "_id")]: newValue,
         },
       }
 
       if (
         Object.keys(
           newMatch.$match[
-            value.replace("_ID", "").replace("_", ".").replace(".id", "_id")
+            value
+              .replace("_ID_ONLY", "")
+              .replace("_ID", "")
+              .replace("_", ".")
+              .replace(".id", "_id")
           ],
         ).length !== 0
       )

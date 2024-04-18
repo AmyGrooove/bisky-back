@@ -16,7 +16,7 @@ class GenreResolver {
   async getGenres(
     @Args("genreQuery", {
       type: () => GeneralGenreQuery,
-      defaultValue: { page: 1, count: 10 },
+      defaultValue: { page: 1, count: 10, isPaginationOff: false },
     })
     genreQuery: GeneralGenreQuery,
 
@@ -29,8 +29,13 @@ class GenreResolver {
     return Promise.all(
       (await this.genreService.getGenres(genreQuery)).map(async (el) => {
         const relatedWorks = await this.animeService.getAnimes({
-          ...animeQuery,
-          filter: { ...animeQuery.filter, genres_ID: [el._id.toString()] },
+          query: {
+            ...animeQuery,
+            filter: {
+              ...animeQuery.filter,
+              genres_ID_ONLY: [el._id.toString()],
+            },
+          },
         })
 
         return { ...el, relatedWorks: relatedWorks }

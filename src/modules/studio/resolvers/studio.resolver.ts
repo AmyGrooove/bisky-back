@@ -16,7 +16,7 @@ class StudioResolver {
   async getStudios(
     @Args("studioQuery", {
       type: () => GeneralStudioQuery,
-      defaultValue: { page: 1, count: 10 },
+      defaultValue: { page: 1, count: 10, isPaginationOff: false },
     })
     studioQuery: GeneralStudioQuery,
 
@@ -29,8 +29,13 @@ class StudioResolver {
     return Promise.all(
       (await this.studioService.getStudios(studioQuery)).map(async (el) => {
         const relatedWorks = await this.animeService.getAnimes({
-          ...animeQuery,
-          filter: { ...animeQuery.filter, studios_ID: [el._id.toString()] },
+          query: {
+            ...animeQuery,
+            filter: {
+              ...animeQuery.filter,
+              studios_ID_ONLY: [el._id.toString()],
+            },
+          },
         })
 
         return { ...el, relatedWorks: relatedWorks }

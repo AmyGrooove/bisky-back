@@ -16,7 +16,7 @@ class FranchiseResolver {
   async getFranchises(
     @Args("franchiseQuery", {
       type: () => GeneralFranchiseQuery,
-      defaultValue: { page: 1, count: 10 },
+      defaultValue: { page: 1, count: 10, isPaginationOff: false },
     })
     franchiseQuery: GeneralFranchiseQuery,
 
@@ -30,10 +30,12 @@ class FranchiseResolver {
       (await this.franchiseService.getFranchises(franchiseQuery)).map(
         async (el) => {
           const relatedWorks = await this.animeService.getAnimes({
-            ...animeQuery,
-            filter: {
-              ...animeQuery.filter,
-              franchises_ID: [el._id.toString()],
+            query: {
+              ...animeQuery,
+              filter: {
+                ...animeQuery.filter,
+                franchises_ID_ONLY: [el._id.toString()],
+              },
             },
           })
 
