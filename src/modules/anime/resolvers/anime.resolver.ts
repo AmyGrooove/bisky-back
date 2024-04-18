@@ -56,12 +56,17 @@ class AnimeResolver {
     })
     studioQuery: GeneralStudioQuery,
 
+    @Args("isSimpleData", { type: () => Boolean, defaultValue: false })
+    isSimpleData = false,
+
     @Context() context,
   ) {
     return Promise.all(
       (
         await this.animeService.getAnimes(animeQuery, context.req?.user?._id)
       ).map(async (el) => {
+        if (isSimpleData) return el
+
         const franchises = await this.franchiseService.getFranchises({
           ...franchiseQuery,
           filter: {

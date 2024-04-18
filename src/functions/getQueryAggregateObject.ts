@@ -24,7 +24,7 @@ const getQueryAggregateObject = (
       const newValue =
         value.indexOf("_ID") !== -1 && !!itemObject[value]
           ? {
-              $in: [itemObject[value]]
+              $all: [itemObject[value]]
                 .flat()
                 .map((el) => new Types.ObjectId(el)),
             }
