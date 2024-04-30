@@ -62,7 +62,7 @@ paths:
                   $ref: '#/components/schemas/GenreIdAndName'
       tags:
         - Genre
-  /api/user/{animeId}/comment:
+  /api/comment/{animeId}/add:
     put:
       operationId: AnimeCommentController_addAnimeComment
       summary: Add a comment to the anime
@@ -89,7 +89,7 @@ paths:
         - AnimeComment
       security:
         - AccessToken: []
-  /api/user/{commentId}:
+  /api/comment/{commentId}:
     patch:
       operationId: AnimeCommentController_updateAnimeComment
       summary: Update comment
@@ -136,7 +136,7 @@ paths:
         - AnimeComment
       security:
         - AccessToken: []
-  /api/user/{commentId}/like:
+  /api/comment/{commentId}/like:
     patch:
       operationId: AnimeCommentLikeController_updateAnimeCommentLike
       summary: Add/Delete/Update like on comment
@@ -262,6 +262,49 @@ paths:
                 type: boolean
       tags:
         - AnimeEstimate
+      security:
+        - AccessToken: []
+  /api/user/skipList:
+    patch:
+      operationId: UserAnimeController_skipAnime
+      summary: Add anime in skipList
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkipListDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: boolean
+      tags:
+        - UserAnime
+      security:
+        - AccessToken: []
+    delete:
+      operationId: UserAnimeController_removeFromSkipAnime
+      summary: Remove anime from skipList
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SkipListDto'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: boolean
+      tags:
+        - UserAnime
       security:
         - AccessToken: []
   /api/auth/whoami:
@@ -483,6 +526,13 @@ components:
           minimum: 0
       required:
         - watchedSeriesCount
+    SkipListDto:
+      type: object
+      properties:
+        animeId:
+          type: string
+      required:
+        - animeId
     User:
       type: object
       properties:

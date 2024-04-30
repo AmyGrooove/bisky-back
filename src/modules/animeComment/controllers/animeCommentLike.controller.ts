@@ -19,7 +19,7 @@ import { AnimeCommentLikeService } from "../services/animeCommentLike.service"
 import { UpdateAnimeCommentLikeDto } from "../dto/updateAnimeCommentLike.dto"
 
 @ApiTags("AnimeComment")
-@Controller("user")
+@Controller("comment")
 class AnimeCommentLikeController {
   constructor(private animeCommentLikeService: AnimeCommentLikeService) {}
 

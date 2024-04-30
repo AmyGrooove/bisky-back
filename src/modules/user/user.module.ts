@@ -8,6 +8,8 @@ import { AnimeEstimateController } from "./controllers/animeEstimate.controller"
 import { AnimeEstimateService } from "./services/animeEstimate.service"
 import { AnimeSchema } from "../anime/schemas/anime.schema"
 import { AnimeModule } from "../anime/anime.module"
+import { UserAnimeService } from "./services/userAnime.service"
+import { UserAnimeController } from "./controllers/userAnime.controller"
 
 @Module({
   imports: [
@@ -18,8 +20,13 @@ import { AnimeModule } from "../anime/anime.module"
     ]),
     AnimeModule,
   ],
-  providers: [UserResolver, UserService, AnimeEstimateService],
-  controllers: [AnimeEstimateController],
+  providers: [
+    UserResolver,
+    UserService,
+    AnimeEstimateService,
+    UserAnimeService,
+  ],
+  controllers: [AnimeEstimateController, UserAnimeController],
   exports: [UserService],
 })
 class UserModule {}

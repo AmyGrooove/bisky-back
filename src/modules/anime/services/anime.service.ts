@@ -9,12 +9,15 @@ import {
   convertIncorrectKeyboard,
 } from "../../../functions"
 import { Anime } from "../schemas/anime.schema"
+import { User } from "../../user/schemas/user.schema"
 
 @Injectable()
 class AnimeService {
   constructor(
     @InjectModel("Anime")
     private readonly animeModel: Model<Anime>,
+    @InjectModel("User")
+    private readonly userModel: Model<User>,
   ) {}
 
   async getAnimes({
@@ -24,8 +27,16 @@ class AnimeService {
     query: GeneralAnimeQuery
     userId?: string
   }) {
-    const { page, count, limit, filter, sort, searchInput, isPaginationOff } =
-      query
+    const {
+      page,
+      count,
+      limit,
+      filter,
+      sort,
+      searchInput,
+      isPaginationOff,
+      userFilters,
+    } = query
 
     const convertedSearchInput = searchInput
       ? convertIncorrectKeyboard(searchInput)
@@ -45,9 +56,40 @@ class AnimeService {
         ]
       : []
 
+    const skippedAnime =
+      !userFilters.isHiddenAnimeInSkipList || !userId
+        ? []
+        : [
+            {
+              $match: {
+                _id: {
+                  $nin: (
+                    await this.userModel.findById(userId).lean().exec()
+                  ).skippedAnime.map(
+                    (item) => new Types.ObjectId(item.animeId.toString()),
+                  ),
+                },
+              },
+            },
+          ]
+
+    const inListAnime =
+      !userFilters.isHiddenAnimeInUserList || !userId
+        ? []
+        : [
+            {
+              $match: {
+                "estimatesCollection.author": {
+                  $ne: new Types.ObjectId(userId),
+                },
+              },
+            },
+          ]
+
     return this.animeModel
       .aggregate(
         [
+          ...skippedAnime,
           {
             $lookup: {
               from: "AnimeEstimate",
@@ -67,6 +109,7 @@ class AnimeService {
               },
             },
           },
+          ...inListAnime,
           {
             $addFields: {
               userData: {

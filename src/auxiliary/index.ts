@@ -9,6 +9,7 @@ export { EStatus } from "./enums/status.entity"
 export { ERating } from "./enums/rating.entity"
 export { EListStatus } from "./enums/listStatus.entity"
 export { ERole } from "./enums/role.entity"
+export { EHistory } from "./enums/history.entity"
 
 export { DateBetweenQuery } from "./queries/dateBetween.query"
 export { FloatBetweenQuery } from "./queries/floatBetween.query"

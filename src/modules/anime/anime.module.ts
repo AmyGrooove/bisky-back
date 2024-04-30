@@ -8,10 +8,14 @@ import { PlatformModule } from "../platform/platform.module"
 import { StudioModule } from "../studio/studio.module"
 import { AnimeSchema } from "./schemas/anime.schema"
 import { AnimeController } from "./controllers/anime.controller"
+import { UserSchema } from "../user/schemas/user.schema"
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: "Anime", schema: AnimeSchema }]),
+    MongooseModule.forFeature([
+      { name: "Anime", schema: AnimeSchema },
+      { name: "User", schema: UserSchema },
+    ]),
     forwardRef(() => StudioModule),
     forwardRef(() => FranchiseModule),
     forwardRef(() => GenreModule),

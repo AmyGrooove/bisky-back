@@ -21,7 +21,7 @@ import { AnimeCommentService } from "../services/animeComment.service"
 import { UpdateAnimeCommentDto } from "../dto/updateAnimeComment.dto"
 
 @ApiTags("AnimeComment")
-@Controller("user")
+@Controller("comment")
 class AnimeCommentController {
   constructor(private animeCommentService: AnimeCommentService) {}
 
@@ -34,7 +34,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
-  @Put("/:animeId/comment")
+  @Put(":animeId/add")
   async addAnimeComment(
     @Request() req,
     @Param("animeId") animeId: string,
@@ -56,7 +56,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "commentId", type: String })
   @UseGuards(AccessTokenGuard)
-  @Patch("/:commentId")
+  @Patch(":commentId")
   async updateAnimeComment(
     @Request() req,
     @Param("commentId") commentId: string,
@@ -78,7 +78,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "commentId", type: String })
   @UseGuards(AccessTokenGuard)
-  @Delete("/:commentId")
+  @Delete(":commentId")
   async deleteAnimeComment(
     @Request() req,
     @Param("commentId") commentId: string,

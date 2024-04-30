@@ -2,6 +2,7 @@ import { Field, InputType, Int } from "@nestjs/graphql"
 import { FilterAnimeQuery } from "./filterAnime.query"
 import { SortAnimeQuery } from "./sortAnime.query"
 import { LimitQuantityAnimeQuery } from "./limitQuantityAnime.query"
+import { UserFilterQuery } from "./userFilter.query"
 
 @InputType({ description: "Anime arguments" })
 class GeneralAnimeQuery {
@@ -18,25 +19,22 @@ class GeneralAnimeQuery {
   })
   searchInput?: string | null
 
-  @Field(() => FilterAnimeQuery, {
-    nullable: true,
-    defaultValue: null,
-  })
+  @Field(() => FilterAnimeQuery, { nullable: true, defaultValue: null })
   filter?: FilterAnimeQuery | null
 
-  @Field(() => SortAnimeQuery, {
-    nullable: true,
-    defaultValue: null,
-  })
+  @Field(() => SortAnimeQuery, { nullable: true, defaultValue: null })
   sort?: SortAnimeQuery | null
 
-  @Field(() => LimitQuantityAnimeQuery, {
-    nullable: true,
-    defaultValue: null,
-  })
+  @Field(() => LimitQuantityAnimeQuery, { nullable: true, defaultValue: null })
   limit?: LimitQuantityAnimeQuery | null
 
-  @Field(() => Boolean, { defaultValue: false })
+  @Field(() => UserFilterQuery, { nullable: true, defaultValue: null })
+  userFilters?: UserFilterQuery | null
+
+  @Field(() => Boolean, {
+    defaultValue: false,
+    description: "Set to true if pagination is not needed (Speeds up queries)",
+  })
   isPaginationOff?: boolean
 }
 

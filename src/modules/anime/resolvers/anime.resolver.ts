@@ -28,7 +28,12 @@ class AnimeResolver {
   async getAnimes(
     @Args("animeQuery", {
       type: () => GeneralAnimeQuery,
-      defaultValue: { page: 1, count: 10, isPaginationOff: false },
+      defaultValue: {
+        page: 1,
+        count: 10,
+        isPaginationOff: false,
+        userFilters: {},
+      },
     })
     animeQuery: GeneralAnimeQuery,
 

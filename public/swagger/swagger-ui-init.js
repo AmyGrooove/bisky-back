@@ -108,7 +108,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/user/{animeId}/comment": {
+      "/api/comment/{animeId}/add": {
         "put": {
           "operationId": "AnimeCommentController_addAnimeComment",
           "summary": "Add a comment to the anime",
@@ -154,7 +154,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/user/{commentId}": {
+      "/api/comment/{commentId}": {
         "patch": {
           "operationId": "AnimeCommentController_updateAnimeComment",
           "summary": "Update comment",
@@ -234,7 +234,7 @@ window.onload = function() {
           ]
         }
       },
-      "/api/user/{commentId}/like": {
+      "/api/comment/{commentId}/like": {
         "patch": {
           "operationId": "AnimeCommentLikeController_updateAnimeCommentLike",
           "summary": "Add/Delete/Update like on comment",
@@ -444,6 +444,78 @@ window.onload = function() {
           },
           "tags": [
             "AnimeEstimate"
+          ],
+          "security": [
+            {
+              "AccessToken": []
+            }
+          ]
+        }
+      },
+      "/api/user/skipList": {
+        "patch": {
+          "operationId": "UserAnimeController_skipAnime",
+          "summary": "Add anime in skipList",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkipListDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "UserAnime"
+          ],
+          "security": [
+            {
+              "AccessToken": []
+            }
+          ]
+        },
+        "delete": {
+          "operationId": "UserAnimeController_removeFromSkipAnime",
+          "summary": "Remove anime from skipList",
+          "parameters": [],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkipListDto"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "tags": [
+            "UserAnime"
           ],
           "security": [
             {
@@ -786,6 +858,17 @@ window.onload = function() {
           },
           "required": [
             "watchedSeriesCount"
+          ]
+        },
+        "SkipListDto": {
+          "type": "object",
+          "properties": {
+            "animeId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "animeId"
           ]
         },
         "User": {
