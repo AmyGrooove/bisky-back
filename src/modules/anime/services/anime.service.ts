@@ -57,7 +57,7 @@ class AnimeService {
       : []
 
     const skippedAnime =
-      !userFilters.isHiddenAnimeInSkipList || !userId
+      !userFilters?.isHiddenAnimeInSkipList || !userId
         ? []
         : [
             {
@@ -74,7 +74,7 @@ class AnimeService {
           ]
 
     const inListAnime =
-      !userFilters.isHiddenAnimeInUserList || !userId
+      !userFilters?.isHiddenAnimeInUserList || !userId
         ? []
         : [
             {

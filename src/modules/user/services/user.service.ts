@@ -72,7 +72,14 @@ class UserService {
 
     return this.userModel
       .findOne(filteredProps)
-      .select({ passwordHash: 0, refreshToken: 0 })
+      .select({
+        passwordHash: 0,
+        refreshToken: 0,
+        favorites: 0,
+        skippedAnime: 0,
+        subscriptions: 0,
+        userPersonalization: 0,
+      })
       .lean()
       .exec()
   }

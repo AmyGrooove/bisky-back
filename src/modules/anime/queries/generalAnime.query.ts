@@ -28,7 +28,7 @@ class GeneralAnimeQuery {
   @Field(() => LimitQuantityAnimeQuery, { nullable: true, defaultValue: null })
   limit?: LimitQuantityAnimeQuery | null
 
-  @Field(() => UserFilterQuery, { nullable: true, defaultValue: null })
+  @Field(() => UserFilterQuery, { nullable: true })
   userFilters?: UserFilterQuery | null
 
   @Field(() => Boolean, {
