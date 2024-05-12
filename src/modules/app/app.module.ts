@@ -16,9 +16,12 @@ import { UserModule } from "../user/user.module"
 import { AuthModule } from "../auth/auth.module"
 import { join } from "path"
 import { ServeStaticModule } from "@nestjs/serve-static"
+import { ScheduleModule } from "@nestjs/schedule"
+import { ParseAnimeCronModule } from "../parseAnimeCron/parseAnimeCron.module"
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -40,6 +43,7 @@ import { ServeStaticModule } from "@nestjs/serve-static"
     AnimeCommentModule,
     UserModule,
     AuthModule,
+    ParseAnimeCronModule,
   ],
   controllers: [AppController],
 })
