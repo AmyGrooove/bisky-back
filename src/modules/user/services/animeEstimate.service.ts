@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+import { Model } from "mongoose"
+
 import { Anime } from "../../anime/schemas/anime.schema"
 import { AnimeEstimate } from "../schemas/animeEstimate.schema"
-import { Model } from "mongoose"
 import { EListStatus } from "../../../auxiliary"
 
 @Injectable()

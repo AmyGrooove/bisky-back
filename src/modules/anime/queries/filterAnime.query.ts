@@ -1,4 +1,5 @@
 import { Field, InputType } from "@nestjs/graphql"
+
 import {
   DateBetweenQuery,
   EKind,
@@ -65,8 +66,11 @@ class FilterAnimeQuery {
   @Field(() => DateBetweenQuery, { nullable: true, defaultValue: null })
   episodes_nextEpisodeAiredDate?: DateBetweenQuery | null
 
-  @Field(() => DateBetweenQuery, { nullable: true, defaultValue: null })
-  episodes_averageDuration?: DateBetweenQuery | null
+  @Field(() => IntBetweenQuery, { nullable: true, defaultValue: null })
+  episodes_duration?: IntBetweenQuery | null
+
+  @Field(() => IntBetweenQuery, { nullable: true, defaultValue: null })
+  episodes_count?: IntBetweenQuery | null
 
   @Field(() => IntBetweenQuery, { nullable: true, defaultValue: null })
   episodes_airedCount?: IntBetweenQuery | null

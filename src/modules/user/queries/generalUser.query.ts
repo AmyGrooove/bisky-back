@@ -1,5 +1,7 @@
 import { Field, InputType } from "@nestjs/graphql"
+
 import { EListStatus } from "../../../auxiliary"
+
 import { FilterUserQuery } from "./filterUser.query"
 
 @InputType({

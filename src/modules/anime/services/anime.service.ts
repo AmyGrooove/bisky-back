@@ -1,8 +1,9 @@
 import { Model, Types } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+
 import { GeneralAnimeQuery } from "../queries/generalAnime.query"
-import { EListStatus, EStatus } from "../../../auxiliary"
+import { EListStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,
   getQueryAggregateObject,
@@ -212,46 +213,6 @@ class AnimeService {
                     if: { $eq: [{ $size: "$scoredCollection" }, 0] },
                     then: 0,
                     else: { $avg: "$scoredCollection.score" },
-                  },
-                },
-              },
-              episodes: {
-                count: { $subtract: ["$episodes.count", 1] },
-                nextEpisodeAiredDate: {
-                  $cond: {
-                    if: { $eq: ["$status", EStatus.released] },
-                    then: null,
-                    else: { $last: "$episodes.singleEpisodes.airedOn" },
-                  },
-                },
-                lastEpisodeAiredDate: {
-                  $cond: {
-                    if: { $eq: ["$status", EStatus.anons] },
-                    then: null,
-                    else: {
-                      $cond: {
-                        if: { $eq: ["$status", EStatus.released] },
-                        then: { $last: "$episodes.singleEpisodes.airedOn" },
-                        else: {
-                          $arrayElemAt: [
-                            "$episodes.singleEpisodes.airedOn",
-                            -2,
-                          ],
-                        },
-                      },
-                    },
-                  },
-                },
-                averageDuration: {
-                  $ceil: { $avg: "$episodes.singleEpisodes.duration" },
-                },
-                airedCount: {
-                  $cond: {
-                    if: { $eq: ["$status", EStatus.anons] },
-                    then: 0,
-                    else: {
-                      $subtract: [{ $size: "$episodes.singleEpisodes" }, 1],
-                    },
                   },
                 },
               },

@@ -1,6 +1,8 @@
 import { Module, forwardRef } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
+
 import { AnimeModule } from "../anime/anime.module"
+
 import { FranchiseResolver } from "./resolvers/franchise.resolver"
 import { FranchiseSchema } from "./schemas/franchise.schema"
 import { FranchiseService } from "./services/franchise.service"

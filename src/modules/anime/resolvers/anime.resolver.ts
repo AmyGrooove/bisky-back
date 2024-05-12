@@ -1,4 +1,6 @@
 import { Args, Context, Query, Resolver } from "@nestjs/graphql"
+import { UseGuards } from "@nestjs/common"
+
 import { AnimeService } from "../services/anime.service"
 import { FranchiseService } from "../../franchise/services/franchise.service"
 import { GenreService } from "../../genre/services/genre.service"
@@ -9,7 +11,6 @@ import { GeneralFranchiseQuery } from "../../franchise/queries/generalFranchise.
 import { GeneralGenreQuery } from "../../genre/queries/generalGenre.query"
 import { GeneralPlatformQuery } from "../../platform/queries/generalPlatform.query"
 import { GeneralStudioQuery } from "../../studio/queries/generalStudio.query"
-import { UseGuards } from "@nestjs/common"
 import { SimpleAccessTokenGuard } from "../../auth/guards/simpleAccessToken.guard"
 import { GeneralAnimeQuery } from "../queries/generalAnime.query"
 

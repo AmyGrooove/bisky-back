@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql"
-import { SingleEpisodeModel } from "./singleEpisode.entity"
 
 @ObjectType({ description: "General information about anime series" })
 class EpisodesModel {
@@ -11,8 +10,8 @@ class EpisodesModel {
   })
   count: number | null
 
-  @Field(() => Int, { defaultValue: 0 })
-  airedCount?: number
+  @Field(() => Int, { nullable: true, defaultValue: null })
+  airedCount: number | null
 
   @Field(() => Date, { nullable: true, defaultValue: null })
   nextEpisodeAiredDate: Date | null
@@ -20,11 +19,8 @@ class EpisodesModel {
   @Field(() => Date, { nullable: true, defaultValue: null })
   lastEpisodeAiredDate: Date | null
 
-  @Field(() => Int, { defaultValue: 0 })
-  averageDuration: number
-
-  @Field(() => [SingleEpisodeModel])
-  singleEpisodes: SingleEpisodeModel[]
+  @Field(() => Int, { nullable: true, defaultValue: null })
+  duration: number
 }
 
 export { EpisodesModel }

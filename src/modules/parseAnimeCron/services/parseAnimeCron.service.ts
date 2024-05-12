@@ -1,16 +1,19 @@
 import { Injectable } from "@nestjs/common"
 import { Cron, CronExpression } from "@nestjs/schedule"
-import { ParseAnimeSubService } from "./ParseAnimeSubService"
-import axios from "axios"
-import { IGenresShiki } from "../types/IGenresShiki"
-import { genresQuery } from "../graphqlQuery/genresQuery"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
+import { HttpService } from "@nestjs/axios"
+
+import { IGenresShiki } from "../types/IGenresShiki"
 import { Genre } from "../../genre/schemas/genre.schema"
+import { genresGetQuery } from "../graphqlQuery/genresGetQuery"
+
+import { ParseAnimeSubService } from "./parseAnimeSub.service"
 
 @Injectable()
 class ParseAnimeCronService {
   constructor(
+    private readonly httpService: HttpService,
     private readonly parseAnimeSubService: ParseAnimeSubService,
     @InjectModel("Genre")
     private readonly genreModel: Model<Genre>,
@@ -33,11 +36,12 @@ class ParseAnimeCronService {
     await this.parseAnimeSubService.updateAnimes(animesData)
   }
 
+  @Cron("0 0 1 1 *")
   async parseGenres() {
     try {
-      const mainInfo = await axios
+      const mainInfo = await this.httpService.axiosRef
         .post<IGenresShiki>(process.env.SHIKI_GRAPHQL_API, {
-          query: genresQuery(),
+          query: genresGetQuery(),
         })
         .then((response) => response.data.data.genres)
 

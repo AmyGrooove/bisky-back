@@ -1,10 +1,12 @@
-import { NestFactory } from "@nestjs/core"
 
-import { AppModule } from "./modules/app/app.module"
-import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import { createWriteStream } from "fs"
 import { get } from "http"
+
+import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
+import { NestFactory } from "@nestjs/core"
 import { RequestMethod, ValidationPipe, VersioningType } from "@nestjs/common"
+
+import { AppModule } from "./modules/app/app.module"
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

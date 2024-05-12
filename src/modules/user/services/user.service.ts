@@ -1,6 +1,7 @@
 import { Model } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+
 import { User } from "../schemas/user.schema"
 import { CreateUserDto } from "../../auth/dto/createUser.dto"
 import { UpdateUserDto } from "../../auth/dto/updateUser.dto"

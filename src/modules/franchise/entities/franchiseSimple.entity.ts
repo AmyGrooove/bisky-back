@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
+
 import { FranchiseModel } from "./franchise.entity"
 
 @ObjectType({ description: "Related projects" })

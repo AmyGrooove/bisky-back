@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { ApiProperty } from "@nestjs/swagger"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
+
 import { ERole } from "../../../auxiliary"
+
 import {
   UserPersonalizationSchema,
   UserPersonalizationDocument,

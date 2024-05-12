@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { HydratedDocument } from "mongoose"
+
 import { LanguageDocument, LanguageSchema } from "../../../auxiliary"
 
 @Schema({ collection: "Franchise", versionKey: false })

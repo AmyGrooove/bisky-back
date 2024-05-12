@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql"
+
 import { FilterFranchiseQuery } from "./filterFranchise.query"
 
 @InputType({ description: "Franchise arguments" })

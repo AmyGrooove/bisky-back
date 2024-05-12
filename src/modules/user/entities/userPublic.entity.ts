@@ -1,6 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { ERole } from "../../../auxiliary"
 import { ApiProperty } from "@nestjs/swagger"
+
+import { ERole } from "../../../auxiliary"
 
 @ObjectType()
 class UserPublicModel {

@@ -1,4 +1,4 @@
-const animesQuery = (page = 1, additionalQuery: string) => `{
+const animesGetQuery = (page = 1, additionalQuery: string) => `{
   animes(limit: 50, page: ${page}, ${additionalQuery}) {
     id
     name
@@ -38,10 +38,10 @@ const animesQuery = (page = 1, additionalQuery: string) => `{
       imageUrl
     }
 
-    externalLinks {
-      kind
-      url
-    }
+    # externalLinks {
+    #   kind
+    #   url
+    # }
 
     related {
       anime {
@@ -61,6 +61,6 @@ const animesQuery = (page = 1, additionalQuery: string) => `{
 
     description
   }
-}`;
+}`
 
-export { animesQuery };
+export { animesGetQuery }

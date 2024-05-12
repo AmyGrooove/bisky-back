@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql"
+
 import { FilterPlatformQuery } from "./filterPlatform.query"
 
 @InputType({ description: "Platform arguments" })

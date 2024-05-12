@@ -1,11 +1,13 @@
-import { LanguageModel } from "../../../auxiliary"
 import { Field, Int, ObjectType } from "@nestjs/graphql"
-import { LabelsModel } from "./additional/labels.entity"
+
+import { LanguageModel } from "../../../auxiliary"
 import { EKind } from "../../../auxiliary/enums/kind.entity"
 import { EStatus } from "../../../auxiliary/enums/status.entity"
+import { ERating } from "../../../auxiliary/enums/rating.entity"
+
+import { LabelsModel } from "./additional/labels.entity"
 import { EpisodesModel } from "./additional/episodes.entity"
 import { DatesModel } from "./additional/dates.entity"
-import { ERating } from "../../../auxiliary/enums/rating.entity"
 import { VideModel } from "./additional/video.entity"
 import { UserListModel } from "./additional/userList.entity"
 import { AnimeUserDataModel } from "./additional/animeUserData.entity"

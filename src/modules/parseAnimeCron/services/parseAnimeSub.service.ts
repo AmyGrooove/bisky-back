@@ -1,15 +1,17 @@
 import { Injectable } from "@nestjs/common"
-import { IAnimeShiki, IAnimeShikiGraph } from "../types/IAnimeShiki"
-import { animesQuery } from "../graphqlQuery/animesQuery"
-import { EStatus } from "../../../auxiliary"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
+import { HttpService } from "@nestjs/axios"
+
+import { IAnimeShiki, IAnimeShikiGraph } from "../types/IAnimeShiki"
+import { animesGetQuery } from "../graphqlQuery/animesGetQuery"
+import { EStatus } from "../../../auxiliary"
 import { Anime } from "../../anime/schemas/anime.schema"
-import { Platform } from "../../platform/schemas/platform.schema"
+// import { Platform } from "../../platform/schemas/platform.schema"
 import { Studio } from "../../studio/schemas/studio.schema"
 import { Franchise } from "../../franchise/schemas/franchise.schema"
 import { Genre } from "../../genre/schemas/genre.schema"
-import { HttpService } from "@nestjs/axios"
+import { compareDates } from "../../../functions"
 
 @Injectable()
 class ParseAnimeSubService {
@@ -17,8 +19,8 @@ class ParseAnimeSubService {
     private readonly httpService: HttpService,
     @InjectModel("Anime")
     private readonly animeModel: Model<Anime>,
-    @InjectModel("Platform")
-    private readonly platformModel: Model<Platform>,
+    // @InjectModel("Platform")
+    // private readonly platformModel: Model<Platform>,
     @InjectModel("Studio")
     private readonly studioModel: Model<Studio>,
     @InjectModel("Franchise")
@@ -39,7 +41,7 @@ class ParseAnimeSubService {
       try {
         const newInfo = await this.httpService.axiosRef
           .post<IAnimeShikiGraph>(process.env.SHIKI_GRAPHQL_API, {
-            query: animesQuery(
+            query: animesGetQuery(
               page,
               `season: "${to ? from + "_" + to : from}"`,
             ),
@@ -72,7 +74,7 @@ class ParseAnimeSubService {
       try {
         const newInfo = await this.httpService.axiosRef
           .post<IAnimeShikiGraph>(process.env.SHIKI_GRAPHQL_API, {
-            query: animesQuery(page, `status: "!${EStatus.released}"`),
+            query: animesGetQuery(page, `status: "!${EStatus.released}"`),
           })
           .then((response) => response.data.data.animes)
 
@@ -104,7 +106,10 @@ class ParseAnimeSubService {
       try {
         const newInfo = await this.httpService.axiosRef
           .post<IAnimeShikiGraph>(process.env.SHIKI_GRAPHQL_API, {
-            query: animesQuery(page, `ids: "${releasedAnimeIds.join(", ")}"`),
+            query: animesGetQuery(
+              page,
+              `ids: "${releasedAnimeIds.join(", ")}"`,
+            ),
           })
           .then((response) => response.data.data.animes)
 
@@ -140,18 +145,18 @@ class ParseAnimeSubService {
               .exec()
           ).map((item) => item._id)
 
-          const animePlatforms = (
-            await this.platformModel
-              .find({
-                shikiId: { $in: el.externalLinks.map((item) => item.kind) },
-              })
-              .select("_id")
-              .lean()
-              .exec()
-          ).map((item, index) => ({
-            url: el.externalLinks[index].url,
-            platform: item._id,
-          }))
+          // const animePlatforms = (
+          //   await this.platformModel
+          //     .find({
+          //       shikiId: { $in: el.externalLinks.map((item) => item.kind) },
+          //     })
+          //     .select("_id")
+          //     .lean()
+          //     .exec()
+          // ).map((item, index) => ({
+          //   url: el.externalLinks[index].url,
+          //   platform: item._id,
+          // }))
 
           const animeInfo = await this.animeModel
             .findOne({
@@ -204,11 +209,6 @@ class ParseAnimeSubService {
                 .exec()
             )?._id ?? null
 
-          const newEpisodesCount =
-            Number(
-              el.status === "released" ? el.episodes : el.episodesAired + 1,
-            ) - (animeInfo?.episodes?.singleEpisodes?.length ?? 0)
-
           return {
             shikiId: Number(el.id),
             labels: {
@@ -218,23 +218,35 @@ class ParseAnimeSubService {
             },
             poster: el.poster?.originalUrl ?? null,
             kind: el.kind,
-            otherPlatforms: animePlatforms,
+            otherPlatforms: [],
+            // animePlatforms,
             status: el.status,
             episodes: {
               count: el.episodes === 0 ? null : Number(el.episodes),
-              singleEpisodes: [
-                ...(animeInfo?.episodes?.singleEpisodes ?? []),
-                ...[...Array(newEpisodesCount < 0 ? 0 : newEpisodesCount)].map(
-                  (_, index) => ({
-                    name: null,
-                    airedAt:
-                      index === el.episodesAired && el.nextEpisodeAt
-                        ? new Date(el.nextEpisodeAt)
-                        : null,
-                    duration: el.duration,
-                  }),
-                ),
-              ],
+              airedCount:
+                el.status === "released"
+                  ? el.episodes
+                  : el.episodesAired === 0
+                  ? null
+                  : Number(el.episodesAired),
+              duration:
+                el.duration === null || el.duration === 0
+                  ? null
+                  : Number(el.duration),
+              nextEpisodeAiredDate: el.nextEpisodeAt
+                ? new Date(el.nextEpisodeAt)
+                : null,
+              lastEpisodeAiredDate:
+                el.status === "released" && el.releasedOn.date
+                  ? new Date(el.releasedOn.date)
+                  : el.status === "anons"
+                  ? null
+                  : !compareDates(
+                      animeInfo?.episodes?.nextEpisodeAiredDate,
+                      el.nextEpisodeAt,
+                    )
+                  ? animeInfo?.episodes?.nextEpisodeAiredDate
+                  : null,
             },
             dates: {
               airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,

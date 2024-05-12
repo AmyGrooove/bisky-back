@@ -1,6 +1,7 @@
 import { Model } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+
 import { Fact } from "../schemas/fact.schema"
 import { FilterFactQuery } from "../queries/filterFact.query"
 import { getQueryObject } from "../../../functions"

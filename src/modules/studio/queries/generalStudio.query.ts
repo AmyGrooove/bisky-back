@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql"
+
 import { FilterStudioQuery } from "./filterStudio.query"
 
 @InputType({ description: "Studio arguments" })

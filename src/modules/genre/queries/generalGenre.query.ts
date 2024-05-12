@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql"
+
 import { FilterGenreQuery } from "./filterGenre.query"
 
 @InputType({ description: "Genre arguments" })

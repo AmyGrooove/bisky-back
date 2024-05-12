@@ -1,5 +1,6 @@
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
+
 import { EHistory, EListStatus } from "../../../../auxiliary"
 
 @Schema({ collection: "AnimeEstimateHistory", _id: false, versionKey: false })

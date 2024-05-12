@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
+
 import { LanguageModel } from "../../../auxiliary"
 
 @ObjectType({ description: "Related projects" })

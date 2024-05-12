@@ -1,4 +1,5 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
+
 import { PlatformService } from "../services/platform.service"
 import { PlatformModel } from "../entities/platform.entity"
 import { GeneralPlatformQuery } from "../queries/generalPlatform.query"

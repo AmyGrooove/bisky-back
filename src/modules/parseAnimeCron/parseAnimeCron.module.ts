@@ -1,13 +1,15 @@
 import { Module } from "@nestjs/common"
-import { ParseAnimeCronService } from "./services/ParseAnimeCronService"
 import { MongooseModule } from "@nestjs/mongoose"
+import { HttpModule } from "@nestjs/axios"
+
 import { AnimeSchema } from "../anime/schemas/anime.schema"
 import { PlatformSchema } from "../platform/schemas/platform.schema"
 import { StudioSchema } from "../studio/schemas/studio.schema"
 import { FranchiseSchema } from "../franchise/schemas/franchise.schema"
 import { GenreSchema } from "../genre/schemas/genre.schema"
-import { ParseAnimeSubService } from "./services/ParseAnimeSubService"
-import { HttpModule } from "@nestjs/axios"
+
+import { ParseAnimeCronService } from "./services/parseAnimeCron.service"
+import { ParseAnimeSubService } from "./services/parseAnimeSub.service"
 
 @Module({
   imports: [

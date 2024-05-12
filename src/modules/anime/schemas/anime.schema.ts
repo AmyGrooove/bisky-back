@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
+
 import {
   EKind,
   EStatus,
@@ -7,6 +8,7 @@ import {
   LanguageSchema,
   LanguageDocument,
 } from "../../../auxiliary"
+
 import { DatesSchema, DatesDocument } from "./additional/dates.schema"
 import { EpisodesSchema, EpisodesDocument } from "./additional/episodes.schema"
 import { LabelsSchema, LabelsDocument } from "./additional/labels.schema"

@@ -1,4 +1,5 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
+
 import { FranchiseService } from "../services/franchise.service"
 import { GeneralFranchiseQuery } from "../queries/generalFranchise.query"
 import { FranchiseFullModel } from "../entities/franchiseFull.entity"

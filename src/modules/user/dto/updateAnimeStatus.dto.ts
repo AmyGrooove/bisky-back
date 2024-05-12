@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { IsEnum } from "class-validator"
+
 import { EListStatus } from "../../../auxiliary"
 
 class UpdateAnimeStatusDto {

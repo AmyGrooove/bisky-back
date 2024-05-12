@@ -1,4 +1,5 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql"
+
 import { FactService } from "../services/fact.service"
 import { FilterFactQuery } from "../queries/filterFact.query"
 import { FactModel } from "../entities/fact.entity"

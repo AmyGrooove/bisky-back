@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
+
 import { PlatformModel } from "../../../platform/entities/platform.entity"
 
 @ObjectType({ description: "This anime is on other platforms" })

@@ -5,6 +5,7 @@ import {
   ApiResponse,
   ApiProperty,
 } from "@nestjs/swagger"
+
 import { StudioService } from "../services/studio.service"
 
 class StudioIdAndName {

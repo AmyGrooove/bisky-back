@@ -1,4 +1,5 @@
 import { Field, InputType, Int } from "@nestjs/graphql"
+
 import { FilterAnimeQuery } from "./filterAnime.query"
 import { SortAnimeQuery } from "./sortAnime.query"
 import { LimitQuantityAnimeQuery } from "./limitQuantityAnime.query"

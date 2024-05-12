@@ -1,5 +1,6 @@
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose"
 import mongoose, { HydratedDocument, ObjectId } from "mongoose"
+
 import { LanguageDocument, LanguageSchema } from "../../../../auxiliary"
 
 @Schema({ collection: "RelatedAnime", _id: false, versionKey: false })

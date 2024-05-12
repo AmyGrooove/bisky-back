@@ -1,14 +1,16 @@
 import { Module, forwardRef } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
-import { AnimeResolver } from "./resolvers/anime.resolver"
-import { AnimeService } from "./services/anime.service"
+
 import { FranchiseModule } from "../franchise/franchise.module"
 import { GenreModule } from "../genre/genre.module"
 import { PlatformModule } from "../platform/platform.module"
 import { StudioModule } from "../studio/studio.module"
+import { UserSchema } from "../user/schemas/user.schema"
+
 import { AnimeSchema } from "./schemas/anime.schema"
 import { AnimeController } from "./controllers/anime.controller"
-import { UserSchema } from "../user/schemas/user.schema"
+import { AnimeService } from "./services/anime.service"
+import { AnimeResolver } from "./resolvers/anime.resolver"
 
 @Module({
   imports: [

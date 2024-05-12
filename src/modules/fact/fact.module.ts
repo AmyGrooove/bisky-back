@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common"
 import { MongooseModule } from "@nestjs/mongoose"
+
 import { FactController } from "./controllers/fact.controller"
 import { FactResolver } from "./resolvers/fact.resolver"
 import { FactSchema } from "./schemas/fact.schema"

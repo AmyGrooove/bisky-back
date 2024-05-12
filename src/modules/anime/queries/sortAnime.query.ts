@@ -20,6 +20,9 @@ class SortAnimeQuery {
   dates_releasedOn?: boolean | null
 
   @Field(() => Boolean, { nullable: true, defaultValue: null })
+  episodes_count?: boolean | null
+
+  @Field(() => Boolean, { nullable: true, defaultValue: null })
   episodes_airedCount?: boolean | null
 
   @Field(() => Boolean, { nullable: true, defaultValue: null })
@@ -29,7 +32,7 @@ class SortAnimeQuery {
   episodes_nextEpisodeAiredDate?: boolean | null
 
   @Field(() => Boolean, { nullable: true, defaultValue: null })
-  episodes_averageDuration?: boolean | null
+  episodes_duration?: boolean | null
 }
 
 export { SortAnimeQuery }

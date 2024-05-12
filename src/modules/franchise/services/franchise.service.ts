@@ -1,6 +1,7 @@
 import { Model } from "mongoose"
 import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
+
 import { Franchise } from "../schemas/franchise.schema"
 import { getQueryObject } from "../../../functions"
 import { GeneralFranchiseQuery } from "../queries/generalFranchise.query"

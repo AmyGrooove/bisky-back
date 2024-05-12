@@ -1,4 +1,5 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
+
 import { GenreService } from "../services/genre.service"
 import { GeneralGenreQuery } from "../queries/generalGenre.query"
 import { GenreFullModel } from "../entities/genreFull.entity"

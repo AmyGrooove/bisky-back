@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql"
+
 import { LanguageModel } from "../../../../auxiliary"
 import { AnimeSimpleModel } from "../animeSimple.entity"
 

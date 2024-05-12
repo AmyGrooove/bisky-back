@@ -1,6 +1,7 @@
 import { Controller, Get, HttpStatus } from "@nestjs/common"
-import { FactService } from "../services/fact.service"
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger"
+
+import { FactService } from "../services/fact.service"
 import { FactModel } from "../entities/fact.entity"
 
 @ApiTags("Fact")

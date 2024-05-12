@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql"
+
 import { AnimeModel } from "./anime.entity"
 import { RelatedAnimeSimpleModel } from "./additional/relatedAnimeSimple.entity"
 import { OtherPlatformSimpleModel } from "./additional/otherPlatformSimple.entity"

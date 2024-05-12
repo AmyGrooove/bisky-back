@@ -13,6 +13,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from "@nestjs/swagger"
+
 import { UserAnimeService } from "../services/userAnime.service"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { SkipListDto } from "../dto/skipList.dto"
