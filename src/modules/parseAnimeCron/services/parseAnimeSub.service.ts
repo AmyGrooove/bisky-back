@@ -11,7 +11,7 @@ import { Anime } from "../../anime/schemas/anime.schema"
 import { Studio } from "../../studio/schemas/studio.schema"
 import { Franchise } from "../../franchise/schemas/franchise.schema"
 import { Genre } from "../../genre/schemas/genre.schema"
-import { compareDates } from "../../../functions"
+import { checkFirstTimeMore } from "../../../functions"
 
 @Injectable()
 class ParseAnimeSubService {
@@ -237,13 +237,14 @@ class ParseAnimeSubService {
                 ? new Date(el.nextEpisodeAt)
                 : null,
               lastEpisodeAiredDate:
-                el.status === "released" && el.releasedOn.date
-                  ? new Date(el.releasedOn.date)
+                el.status === "released" &&
+                (el.releasedOn.date || el.airedOn.date)
+                  ? new Date(el.releasedOn.date ?? el.airedOn.date)
                   : el.status === "anons"
                   ? null
-                  : !compareDates(
-                      animeInfo?.episodes?.nextEpisodeAiredDate,
+                  : checkFirstTimeMore(
                       el.nextEpisodeAt,
+                      animeInfo?.episodes?.nextEpisodeAiredDate,
                     )
                   ? animeInfo?.episodes?.nextEpisodeAiredDate
                   : null,
