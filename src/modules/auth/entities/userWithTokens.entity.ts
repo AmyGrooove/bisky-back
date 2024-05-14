@@ -11,7 +11,7 @@ class UserWithTokensModel extends User {
 
   @ApiProperty({ type: String })
   @Field(() => String)
-  refreshToken: string
+  declare refreshToken: string
 }
 
 export { UserWithTokensModel }

@@ -35,6 +35,10 @@ import { AppController } from "./controllers/app.controller"
       sortSchema: true,
       introspection: true,
       context: ({ req }) => ({ req }),
+      apollo: {
+        graphRef: process.env.APOLLO_GRAPH_REF,
+        key: process.env.APOLLO_KEY,
+      },
     }),
     ServeStaticModule.forRoot({ rootPath: join(process.cwd(), "public") }),
     FactModule,

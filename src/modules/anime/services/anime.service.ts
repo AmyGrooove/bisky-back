@@ -37,6 +37,7 @@ class AnimeService {
       searchInput,
       isPaginationOff,
       userFilters,
+      filterExclude,
     } = query
 
     const convertedSearchInput = searchInput
@@ -223,6 +224,7 @@ class AnimeService {
             },
           },
           { $project: { estimatesCollection: 0, scoredCollection: 0 } },
+          ...getQueryAggregateObject(filterExclude, true),
           ...getQueryAggregateObject(filter),
           ...searchMatch,
           ...getSortQueryAggregate(sort, isPaginationOff),

@@ -1,69 +1,56 @@
 import { Types } from "mongoose"
 
-const getBetweenMatch = (item: Record<string, "from" | "to">) =>
-  item?.from !== null
-    ? item?.to !== null
-      ? { $gte: item?.from, $lte: item?.to }
-      : { $gte: item?.from }
-    : item?.to !== null
-    ? { $lte: item?.to }
-    : {}
+interface ItemRange {
+  from: string | null
+  to: string | null
+}
+
+const getBetweenMatch = ({ from, to }: ItemRange) => {
+  const match: Record<string, any> = {}
+
+  if (from !== null) match.$gte = from
+  if (to !== null) match.$lte = to
+
+  return match
+}
 
 const getQueryAggregateObject = (
   itemObject: Record<string, any> | null,
+  isReverse = false,
 ): { $match: Record<string, any> }[] => {
   if (!itemObject) return []
 
-  const items = Object.keys(itemObject)
+  const query: { $match: Record<string, any> }[] = []
 
-  if (items.length === 0) return []
+  Object.entries(itemObject).forEach(([key, value]) => {
+    if (!value) return
 
-  const query = []
-  items.forEach((value) => {
-    if (itemObject[value]) {
-      const newValue =
-        value.indexOf("_ID_ONLY") !== -1 && !!itemObject[value]
-          ? {
-              $all: [itemObject[value]]
-                .flat()
-                .map((el) => new Types.ObjectId(el)),
-            }
-          : value.indexOf("_ID") !== -1 && !!itemObject[value]
-          ? {
-              $in: [itemObject[value]]
-                .flat()
-                .map((el) => new Types.ObjectId(el)),
-            }
-          : itemObject[value].from === null ||
-            itemObject[value].to === null ||
-            !!itemObject[value]?.from ||
-            !!itemObject[value]?.to
-          ? getBetweenMatch(itemObject[value])
-          : { $in: [itemObject[value]].flat() }
+    const isIDOnly = key.includes("_ID_ONLY")
+    const isID = key.includes("_ID")
 
-      const newMatch = {
-        $match: {
-          [value
-            .replace("_ID_ONLY", "")
-            .replace("_ID", "")
-            .replace("_", ".")
-            .replace(".id", "_id")]: newValue,
-        },
+    const operator = isReverse ? "$nin" : isIDOnly ? "$all" : "$in"
+
+    let newValue: any
+
+    if (isIDOnly || isID)
+      newValue = {
+        [operator]: [value].flat().map((el: string) => new Types.ObjectId(el)),
       }
+    else if (value.from === null || value.to === null || value.from || value.to)
+      newValue = getBetweenMatch(value)
+    else newValue = { [operator]: [value].flat() }
 
-      if (
-        Object.keys(
-          newMatch.$match[
-            value
-              .replace("_ID_ONLY", "")
-              .replace("_ID", "")
-              .replace("_", ".")
-              .replace(".id", "_id")
-          ],
-        ).length !== 0
-      )
-        query.push(newMatch)
+    const newMatchKey = key
+      .replace("_ID_ONLY", "")
+      .replace("_ID", "")
+      .replace("_", ".")
+      .replace(".id", "_id")
+
+    const newMatch: { $match: Record<string, any> } = {
+      $match: { [newMatchKey]: newValue },
     }
+
+    if (Object.keys(newValue).length !== 0) query.push(newMatch)
   })
 
   return query

@@ -3,6 +3,7 @@ import { Cron, CronExpression } from "@nestjs/schedule"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
 import { HttpService } from "@nestjs/axios"
+import { Logger } from "@nestjs/common"
 
 import { IGenresShiki } from "../types/IGenresShiki"
 import { Genre } from "../../genre/schemas/genre.schema"
@@ -19,8 +20,12 @@ class ParseAnimeCronService {
     private readonly genreModel: Model<Genre>,
   ) {}
 
+  private readonly logger = new Logger(ParseAnimeCronService.name)
+
   @Cron(CronExpression.EVERY_2_HOURS)
   async updateNewAnime() {
+    this.logger.debug("updateNewAnime started")
+
     const animesData = await this.parseAnimeSubService.getUpdatingAnimesData()
 
     await this.parseAnimeSubService.updateAnimes(animesData)
@@ -28,6 +33,8 @@ class ParseAnimeCronService {
 
   @Cron(CronExpression.EVERY_WEEK)
   async parseAnimesByYear() {
+    this.logger.debug("parseAnimesByYear started")
+
     const animesData = await this.parseAnimeSubService.getAnimesDataByYear(
       1000,
       3000,
@@ -38,6 +45,8 @@ class ParseAnimeCronService {
 
   @Cron("0 0 1 1 *")
   async parseGenres() {
+    this.logger.debug("parseGenres started")
+
     try {
       const mainInfo = await this.httpService.axiosRef
         .post<IGenresShiki>(process.env.SHIKI_GRAPHQL_API, {
@@ -55,7 +64,7 @@ class ParseAnimeCronService {
 
       await this.genreModel.bulkWrite(operations)
     } catch (error) {
-      console.error(error)
+      this.logger.error(error)
     }
   }
 }

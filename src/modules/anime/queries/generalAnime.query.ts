@@ -23,6 +23,9 @@ class GeneralAnimeQuery {
   @Field(() => FilterAnimeQuery, { nullable: true, defaultValue: null })
   filter?: FilterAnimeQuery | null
 
+  @Field(() => FilterAnimeQuery, { nullable: true, defaultValue: null })
+  filterExclude?: FilterAnimeQuery | null
+
   @Field(() => SortAnimeQuery, { nullable: true, defaultValue: null })
   sort?: SortAnimeQuery | null
 
