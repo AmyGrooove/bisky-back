@@ -36,7 +36,7 @@ class Anime {
   @Prop({ type: String, enum: EKind, default: EKind.none })
   kind: EKind
 
-  @Prop({ type: OtherPlatformSchema, default: [] })
+  @Prop({ type: [OtherPlatformSchema], default: [] })
   otherPlatforms: OtherPlatformDocument[]
 
   @Prop({ type: String, enum: EStatus, default: EStatus.anons })

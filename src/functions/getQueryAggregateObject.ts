@@ -25,32 +25,45 @@ const getQueryAggregateObject = (
   Object.entries(itemObject).forEach(([key, value]) => {
     if (!value) return
 
-    const isIDOnly = key.includes("_ID_ONLY")
-    const isID = key.includes("_ID")
+    try {
+      const isIDOnly = key.includes("_ID_ONLY")
+      const isID = key.includes("_ID")
 
-    const operator = isReverse ? "$nin" : isIDOnly ? "$all" : "$in"
+      const operator = isReverse ? "$nin" : isIDOnly ? "$all" : "$in"
 
-    let newValue: any
+      let newValue: any
 
-    if (isIDOnly || isID)
-      newValue = {
-        [operator]: [value].flat().map((el: string) => new Types.ObjectId(el)),
+      if (isIDOnly || isID)
+        newValue = {
+          [operator]: [value]
+            .flat()
+            .map((el: string) => new Types.ObjectId(el)),
+        }
+      else if (
+        value.from === null ||
+        value.to === null ||
+        value.from ||
+        value.to
+      )
+        newValue = getBetweenMatch(value)
+      else newValue = { [operator]: [value].flat() }
+
+      const newMatchKey = key
+        .replace("_ID_ONLY", "")
+        .replace("_ID", "")
+        .replace("_", ".")
+        .replace(".id", "_id")
+
+      const newMatch: { $match: Record<string, any> } = {
+        $match: { [newMatchKey]: newValue },
       }
-    else if (value.from === null || value.to === null || value.from || value.to)
-      newValue = getBetweenMatch(value)
-    else newValue = { [operator]: [value].flat() }
 
-    const newMatchKey = key
-      .replace("_ID_ONLY", "")
-      .replace("_ID", "")
-      .replace("_", ".")
-      .replace(".id", "_id")
+      if (Object.keys(newValue).length !== 0) query.push(newMatch)
+    } catch (error) {
+      console.error(error)
 
-    const newMatch: { $match: Record<string, any> } = {
-      $match: { [newMatchKey]: newValue },
+      return
     }
-
-    if (Object.keys(newValue).length !== 0) query.push(newMatch)
   })
 
   return query

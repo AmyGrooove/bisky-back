@@ -1,12 +1,12 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
-import { Model } from "mongoose"
+import { Model, Schema } from "mongoose"
 import { HttpService } from "@nestjs/axios"
 
 import { IAnimeShiki, IAnimeShikiGraph } from "../types/IAnimeShiki"
 import { animesGetQuery } from "../graphqlQuery/animesGetQuery"
 import { EStatus } from "../../../auxiliary"
-import { Anime } from "../../anime/schemas/anime.schema"
+import { Anime, AnimeDocument } from "../../anime/schemas/anime.schema"
 // import { Platform } from "../../platform/schemas/platform.schema"
 import { Studio } from "../../studio/schemas/studio.schema"
 import { Franchise } from "../../franchise/schemas/franchise.schema"
@@ -28,6 +28,7 @@ class ParseAnimeSubService {
     @InjectModel("Genre")
     private readonly genreModel: Model<Genre>,
   ) {}
+  private readonly logger = new Logger(ParseAnimeSubService.name)
 
   async getAnimesDataByYear(
     from: number = new Date().getFullYear(),
@@ -57,12 +58,17 @@ class ParseAnimeSubService {
           setTimeout(res, Number(process.env.PAGE_DELAY_COUNT)),
         )
       } catch (error: any) {
+        this.logger.warn("delay... " + error.message)
+
         await new Promise((res) =>
           setTimeout(res, Number(process.env.ERROR_DELAY_COUNT)),
         )
       }
     }
 
+    this.logger.log(
+      `Animes received (count: ${animeInfos.length}) (pages: ${page})`,
+    )
     return animeInfos
   }
 
@@ -87,11 +93,17 @@ class ParseAnimeSubService {
           setTimeout(res, Number(process.env.PAGE_DELAY_COUNT)),
         )
       } catch (error: any) {
+        this.logger.warn("delay... " + error.message)
+
         await new Promise((res) =>
           setTimeout(res, Number(process.env.ERROR_DELAY_COUNT)),
         )
       }
     }
+
+    this.logger.log(
+      `Ongoing/Anons Animes received (count: ${animeInfos.length}) (pages: ${page})`,
+    )
 
     page = 1
 
@@ -122,17 +134,26 @@ class ParseAnimeSubService {
           setTimeout(res, Number(process.env.PAGE_DELAY_COUNT)),
         )
       } catch (error: any) {
+        this.logger.warn("delay... " + error.message)
+
         await new Promise((res) =>
           setTimeout(res, Number(process.env.ERROR_DELAY_COUNT)),
         )
       }
     }
 
+    this.logger.log(
+      releasedAnimeIds.length === 0
+        ? "No anime released yet"
+        : `Released Anime received (${releasedAnimeIds.length})`,
+    )
     return animeInfos
   }
 
   async updateAnimes(animes: IAnimeShiki[] = []) {
     try {
+      let newAnimesSeries = 0
+
       const newAnimes = await Promise.all(
         animes.map(async (el) => {
           const animeGenres = (
@@ -209,6 +230,14 @@ class ParseAnimeSubService {
                 .exec()
             )?._id ?? null
 
+          if (
+            checkFirstTimeMore(
+              el.nextEpisodeAt,
+              animeInfo?.episodes?.nextEpisodeAiredDate,
+            )
+          )
+            newAnimesSeries++
+
           return {
             shikiId: Number(el.id),
             labels: {
@@ -247,7 +276,7 @@ class ParseAnimeSubService {
                       animeInfo?.episodes?.nextEpisodeAiredDate,
                     )
                   ? animeInfo?.episodes?.nextEpisodeAiredDate
-                  : null,
+                  : animeInfo?.episodes?.lastEpisodeAiredDate ?? null,
             },
             dates: {
               airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
@@ -277,12 +306,18 @@ class ParseAnimeSubService {
               name: item.name,
               url: item.url,
             })),
-            genres: animeGenres,
-            studios: animeStudios,
-            franchise: animeFranchise,
+            genres: animeGenres as unknown as Schema.Types.ObjectId[],
+            studios: animeStudios as unknown as Schema.Types.ObjectId[],
+            franchise: animeFranchise as unknown as Schema.Types.ObjectId,
             updateDate: new Date(),
-          }
+          } as AnimeDocument
         }),
+      )
+
+      this.logger.log(
+        newAnimesSeries === 0
+          ? "There's no new anime series"
+          : `Only so many anime have a new series out (${newAnimesSeries})`,
       )
 
       const operations = newAnimes.map((item) => ({
@@ -294,6 +329,7 @@ class ParseAnimeSubService {
       }))
 
       await this.animeModel.bulkWrite(operations)
+      this.logger.log("Database updated")
 
       await this.updateAnimesRelations()
     } catch (error) {
@@ -336,6 +372,8 @@ class ParseAnimeSubService {
     )
 
     await this.animeModel.bulkWrite(operations)
+
+    this.logger.log("Anime connections updated")
   }
 }
 
