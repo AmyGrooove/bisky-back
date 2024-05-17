@@ -98,7 +98,7 @@ class AuthController {
   @ApiSecurity("RefreshToken")
   @UseGuards(RefreshTokenGuard)
   @Patch("refresh")
-  refreshTokens(
+  async refreshTokens(
     @Headers("Authorization") authentication: string,
     @Request() req,
   ) {

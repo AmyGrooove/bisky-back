@@ -116,7 +116,10 @@ class AuthService {
     const hashedRefreshToken = await hash(refreshToken, 10)
     await this.userService.updateUser({
       _id: userId,
-      updateUserDto: { refreshToken: hashedRefreshToken },
+      updateUserDto: {
+        refreshToken: hashedRefreshToken,
+        lastOnlineDate: new Date(),
+      },
     })
   }
 
@@ -128,7 +131,7 @@ class AuthService {
         { _id: userId, username },
         {
           secret: this.configService.get("JWT_ACCESS_SECRET"),
-          expiresIn: "1d",
+          expiresIn: "5m",
         },
       ),
       this.jwtService.signAsync(

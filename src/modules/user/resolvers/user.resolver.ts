@@ -26,7 +26,7 @@ class UserResolver {
 
     @Args("userQuery", {
       type: () => GeneralUserQuery,
-      defaultValue: { isCurrentUser: false },
+      defaultValue: { favorites: { animesQuery: { page: 1, count: 20 } } },
     })
     userQuery: GeneralUserQuery,
 
@@ -60,7 +60,22 @@ class UserResolver {
       base: item,
     }))
 
-    return { ...userData, animeEstimates: relatedAnimes }
+    const favoriteAnimes = await this.animeService.getAnimes({
+      query: {
+        ...userQuery.favorites.animesQuery,
+        filter: { _id_ID: userData.favorites.animeIds },
+      },
+      userId: context.req?.user?._id,
+    })
+
+    return {
+      ...userData,
+      animeEstimates: relatedAnimes,
+      favorites: {
+        ...userData.favorites,
+        animeIds: favoriteAnimes,
+      },
+    }
   }
 }
 

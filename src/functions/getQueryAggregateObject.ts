@@ -60,8 +60,6 @@ const getQueryAggregateObject = (
 
       if (Object.keys(newValue).length !== 0) query.push(newMatch)
     } catch (error) {
-      console.error(error)
-
       return
     }
   })
