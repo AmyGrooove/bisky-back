@@ -1,13 +1,16 @@
 import { Resolver, Query, Args, Int } from "@nestjs/graphql"
+import { UseInterceptors } from "@nestjs/common"
 
 import { FactService } from "../services/fact.service"
 import { FilterFactQuery } from "../queries/filterFact.query"
 import { FactModel } from "../entities/fact.entity"
+import { CacheResolver } from "../../../decorators"
 
 @Resolver()
 class FactResolver {
   constructor(private factService: FactService) {}
 
+  @UseInterceptors(CacheResolver)
   @Query(() => [FactModel], { name: "getFacts" })
   async getFacts(
     @Args("page", {

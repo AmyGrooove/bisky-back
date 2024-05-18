@@ -1,5 +1,6 @@
 import { Args, Context, Query, Resolver } from "@nestjs/graphql"
 import { UseGuards } from "@nestjs/common"
+import { UseInterceptors } from "@nestjs/common"
 
 import { UserService } from "../services/user.service"
 import { UserPublicFullModel } from "../entities/userPublicFull.entity"
@@ -7,6 +8,7 @@ import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
 import { AnimeService } from "../../anime/services/anime.service"
 import { SimpleAccessTokenGuard } from "../../auth/guards/simpleAccessToken.guard"
 import { GeneralUserQuery } from "../queries/generalUser.query"
+import { CacheResolver } from "../../../decorators"
 
 @Resolver()
 class UserResolver {
@@ -16,6 +18,7 @@ class UserResolver {
   ) {}
 
   @UseGuards(SimpleAccessTokenGuard)
+  @UseInterceptors(CacheResolver)
   @Query(() => UserPublicFullModel, { name: "getUserPublicData" })
   async getUserPublicData(
     @Args("animeQuery", {

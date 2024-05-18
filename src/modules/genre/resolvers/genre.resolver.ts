@@ -1,10 +1,12 @@
 import { Args, Query, Resolver } from "@nestjs/graphql"
+import { UseInterceptors } from "@nestjs/common"
 
 import { GenreService } from "../services/genre.service"
 import { GeneralGenreQuery } from "../queries/generalGenre.query"
 import { GenreFullModel } from "../entities/genreFull.entity"
 import { AnimeService } from "../../anime/services/anime.service"
 import { GeneralAnimeQuery } from "../../anime/queries/generalAnime.query"
+import { CacheResolver } from "../../../decorators"
 
 @Resolver()
 class GenreResolver {
@@ -13,6 +15,7 @@ class GenreResolver {
     private animeService: AnimeService,
   ) {}
 
+  @UseInterceptors(CacheResolver)
   @Query(() => [GenreFullModel], { name: "getGenres" })
   async getGenres(
     @Args("genreQuery", {

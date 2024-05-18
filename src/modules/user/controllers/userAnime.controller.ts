@@ -6,6 +6,7 @@ import {
   UseGuards,
   Request,
   Delete,
+  UseInterceptors,
 } from "@nestjs/common"
 import {
   ApiOperation,
@@ -13,12 +14,14 @@ import {
   ApiSecurity,
   ApiTags,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { UserAnimeService } from "../services/userAnime.service"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { SkipListDto } from "../dto/skipList.dto"
 
 @ApiTags("UserAnime")
+@UseInterceptors(CacheInterceptor)
 @Controller("user")
 class UserAnimeController {
   constructor(private userAnimeService: UserAnimeService) {}

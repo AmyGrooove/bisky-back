@@ -1,13 +1,16 @@
 import { Args, Int, Query, Resolver } from "@nestjs/graphql"
+import { UseInterceptors } from "@nestjs/common"
 
 import { AnimeCommentService } from "../services/animeComment.service"
 import { AnimeCommentModel } from "../entities/animeComment.entity"
 import { SortAnimeCommentQuery } from "../query/sortAnimeComment.query"
+import { CacheResolver } from "../../../decorators"
 
 @Resolver()
 class AnimeCommentResolver {
   constructor(private animeCommentService: AnimeCommentService) {}
 
+  @UseInterceptors(CacheResolver)
   @Query(() => [AnimeCommentModel], { name: "getAnimeComments" })
   async getAnimeComments(
     @Args("animeId", { type: () => String, description: "Anime _id" })

@@ -1,11 +1,19 @@
-import { Controller, UseGuards, Get, Req } from "@nestjs/common"
+import {
+  Controller,
+  UseGuards,
+  Get,
+  Req,
+  UseInterceptors,
+} from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
 import { AuthGuard } from "@nestjs/passport"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { UserService } from "../../user/services/user.service"
 import { AuthService } from "../services/auth.service"
 
 @ApiTags("Auth")
+@UseInterceptors(CacheInterceptor)
 @Controller("auth")
 class OAuth2Controller {
   constructor(

@@ -1,5 +1,5 @@
 import { Args, Context, Query, Resolver } from "@nestjs/graphql"
-import { UseGuards } from "@nestjs/common"
+import { UseGuards, UseInterceptors } from "@nestjs/common"
 
 import { AnimeService } from "../services/anime.service"
 import { FranchiseService } from "../../franchise/services/franchise.service"
@@ -13,6 +13,7 @@ import { GeneralPlatformQuery } from "../../platform/queries/generalPlatform.que
 import { GeneralStudioQuery } from "../../studio/queries/generalStudio.query"
 import { SimpleAccessTokenGuard } from "../../auth/guards/simpleAccessToken.guard"
 import { GeneralAnimeQuery } from "../queries/generalAnime.query"
+import { CacheResolver } from "../../../decorators"
 
 @Resolver()
 class AnimeResolver {
@@ -25,6 +26,7 @@ class AnimeResolver {
   ) {}
 
   @UseGuards(SimpleAccessTokenGuard)
+  @UseInterceptors(CacheResolver)
   @Query(() => [AnimeFullModel], { name: "getAnimes" })
   async getAnimes(
     @Args("animeQuery", {

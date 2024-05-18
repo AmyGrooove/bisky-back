@@ -1,10 +1,11 @@
-import { Controller, Get, HttpStatus } from "@nestjs/common"
+import { Controller, Get, HttpStatus, UseInterceptors } from "@nestjs/common"
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiProperty,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { StudioService } from "../services/studio.service"
 
@@ -17,6 +18,7 @@ class StudioIdAndName {
 }
 
 @ApiTags("Studio")
+@UseInterceptors(CacheInterceptor)
 @Controller("studio")
 class StudioController {
   constructor(private studioService: StudioService) {}

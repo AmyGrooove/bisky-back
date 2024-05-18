@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql"
-import { AnimeSimpleModel } from "src/modules/anime/entities/animeSimple.entity"
+
+import { AnimeSimpleModel } from "../../../anime/entities/animeSimple.entity"
 
 @ObjectType()
 class FavoriteModel {

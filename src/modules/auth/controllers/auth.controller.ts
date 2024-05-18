@@ -9,6 +9,7 @@ import {
   Patch,
   Put,
   Headers,
+  UseInterceptors,
 } from "@nestjs/common"
 import {
   ApiTags,
@@ -17,6 +18,7 @@ import {
   ApiHeader,
   ApiSecurity,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { User } from "../../user/schemas/user.schema"
 import { UserService } from "../../user/services/user.service"
@@ -29,6 +31,7 @@ import { UserWithTokensModel } from "../entities/userWithTokens.entity"
 import { TokensModel } from "../entities/tokens.entity"
 
 @ApiTags("Auth")
+@UseInterceptors(CacheInterceptor)
 @Controller("auth")
 class AuthController {
   constructor(

@@ -1,10 +1,11 @@
-import { Controller, Get, HttpStatus } from "@nestjs/common"
+import { Controller, Get, HttpStatus, UseInterceptors } from "@nestjs/common"
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiProperty,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { GenreService } from "../services/genre.service"
 import { LanguageModel } from "../../../auxiliary"
@@ -18,6 +19,7 @@ class GenreIdAndName {
 }
 
 @ApiTags("Genre")
+@UseInterceptors(CacheInterceptor)
 @Controller("genre")
 class GenreController {
   constructor(private genreService: GenreService) {}

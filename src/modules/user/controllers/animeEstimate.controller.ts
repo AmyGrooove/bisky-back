@@ -7,6 +7,7 @@ import {
   UseGuards,
   Body,
   Delete,
+  UseInterceptors,
 } from "@nestjs/common"
 import {
   ApiSecurity,
@@ -15,6 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { AnimeEstimateService } from "../services/animeEstimate.service"
@@ -23,6 +25,7 @@ import { UpdateAnimeStatusDto } from "../dto/updateAnimeStatus.dto"
 import { UpdateAnimeWatchedSeriesDto } from "../dto/updateAnimeWatchedSeriesCount.dto"
 
 @ApiTags("AnimeEstimate")
+@UseInterceptors(CacheInterceptor)
 @Controller("user")
 class AnimeEstimateController {
   constructor(private animeEstimateService: AnimeEstimateService) {}

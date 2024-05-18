@@ -8,6 +8,7 @@ import {
   Body,
   Put,
   Delete,
+  UseInterceptors,
 } from "@nestjs/common"
 import {
   ApiSecurity,
@@ -16,12 +17,14 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger"
+import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { AnimeCommentService } from "../services/animeComment.service"
 import { UpdateAnimeCommentDto } from "../dto/updateAnimeComment.dto"
 
 @ApiTags("AnimeComment")
+@UseInterceptors(CacheInterceptor)
 @Controller("comment")
 class AnimeCommentController {
   constructor(private animeCommentService: AnimeCommentService) {}
