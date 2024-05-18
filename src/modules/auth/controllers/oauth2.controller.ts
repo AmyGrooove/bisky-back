@@ -2,7 +2,7 @@ import {
   Controller,
   UseGuards,
   Get,
-  Req,
+  Request,
   UseInterceptors,
 } from "@nestjs/common"
 import { ApiTags } from "@nestjs/swagger"
@@ -27,7 +27,7 @@ class OAuth2Controller {
 
   @Get("google/callback")
   @UseGuards(AuthGuard("google"))
-  googleLoginCallback(@Req() req) {
+  googleLoginCallback(@Request() req) {
     return req.user
   }
 }

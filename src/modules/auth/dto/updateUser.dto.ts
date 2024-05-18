@@ -6,11 +6,11 @@ import { CreateUserDto } from "./createUser.dto"
 class UpdateUserDto extends PartialType(CreateUserDto) {
   @ApiProperty()
   @IsString()
-  name?: string
+  username?: string
 
   @ApiProperty()
   @IsString()
-  image?: string
+  avatar?: string
 
   refreshToken?: string
 

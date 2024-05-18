@@ -21,6 +21,7 @@ import { StudioModule } from "../studio/studio.module"
 import { UserModule } from "../user/user.module"
 import { AuthModule } from "../auth/auth.module"
 import { ParseAnimeCronModule } from "../parseAnimeCron/parseAnimeCron.module"
+import { UploadModule } from "../upload/upload.module"
 
 import { AppController } from "./controllers/app.controller"
 
@@ -60,6 +61,7 @@ import { AppController } from "./controllers/app.controller"
     UserModule,
     AuthModule,
     ParseAnimeCronModule,
+    UploadModule,
   ],
   controllers: [AppController],
 })
