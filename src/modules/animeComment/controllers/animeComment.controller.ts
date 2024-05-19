@@ -22,6 +22,7 @@ import { CacheInterceptor } from "@nestjs/cache-manager"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { AnimeCommentService } from "../services/animeComment.service"
 import { UpdateAnimeCommentDto } from "../dto/updateAnimeComment.dto"
+import { ClearCache } from "../../../decorators"
 
 @ApiTags("AnimeComment")
 @UseInterceptors(CacheInterceptor)
@@ -38,6 +39,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Put(":animeId/add")
   async addAnimeComment(
     @Request() req,
@@ -60,6 +62,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "commentId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch(":commentId")
   async updateAnimeComment(
     @Request() req,
@@ -82,6 +85,7 @@ class AnimeCommentController {
   })
   @ApiParam({ name: "commentId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Delete(":commentId")
   async deleteAnimeComment(
     @Request() req,

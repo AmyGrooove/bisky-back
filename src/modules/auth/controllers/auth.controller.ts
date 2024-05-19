@@ -18,7 +18,6 @@ import {
   ApiHeader,
   ApiSecurity,
 } from "@nestjs/swagger"
-import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { User } from "../../user/schemas/user.schema"
 import { UserService } from "../../user/services/user.service"
@@ -29,9 +28,9 @@ import { AccessTokenGuard } from "../guards/accessToken.guard"
 import { RefreshTokenGuard } from "../guards/refreshToken.guard"
 import { UserWithTokensModel } from "../entities/userWithTokens.entity"
 import { TokensModel } from "../entities/tokens.entity"
+import { ClearCache } from "../../../decorators"
 
 @ApiTags("Auth")
-@UseInterceptors(CacheInterceptor)
 @Controller("auth")
 class AuthController {
   constructor(
@@ -63,6 +62,7 @@ class AuthController {
     description: "Success",
     type: UserWithTokensModel,
   })
+  @UseInterceptors(ClearCache)
   @Put("register")
   async register(@Body() createUserDto: CreateUserDto) {
     const tokensData = await this.authService.register(createUserDto)
@@ -78,6 +78,7 @@ class AuthController {
     description: "Success",
     type: UserWithTokensModel,
   })
+  @UseInterceptors(ClearCache)
   @Post("login")
   async login(@Body() loginUserDto: LoginUserDto) {
     const tokensData = await this.authService.login(loginUserDto)
@@ -100,6 +101,7 @@ class AuthController {
   })
   @ApiSecurity("RefreshToken")
   @UseGuards(RefreshTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("refresh")
   async refreshTokens(
     @Headers("Authorization") authentication: string,
@@ -121,6 +123,7 @@ class AuthController {
   })
   @ApiSecurity("AccessToken")
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("logout")
   logout(@Request() req) {
     return this.authService.logout(req.user._id)

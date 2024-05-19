@@ -1,6 +1,3 @@
-import { createWriteStream } from "fs"
-import { get } from "http"
-
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger"
 import { NestFactory } from "@nestjs/core"
 import { RequestMethod, ValidationPipe, VersioningType } from "@nestjs/common"
@@ -33,42 +30,6 @@ async function bootstrap() {
 
   const server = await app.listen(3000)
   server.setTimeout(60000)
-
-  const appUrl = await app.getUrl()
-  if ((process.env.IS_DEVELOPMENT ?? "false") === "true") {
-    get(`${appUrl}/swagger-yaml`, (response) => {
-      response.pipe(createWriteStream("public/swagger/swagger-spec.yaml"))
-      console.log(
-        `Swagger YAML file written to: '/public/swagger/swagger-spec.yaml'`,
-      )
-    })
-    get(`${appUrl}/swagger/swagger-ui-bundle.js`, (response) => {
-      response.pipe(createWriteStream("public/swagger/swagger-ui-bundle.js"))
-      console.log(
-        `Swagger UI bundle file written to: '/public/swagger/swagger-ui-bundle.js'`,
-      )
-    })
-    get(`${appUrl}/swagger/swagger-ui-init.js`, (response) => {
-      response.pipe(createWriteStream("public/swagger/swagger-ui-init.js"))
-      console.log(
-        `Swagger UI init file written to: '/public/swagger-ui-init.js'`,
-      )
-    })
-    get(`${appUrl}/swagger/swagger-ui-standalone-preset.js`, (response) => {
-      response.pipe(
-        createWriteStream("public/swagger/swagger-ui-standalone-preset.js"),
-      )
-      console.log(
-        `Swagger UI standalone preset file written to: '/public/swagger/swagger-ui-standalone-preset.js'`,
-      )
-    })
-    get(`${appUrl}/swagger/swagger-ui.css`, (response) => {
-      response.pipe(createWriteStream("public/swagger/swagger-ui.css"))
-      console.log(
-        `Swagger UI css file written to: '/public/swagger/swagger-ui.css'`,
-      )
-    })
-  }
 }
 
 bootstrap()

@@ -23,6 +23,7 @@ import { AnimeEstimateService } from "../services/animeEstimate.service"
 import { UpdateAnimeScoreDto } from "../dto/updateAnimeScore.dto"
 import { UpdateAnimeStatusDto } from "../dto/updateAnimeStatus.dto"
 import { UpdateAnimeWatchedSeriesDto } from "../dto/updateAnimeWatchedSeriesCount.dto"
+import { ClearCache } from "../../../decorators"
 
 @ApiTags("AnimeEstimate")
 @UseInterceptors(CacheInterceptor)
@@ -39,6 +40,7 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("/:animeId/status")
   async updateAnimeStatus(
     @Request() req,
@@ -61,6 +63,7 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("/:animeId/score")
   async updateAnimeScore(
     @Request() req,
@@ -85,6 +88,7 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("/:animeId/watchedSeriesCount")
   async updateAnimeWatchedSeriesCount(
     @Request() req,
@@ -107,6 +111,7 @@ class AnimeEstimateController {
   })
   @ApiParam({ name: "animeId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Delete("/:animeId/status")
   async deleteAnimeFromList(@Request() req, @Param("animeId") animeId: string) {
     return this.animeEstimateService.deleteAnimeFromList({

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, UseInterceptors } from "@nestjs/common"
 import { Cron, CronExpression } from "@nestjs/schedule"
 import { InjectModel } from "@nestjs/mongoose"
 import { Model } from "mongoose"
@@ -8,6 +8,7 @@ import { Logger } from "@nestjs/common"
 import { IGenresShiki } from "../types/IGenresShiki"
 import { Genre } from "../../genre/schemas/genre.schema"
 import { genresGetQuery } from "../graphqlQuery/genresGetQuery"
+import { ClearCache } from "../../../decorators"
 
 import { ParseAnimeSubService } from "./parseAnimeSub.service"
 
@@ -22,6 +23,7 @@ class ParseAnimeCronService {
 
   private readonly logger = new Logger(ParseAnimeCronService.name)
 
+  @UseInterceptors(ClearCache)
   @Cron(CronExpression.EVERY_2_HOURS)
   async updateNewAnime() {
     this.logger.debug("updateNewAnime started")
@@ -31,6 +33,7 @@ class ParseAnimeCronService {
     await this.parseAnimeSubService.updateAnimes(animesData)
   }
 
+  @UseInterceptors(ClearCache)
   @Cron(CronExpression.EVERY_WEEK)
   async parseAnimesByYear() {
     this.logger.debug("parseAnimesByYear started")
@@ -43,6 +46,7 @@ class ParseAnimeCronService {
     await this.parseAnimeSubService.updateAnimes(animesData)
   }
 
+  @UseInterceptors(ClearCache)
   @Cron("0 0 1 1 *")
   async parseGenres() {
     this.logger.debug("parseGenres started")

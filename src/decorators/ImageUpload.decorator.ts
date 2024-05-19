@@ -6,29 +6,22 @@ import {
   UseInterceptors,
 } from "@nestjs/common"
 import { FileInterceptor } from "@nestjs/platform-express"
-import { diskStorage } from "multer"
+import { memoryStorage } from "multer"
 
 const ImageUpload = () =>
   applyDecorators(
     UseInterceptors(
       FileInterceptor("file", {
-        storage: diskStorage({
-          destination: "./uploads",
-          filename: (req, file, callback) => {
-            const uniqueSuffix =
-              Date.now() + "-" + Math.round(Math.random() * 1e9)
-            const ext = extname(file.originalname)
-            callback(null, `${uniqueSuffix}${ext}`)
-          },
-        }),
+        storage: memoryStorage(),
         fileFilter: (req, file, callback) => {
           const fileExt = extname(file.originalname).toLowerCase()
 
-          if (![".png", ".jpg", ".webp", ".jpeg"].includes(fileExt))
+          if (![".png", ".jpg", ".webp", ".jpeg"].includes(fileExt)) {
             return callback(
               new BadRequestException("Invalid file extension"),
               false,
             )
+          }
 
           callback(null, true)
         },

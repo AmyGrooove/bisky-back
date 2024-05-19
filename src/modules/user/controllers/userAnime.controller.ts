@@ -19,6 +19,7 @@ import { CacheInterceptor } from "@nestjs/cache-manager"
 import { UserAnimeService } from "../services/userAnime.service"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { SkipListDto } from "../dto/skipList.dto"
+import { ClearCache } from "../../../decorators"
 
 @ApiTags("UserAnime")
 @UseInterceptors(CacheInterceptor)
@@ -30,6 +31,7 @@ class UserAnimeController {
   @ApiSecurity("AccessToken")
   @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Boolean })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("/skipList")
   async skipAnime(@Request() req, @Body() animeId: SkipListDto) {
     return this.userAnimeService.skipAnime({
@@ -42,6 +44,7 @@ class UserAnimeController {
   @ApiSecurity("AccessToken")
   @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Boolean })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Delete("/skipList")
   async removeFromSkipAnime(@Request() req, @Body() animeId: SkipListDto) {
     return this.userAnimeService.removeFromSkipAnime({

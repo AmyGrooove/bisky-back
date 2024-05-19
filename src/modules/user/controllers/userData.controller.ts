@@ -16,9 +16,9 @@ import {
   ApiTags,
 } from "@nestjs/swagger"
 import { CacheInterceptor } from "@nestjs/cache-manager"
-import { ImageUpload } from "src/decorators"
-import { ImageService } from "src/modules/upload/services/image.service"
 
+import { ClearCache, ImageUpload } from "../../../decorators"
+import { ImageService } from "../../upload/services/image.service"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { FileUploadDto } from "../dto/fileUpload.dto"
 import { UserService } from "../services/user.service"
@@ -39,6 +39,7 @@ class UserDataController {
   @ApiResponse({ status: HttpStatus.OK, description: "Success", type: Boolean })
   @UseGuards(AccessTokenGuard)
   @ImageUpload()
+  @UseInterceptors(ClearCache)
   @Patch("/avatar")
   async updateAvatar(
     @UploadedFile() file: Express.Multer.File,

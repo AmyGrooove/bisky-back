@@ -1,12 +1,9 @@
-import { join } from "path"
-
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo"
 import { Module } from "@nestjs/common"
 import { ConfigModule } from "@nestjs/config"
 import { GraphQLModule } from "@nestjs/graphql"
 import { MongooseModule } from "@nestjs/mongoose"
 import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default"
-import { ServeStaticModule } from "@nestjs/serve-static"
 import { ScheduleModule } from "@nestjs/schedule"
 import * as redisStore from "cache-manager-redis-store"
 import { CacheModule } from "@nestjs/cache-manager"
@@ -43,13 +40,12 @@ import { AppController } from "./controllers/app.controller"
         key: process.env.APOLLO_KEY,
       },
     }),
-    ServeStaticModule.forRoot({ rootPath: join(process.cwd(), "public") }),
     CacheModule.register({
       isGlobal: true,
       useFactory: () => ({ store: redisStore }),
       host: "localhost",
       port: 6379,
-      ttl: 300000,
+      ttl: 7200000,
     }),
     FactModule,
     AnimeModule,

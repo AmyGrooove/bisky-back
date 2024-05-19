@@ -20,6 +20,7 @@ import { CacheInterceptor } from "@nestjs/cache-manager"
 import { AccessTokenGuard } from "../../auth/guards/accessToken.guard"
 import { AnimeCommentLikeService } from "../services/animeCommentLike.service"
 import { UpdateAnimeCommentLikeDto } from "../dto/updateAnimeCommentLike.dto"
+import { ClearCache } from "../../../decorators"
 
 @ApiTags("AnimeComment")
 @UseInterceptors(CacheInterceptor)
@@ -36,6 +37,7 @@ class AnimeCommentLikeController {
   })
   @ApiParam({ name: "commentId", type: String })
   @UseGuards(AccessTokenGuard)
+  @UseInterceptors(ClearCache)
   @Patch("/:commentId/like")
   async updateAnimeCommentLike(
     @Request() req,
