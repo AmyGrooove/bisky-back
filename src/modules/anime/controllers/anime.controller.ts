@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger"
 import { CacheInterceptor } from "@nestjs/cache-manager"
 
 import { AnimeService } from "../services/anime.service"
+import { IdAndUpdateDateModel } from "../entities/idAndUpdateDate.entity"
 
 @ApiTags("Anime")
 @UseInterceptors(CacheInterceptor)
@@ -10,15 +11,15 @@ import { AnimeService } from "../services/anime.service"
 class AnimeController {
   constructor(private animeService: AnimeService) {}
 
-  @ApiOperation({ summary: "Get all id`s" })
+  @ApiOperation({ summary: "Get all id`s and update times" })
   @ApiResponse({
     status: HttpStatus.OK,
     description: "Success",
-    type: [String],
+    type: [IdAndUpdateDateModel],
   })
-  @Get("allIds")
-  async allIds() {
-    return this.animeService.getAllAnimeIds()
+  @Get("allIdsAndUpdateDate")
+  async allIdsAndUpdateDate() {
+    return this.animeService.getAllAnimeIdsAndUpdateDate()
   }
 }
 

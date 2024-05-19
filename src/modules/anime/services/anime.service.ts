@@ -236,10 +236,8 @@ class AnimeService {
       .exec()
   }
 
-  async getAllAnimeIds() {
-    return (await this.animeModel.find().select("_id").lean().exec()).map(
-      (item) => item._id,
-    )
+  async getAllAnimeIdsAndUpdateDate() {
+    return this.animeModel.find().select("_id updateDate").lean().exec()
   }
 }
 
