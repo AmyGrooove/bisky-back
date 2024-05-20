@@ -328,10 +328,14 @@ class ParseAnimeSubService {
         },
       }))
 
-      await this.animeModel.bulkWrite(operations)
-      this.logger.log("Database updated")
+      if (operations.length > 0) {
+        await this.animeModel.bulkWrite(operations)
+        this.logger.log(`Database updated (${operations.length})`)
 
-      await this.updateAnimesRelations()
+        await this.updateAnimesRelations()
+      } else {
+        this.logger.log("No changes detected, database not updated")
+      }
     } catch (error) {
       console.error(error)
     }

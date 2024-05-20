@@ -3,7 +3,6 @@ import { Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 
 import { GeneralAnimeQuery } from "../queries/generalAnime.query"
-import { EListStatus } from "../../../auxiliary"
 import {
   getSortQueryAggregate,
   getQueryAggregateObject,
@@ -11,6 +10,15 @@ import {
 } from "../../../functions"
 import { Anime } from "../schemas/anime.schema"
 import { User } from "../../user/schemas/user.schema"
+import { UserFilterQuery } from "../queries/userFilter.query"
+import {
+  createAddFieldsStage,
+  createScoreStage,
+  createSearchMatch,
+  createUserDataStage,
+  createUsersListStage,
+  getInListAnimeMatch,
+} from "../functions/getAnimesFunctions"
 
 @Injectable()
 class AnimeService {
@@ -21,6 +29,23 @@ class AnimeService {
     private readonly userModel: Model<User>,
   ) {}
 
+  async getSkippedAnimeMatch(
+    userFilters: UserFilterQuery | null,
+    userId?: string,
+  ) {
+    if (!userFilters?.isHiddenAnimeInSkipList || !userId) return []
+
+    const skippedAnimeIds = (
+      await this.userModel.findById(userId).lean().exec()
+    ).skippedAnime.map((item) => new Types.ObjectId(item.animeId.toString()))
+
+    return [
+      {
+        $match: { _id: { $nin: skippedAnimeIds } },
+      },
+    ]
+  }
+
   async getAnimes({
     query,
     userId,
@@ -29,13 +54,13 @@ class AnimeService {
     userId?: string
   }) {
     const {
-      page,
-      count,
+      page = 1,
+      count = 10,
       limit,
       filter,
       sort,
       searchInput,
-      isPaginationOff,
+      isPaginationOff = false,
       userFilters,
       filterExclude,
     } = query
@@ -43,50 +68,11 @@ class AnimeService {
     const convertedSearchInput = searchInput
       ? convertIncorrectKeyboard(searchInput)
       : null
-
     const searchMatch = convertedSearchInput
-      ? [
-          {
-            $match: {
-              $or: [
-                { "labels.en": { $in: convertedSearchInput } },
-                { "labels.ru": { $in: convertedSearchInput } },
-                { "labels.synonymous": { $in: convertedSearchInput } },
-              ],
-            },
-          },
-        ]
+      ? createSearchMatch(convertedSearchInput)
       : []
-
-    const skippedAnime =
-      !userFilters?.isHiddenAnimeInSkipList || !userId
-        ? []
-        : [
-            {
-              $match: {
-                _id: {
-                  $nin: (
-                    await this.userModel.findById(userId).lean().exec()
-                  ).skippedAnime.map(
-                    (item) => new Types.ObjectId(item.animeId.toString()),
-                  ),
-                },
-              },
-            },
-          ]
-
-    const inListAnime =
-      !userFilters?.isHiddenAnimeInUserList || !userId
-        ? []
-        : [
-            {
-              $match: {
-                "estimatesCollection.author": {
-                  $ne: new Types.ObjectId(userId),
-                },
-              },
-            },
-          ]
+    const skippedAnime = await this.getSkippedAnimeMatch(userFilters, userId)
+    const inListAnime = getInListAnimeMatch(userFilters, userId)
 
     return this.animeModel
       .aggregate(
@@ -100,129 +86,11 @@ class AnimeService {
               as: "estimatesCollection",
             },
           },
-          {
-            $addFields: {
-              scoredCollection: {
-                $filter: {
-                  input: "$estimatesCollection",
-                  as: "estimate",
-                  cond: { $ne: ["$$estimate.score", null] },
-                },
-              },
-            },
-          },
+          createAddFieldsStage(limit),
           ...inListAnime,
-          {
-            $addFields: {
-              userData: {
-                $let: {
-                  vars: {
-                    matchingObj: {
-                      $arrayElemAt: [
-                        {
-                          $filter: {
-                            input: "$estimatesCollection",
-                            as: "estimate",
-                            cond: {
-                              $eq: [
-                                "$$estimate.author",
-                                new Types.ObjectId(userId),
-                              ],
-                            },
-                          },
-                        },
-                        0,
-                      ],
-                    },
-                  },
-                  in: {
-                    animeStatus: { $ifNull: ["$$matchingObj.status", null] },
-                    score: { $ifNull: ["$$matchingObj.score", null] },
-                    watchedSeries: {
-                      $ifNull: ["$$matchingObj.watchedSeries", null],
-                    },
-                  },
-                },
-              },
-              usersList: {
-                generalCount: { $size: "$estimatesCollection" },
-                addedCount: {
-                  $sum: {
-                    $map: {
-                      input: "$estimatesCollection",
-                      as: "list",
-                      in: {
-                        $cond: [
-                          { $eq: ["$$list.status", EListStatus.added] },
-                          1,
-                          0,
-                        ],
-                      },
-                    },
-                  },
-                },
-                watchingCount: {
-                  $sum: {
-                    $map: {
-                      input: "$estimatesCollection",
-                      as: "list",
-                      in: {
-                        $cond: [
-                          { $eq: ["$$list.status", EListStatus.watching] },
-                          1,
-                          0,
-                        ],
-                      },
-                    },
-                  },
-                },
-                completedCount: {
-                  $sum: {
-                    $map: {
-                      input: "$estimatesCollection",
-                      as: "list",
-                      in: {
-                        $cond: [
-                          { $eq: ["$$list.status", EListStatus.completed] },
-                          1,
-                          0,
-                        ],
-                      },
-                    },
-                  },
-                },
-                droppedCount: {
-                  $sum: {
-                    $map: {
-                      input: "$estimatesCollection",
-                      as: "list",
-                      in: {
-                        $cond: [
-                          { $eq: ["$$list.status", EListStatus.dropped] },
-                          1,
-                          0,
-                        ],
-                      },
-                    },
-                  },
-                },
-              },
-              score: {
-                count: { $size: "$scoredCollection" },
-                averageScore: {
-                  $cond: {
-                    if: { $eq: [{ $size: "$scoredCollection" }, 0] },
-                    then: 0,
-                    else: { $avg: "$scoredCollection.score" },
-                  },
-                },
-              },
-              screenshots: {
-                $slice: ["$screenshots", limit?.screenshotsCount ?? 100],
-              },
-              videos: { $slice: ["$videos", limit?.videosCount ?? 100] },
-            },
-          },
+          createUserDataStage(userId),
+          createUsersListStage(),
+          createScoreStage(),
           { $project: { estimatesCollection: 0, scoredCollection: 0 } },
           ...getQueryAggregateObject(filterExclude, true),
           ...getQueryAggregateObject(filter),
