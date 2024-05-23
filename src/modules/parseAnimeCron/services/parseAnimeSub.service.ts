@@ -183,7 +183,9 @@ class ParseAnimeSubService {
             .findOne({
               shikiId: el.id,
             })
-            .select("episodes description")
+            .select(
+              "shikiId labels poster kind otherPlatforms status episodes dates rating description related screenshots videos genres studios franchise",
+            )
             .lean()
             .exec()
 
@@ -238,18 +240,23 @@ class ParseAnimeSubService {
           )
             newAnimesSeries++
 
-          return {
+          const animeData = {
             shikiId: Number(el.id),
-            labels: {
-              en: el.name,
-              ru: el.russian,
-              synonyms: [el.japanese, ...el.synonyms].filter((item) => item),
+            dates: {
+              airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
+              releasedOn: el.releasedOn.date
+                ? new Date(el.releasedOn.date)
+                : null,
             },
-            poster: el.poster?.originalUrl ?? null,
-            kind: el.kind,
-            otherPlatforms: [],
-            // animePlatforms,
-            status: el.status,
+            description: {
+              en: animeInfo?.description?.en ?? null,
+              ru:
+                el.description
+                  ?.replace(/\r\n/g, "")
+                  .replace(/\[\[(.*?)\]\]/g, "$1")
+                  .replace(/\[[^\]]*]/g, "")
+                  .replace(/\([^)]*\)/g, "") ?? null,
+            },
             episodes: {
               count: el.episodes === 0 ? null : Number(el.episodes),
               airedCount:
@@ -258,10 +265,6 @@ class ParseAnimeSubService {
                   : el.episodesAired === 0
                   ? null
                   : Number(el.episodesAired),
-              duration:
-                el.duration === null || el.duration === 0
-                  ? null
-                  : Number(el.duration),
               nextEpisodeAiredDate: el.nextEpisodeAt
                 ? new Date(el.nextEpisodeAt)
                 : null,
@@ -277,40 +280,54 @@ class ParseAnimeSubService {
                     )
                   ? animeInfo?.episodes?.nextEpisodeAiredDate
                   : animeInfo?.episodes?.lastEpisodeAiredDate ?? null,
+              duration:
+                el.duration === null || el.duration === 0
+                  ? null
+                  : Number(el.duration),
             },
-            dates: {
-              airedOn: el.airedOn.date ? new Date(el.airedOn.date) : null,
-              releasedOn: el.releasedOn.date
-                ? new Date(el.releasedOn.date)
-                : null,
+            franchise: animeFranchise as unknown as Schema.Types.ObjectId,
+            genres: animeGenres as unknown as Schema.Types.ObjectId[],
+            kind: el.kind,
+            labels: {
+              en: el.name,
+              ru: el.russian,
+              synonyms: [el.japanese, ...el.synonyms].filter((item) => item),
             },
+            otherPlatforms: [],
+            // animePlatforms,
+            poster: el.poster?.originalUrl ?? null,
             rating: el.rating,
-            description: {
-              ru:
-                el.description
-                  ?.replace(/\r\n/g, "")
-                  .replace(/\[\[(.*?)\]\]/g, "$1")
-                  .replace(/\[[^\]]*]/g, "")
-                  .replace(/\([^)]*\)/g, "") ?? null,
-              en: animeInfo?.description?.en ?? null,
-            },
             related: el.related
               .map((item) => ({
                 base: null,
                 shikiId: item.anime?.id ? Number(item.anime?.id) : null,
-                relation: { ru: item.relationRu, en: item.relationEn },
+                relation: { en: item.relationEn, ru: item.relationRu },
               }))
               .filter((item) => item.shikiId),
             screenshots: el.screenshots.map((item) => item.originalUrl),
+            status: el.status,
+            studios: animeStudios as unknown as Schema.Types.ObjectId[],
             videos: el.videos.map((item) => ({
               name: item.name,
               url: item.url,
             })),
-            genres: animeGenres as unknown as Schema.Types.ObjectId[],
-            studios: animeStudios as unknown as Schema.Types.ObjectId[],
-            franchise: animeFranchise as unknown as Schema.Types.ObjectId,
             updateDate: new Date(),
           } as AnimeDocument
+
+          const checkAnimeData = ["updateDate"].reduce(
+            (object: any, key) => (delete object[key], object),
+            { ...animeData },
+          )
+          const checkAnimeInfo = ["_id"].reduce(
+            (object: any, key) => (delete object[key], object),
+            { ...animeInfo },
+          )
+          checkAnimeInfo.related?.map((item: any) => (item.base = null))
+
+          return JSON.stringify(checkAnimeData) ===
+            JSON.stringify(checkAnimeInfo)
+            ? null
+            : animeData
         }),
       )
 
@@ -320,13 +337,15 @@ class ParseAnimeSubService {
           : `Only so many anime have a new series out (${newAnimesSeries})`,
       )
 
-      const operations = newAnimes.map((item) => ({
-        updateOne: {
-          filter: { shikiId: item.shikiId },
-          update: item as Record<string, any>,
-          upsert: true,
-        },
-      }))
+      const operations = newAnimes
+        .filter((item) => item !== null)
+        .map((item) => ({
+          updateOne: {
+            filter: { shikiId: item?.shikiId },
+            update: item as Record<string, any>,
+            upsert: true,
+          },
+        }))
 
       if (operations.length > 0) {
         await this.animeModel.bulkWrite(operations)

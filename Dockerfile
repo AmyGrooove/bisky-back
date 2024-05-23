@@ -1,13 +1,14 @@
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm install -g pnpm
-RUN pnpm install --unsafe-perm
+RUN pnpm install
 
 COPY . .
+RUN pnpm run build
 
 EXPOSE 3000
 
