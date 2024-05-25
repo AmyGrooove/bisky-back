@@ -23,6 +23,12 @@ class FranchiseService {
       .lean()
       .exec()
   }
+
+  async getAllGenreIds() {
+    return (await this.franchiseModel.find().select("_id").lean().exec()).map(
+      (item) => item._id,
+    )
+  }
 }
 
 export { FranchiseService }

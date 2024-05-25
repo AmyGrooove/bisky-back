@@ -49,7 +49,7 @@ class FilterAnimeQuery {
     defaultValue: null,
     description: "Franchise _ids",
   })
-  franchises_ID_ONLY?: string[] | null
+  franchise_ID_ONLY?: string[] | null
 
   @Field(() => FloatBetweenQuery, { nullable: true, defaultValue: null })
   score_averageScore?: FloatBetweenQuery | null
