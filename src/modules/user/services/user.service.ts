@@ -7,6 +7,7 @@ import { CreateUserDto } from "../../auth/dto/createUser.dto"
 import { UpdateUserDto } from "../../auth/dto/updateUser.dto"
 import { GeneralUserQuery } from "../queries/generalUser.query"
 import { getQueryAggregateObject } from "../../../functions"
+import { createAnimeListStage } from "../functions/getUserData"
 
 @Injectable()
 class UserService {
@@ -52,6 +53,7 @@ class UserService {
             as: "animeEstimates",
           },
         },
+        { ...createAnimeListStage() },
         ...filterAnimes,
       ])
     )[0]

@@ -2,6 +2,7 @@ import { Field, ObjectType } from "@nestjs/graphql"
 import { ApiProperty } from "@nestjs/swagger"
 
 import { ERole } from "../../../auxiliary"
+import { UserListModel } from "../../anime/entities/additional/userList.entity"
 
 @ObjectType()
 class UserPublicModel {
@@ -28,6 +29,9 @@ class UserPublicModel {
   @ApiProperty()
   @Field(() => Date)
   lastOnlineDate: Date
+
+  @Field(() => UserListModel)
+  animeList: UserListModel
 }
 
 export { UserPublicModel }
