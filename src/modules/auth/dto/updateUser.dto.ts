@@ -12,6 +12,8 @@ class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsString()
   avatar?: string
 
+  userPersonalization?: { badge?: string; background?: string }
+
   refreshToken?: string
 
   lastOnlineDate?: Date

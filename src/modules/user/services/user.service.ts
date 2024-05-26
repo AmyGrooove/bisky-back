@@ -1,4 +1,4 @@
-import { Model } from "mongoose"
+import { Model, Types } from "mongoose"
 import { BadRequestException, Injectable } from "@nestjs/common"
 import { InjectModel } from "@nestjs/mongoose"
 
@@ -105,6 +105,52 @@ class UserService {
     const { _id, updateUserDto } = query
 
     return this.userModel.findByIdAndUpdate(_id, updateUserDto).lean().exec()
+  }
+
+  async subscribeToUser(query: { userId: string; subscribeUserId: string }) {
+    const { userId, subscribeUserId } = query
+
+    if (!(await this.userModel.findById(subscribeUserId).lean().exec()))
+      throw new BadRequestException("No such user")
+
+    const currentUser = await this.userModel.findOne({ _id: userId })
+
+    if (
+      currentUser.subscriptions.find(
+        (item) => item.toString() === subscribeUserId,
+      )
+    )
+      throw new BadRequestException("Already subscribed")
+
+    currentUser.subscriptions.push(new Types.ObjectId(subscribeUserId) as any)
+    await currentUser.save()
+
+    return true
+  }
+
+  async unSubscribeFromUser(query: {
+    userId: string
+    subscribeUserId: string
+  }) {
+    const { userId, subscribeUserId } = query
+
+    const currentUser = await this.userModel.findOne({ _id: userId })
+
+    console.log(currentUser.subscriptions)
+
+    if (
+      !currentUser.subscriptions.find(
+        (item) => item.toString() === subscribeUserId,
+      )
+    )
+      throw new BadRequestException("No such user found in user subscriptions")
+
+    currentUser.subscriptions = currentUser.subscriptions.filter(
+      (item) => item.toString() !== subscribeUserId,
+    )
+    await currentUser.save()
+
+    return true
   }
 }
 

@@ -50,12 +50,13 @@ class UserAnimeService {
     )
       throw new BadRequestException("No such anime found in user skipped list")
 
-    currentUser.skippedAnime.filter(
+    currentUser.skippedAnime = currentUser.skippedAnime.filter(
       (item) => item.animeId.toString() !== animeId,
     )
+
     await currentUser.save()
 
-    return this.userModel.findById(userId).lean().exec()
+    return true
   }
 }
 

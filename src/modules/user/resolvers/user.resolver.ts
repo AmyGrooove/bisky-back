@@ -71,9 +71,15 @@ class UserResolver {
       userId: context.req?.user?._id,
     })
 
+    const subscriptions = userData.subscriptions.map(
+      async (item) =>
+        await this.userService.getUser({ filter: { _id_ID: item } }),
+    )
+
     return {
       ...userData,
       animeEstimates: relatedAnimes,
+      subscriptions: subscriptions,
       favorites: {
         ...userData.favorites,
         animeIds: favoriteAnimes,
