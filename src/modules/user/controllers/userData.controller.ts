@@ -82,7 +82,7 @@ class UserDataController {
   ) {
     const fileUrl = await this.imageService.processImage(file, {
       fileName: `${req.user.username}_avatar`,
-      minioPath: `avatars/${req.user.username}_avatar.jpg`,
+      minioPath: `avatars/${req.user.username}_avatar`,
       width: 400,
       height: 400,
     })
@@ -110,7 +110,7 @@ class UserDataController {
   ) {
     const fileUrl = await this.imageService.processImage(file, {
       fileName: `${req.user.username}_background`,
-      minioPath: `backgrounds/${req.user.username}_background.jpg`,
+      minioPath: `backgrounds/${req.user.username}_background`,
     })
 
     await this.userService.updateUser({

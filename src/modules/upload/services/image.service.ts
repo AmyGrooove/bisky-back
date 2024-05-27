@@ -40,6 +40,8 @@ class ImageService {
     if (file.size > 10 * 1024 * 1024)
       new BadRequestException("File size exceeds limit of 10MB")
 
+    const newDateTimeStamp = new Date().getTime()
+
     let buffer = file.buffer
 
     if (!options.isOriginalSize)
@@ -48,9 +50,16 @@ class ImageService {
         .toFormat("jpg")
         .toBuffer()
 
-    await this.uploadFile(buffer, options.minioPath)
+    await this.uploadFile(
+      buffer,
+      `${options.minioPath}_${String(newDateTimeStamp)}.jpg`,
+    )
 
-    return `https://${process.env.MINIO_ENDPOINT}/${process.env.MINIO_BUCKET}/${options.minioPath}?response-content-type=image/jpg`
+    return `https://${process.env.MINIO_ENDPOINT}/${
+      process.env.MINIO_BUCKET
+    }/${`${options.minioPath}_${String(
+      newDateTimeStamp,
+    )}.jpg`}?response-content-type=image/jpg`
   }
 }
 
