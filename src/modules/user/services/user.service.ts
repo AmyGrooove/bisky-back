@@ -136,8 +136,6 @@ class UserService {
 
     const currentUser = await this.userModel.findOne({ _id: userId })
 
-    console.log(currentUser.subscriptions)
-
     if (
       !currentUser.subscriptions.find(
         (item) => item.toString() === subscribeUserId,

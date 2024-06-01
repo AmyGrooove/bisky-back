@@ -33,8 +33,6 @@ class FranchiseResolver {
     return Promise.all(
       (await this.franchiseService.getFranchises(franchiseQuery)).map(
         async (el) => {
-          console.log([el._id.toString()])
-
           const relatedWorks = await this.animeService.getAnimes({
             query: {
               ...animeQuery,
