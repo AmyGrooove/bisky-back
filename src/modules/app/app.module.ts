@@ -43,8 +43,7 @@ import { AppController } from "./controllers/app.controller"
     CacheModule.register({
       isGlobal: true,
       useFactory: () => ({ store: redisStore }),
-      host: "localhost",
-      port: 6379,
+      url: process.env.REDIS_URL,
       ttl: 7200000,
     }),
     FactModule,

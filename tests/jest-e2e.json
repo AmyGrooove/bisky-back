@@ -1,0 +1,19 @@
+{
+  "maxConcurrency": 1,
+  "testTimeout": 50000,
+  "maxWorkers": "50%",
+  "slowTestThreshold": 60,
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".e2e-test.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
+  },
+  "coverageReporters": [
+    "clover",
+    "json",
+    "lcov",
+    ["text", { "skipFull": true }]
+  ]
+}

@@ -20,7 +20,7 @@ class AnimeEstimateModel {
   watchedSeries: number
 
   @Field(() => [AnimeEstimateHistoryModel])
-  history: AnimeEstimateHistoryModel
+  history: AnimeEstimateHistoryModel[]
 }
 
 export { AnimeEstimateModel }

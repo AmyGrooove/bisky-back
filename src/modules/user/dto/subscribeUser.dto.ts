@@ -1,8 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsMongoId } from "class-validator"
+import { IsMongoId, IsString } from "class-validator"
 
 class SubscribeUserDto {
   @ApiProperty()
+  @IsString()
   @IsMongoId()
   subscribeUserId: string
 }

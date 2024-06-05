@@ -110,6 +110,9 @@ class UserService {
   async subscribeToUser(query: { userId: string; subscribeUserId: string }) {
     const { userId, subscribeUserId } = query
 
+    if (!Types.ObjectId.isValid(subscribeUserId))
+      throw new BadRequestException("ObjectId error")
+
     if (!(await this.userModel.findById(subscribeUserId).lean().exec()))
       throw new BadRequestException("No such user")
 

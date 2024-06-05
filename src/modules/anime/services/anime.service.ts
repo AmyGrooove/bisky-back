@@ -19,6 +19,7 @@ import {
   createUsersListStage,
   getInListAnimeMatch,
 } from "../functions/getAnimesFunctions"
+import { IdAndUpdateDateModel } from "../entities/idAndUpdateDate.entity"
 
 @Injectable()
 class AnimeService {
@@ -104,8 +105,13 @@ class AnimeService {
       .exec()
   }
 
-  async getAllAnimeIdsAndUpdateDate() {
-    return this.animeModel.find().select("_id updateDate").lean().exec()
+  async getAllAnimeIdsAndUpdateDate(): Promise<IdAndUpdateDateModel[]> {
+    return (
+      await this.animeModel.find().select("_id updateDate").lean().exec()
+    ).map((item) => ({
+      _id: item._id.toString(),
+      ...item,
+    })) as unknown as IdAndUpdateDateModel[]
   }
 }
 
