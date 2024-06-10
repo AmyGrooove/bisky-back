@@ -30,6 +30,7 @@ class ImageService {
       height?: number
       isOriginalSize?: boolean
     },
+    isDateStamp = false,
   ) {
     const validExtensions = [".png", ".jpg", ".webp", ".jpeg"]
     const fileExt = extname(file.originalname).toLowerCase()
@@ -52,14 +53,16 @@ class ImageService {
 
     await this.uploadFile(
       buffer,
-      `${options.minioPath}_${String(newDateTimeStamp)}.jpg`,
+      `${options.minioPath}${
+        isDateStamp ? "_" + String(newDateTimeStamp) : ""
+      }.jpg`,
     )
 
     return `https://${process.env.MINIO_ENDPOINT}/${
       process.env.MINIO_BUCKET
-    }/${`${options.minioPath}_${String(
-      newDateTimeStamp,
-    )}.jpg`}?response-content-type=image/jpg`
+    }/${`${options.minioPath}${
+      isDateStamp ? "_" + String(newDateTimeStamp) : ""
+    }.jpg`}?response-content-type=image/jpg`
   }
 }
 
